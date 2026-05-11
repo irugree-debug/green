@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="https://greentech-rp.com/resource/img/logo.png">
+    <meta name="twitter:image:src" content="https://greentech-rp.com/resource/img/logo.png">
+    <title>GreenTech RolePlay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"></noscript>
+    <link rel="icon" type="image/png" href="/favicon.png"/>
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/v4-shims.css">
+    <link rel="stylesheet" href="/public/css/general.css">
+    <link rel="stylesheet" href="/public/css/main.css">
+    <link rel="stylesheet" href="/public/css/header.css">
+    <link rel="stylesheet" href="/public/css/footer.css">
+    <link rel="stylesheet" href="/public/css/aos.css">
+	<script src="/public/js/aos.js"></script>
+	<script src="/public/js/jquery_3.7.1.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous">
+    </script>
+    <script src="/public/js/general.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-wrapper">
+            <a href="/"class="header-logo"><img src="/resource/img/logo.png" alt="Логотип" loading="lazy"></a>
+            <div class="header-buttons-container">
+                <a href="/" class="header-button">Главная</a>
+                <div class="header-button" onclick="toStart()">Начать играть</div>
+                <a href="/store" class="header-button">Магазин</a>
+                <a href="https://forum.greentech-rp.com/" class="header-button">Форум</a>
+                <a href="https://wiki.greentech-rp.com/" class="header-button">Wiki</a>
+            </div>
+            <a href="/ucp" class="header-button-lk">Личный кабинет</a>
+            <div class="header__menu">
+				<input id="menu__toggle" type="checkbox" />
+				<label class="menu__btn" for="menu__toggle">
+				  	<span></span>
+				</label>
+			</div>
+            <div class="header-mobile">
+                <div class="header-mobile-buttons-container">
+                    <a href="/" class="header-mobile-button">ГЛАВНАЯ</a>
+                    <div class="header-mobile-button" onclick="toStart()">НАЧАТЬ ИГРАТЬ</div>
+                    <a href="/store" class="header-mobile-button">МАГАЗИН</a>
+                    <a href="https://forum.greentech-rp.com/" class="header-mobile-button">ФОРУМ</a>
+                    <a href="https://wiki.greentech-rp.com/" class="header-mobile-button">WIKI</a>
+                </div>
+                <a href="/ucp" class="header-mobile-button-lk">Личный кабинет</a>
+            </div>
+        </div>
+</header>    <main>
+        <div class="main-block1 bg-tint">
+            <div class="main-text-container">
+                <h1 class="main-block1-text">Начни играть в CRMP на проекте GreenTech RolePlay прямо сейчас!</h1>
+                <p class="main-block1-text2">Это игровой сервер GTA Criminal Russia, который удивит тебя и твоих друзей.</p>
+                <div class="main-block1-buttons-container">
+                    <div class="main-block1-button1" onclick="toStart()">Начать играть</div>
+                    <a href="https://www.youtube.com/watch?v=An56qGXVGLk" class="main-block1-button2">Видео о нас</a>
+                </div>
+                <div class="main-block1-online-container">
+                    <div class="main-block1-online-text">игроков онлайн</div>
+                    <div class="main-block1-online-block">
+                        <div class="main-block1-online-circle"></div>
+                                                <div class="main-block1-online"><span class="online-var">121 / </span>295</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="main-block2">
+                <div class="shape1"></div>
+                <div class="main-block2-text-block">
+                    <h2 class="main-block2-text">Начать игру легко и проще простого!</h2>
+                    <p class="main-block2-text2">Для начала игры вам нужна наша сборка.<br>В ней идет сама игра, мультиплеер и наш лаунчер.</p>
+                    <a href="https://greentech-samp-cdn.itcloud.io/Setup.exe" download class="main-block2-button" onclick="downloadClick()">Скачать лаунчер <i class="fa fa-download" aria-hidden="true"></i></a>
+                </div>
+                <div class="main-block2-laucher-block">
+                    <img src="/resource/img/launcher_new.png" alt="Лаунчер" class="main-block2-launcher-img" loading="lazy">
+                    <div class="main-block2-launcher-bg"></div>
+                    <div class="main-block2-launcher-info-block">
+                        <img src="/resource/img/info.png" alt="Информация" class="main-block2-launcher-info-img" loading="lazy">
+                        <div class="main-block2-launcher-info-text-block">
+                            <p class="main-block2-launcher-info-text1">Столкнулись с проблемой?</p>
+                            <p class="main-block2-launcher-info-text2">Мы собрали в одну <a href="https://vk.com/@greentech_rp-izvestnye-problemy-i-ih-resheniya">статью</a> все известные нам проблемы и их решения.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-block3">
+                <div class="shape2"></div>
+                <div class="main-block3-text-block">
+                    <h3 class="main-block3-text1">СЛЕДИ ЗА НАМИ</h3>
+                    <p class="main-block3-text2">Узнавай первый о новостях и акциях</p>
+                </div>
+                <div class="main-block3-blocks-container">
+                    <div class="main-block3-block">
+                        <div class="main-block3-block-title">Официальная группа ВКонтакте</div>
+                        <div class="main-block3-block-text">Все главные новости проекта</div>
+                        <div class="main-block3-block-subs">43K+ подписчиков</div>
+                        <a href="https://vk.com/greentech_rp" class="main-block3-block-button">Подписаться</a>
+                    </div>
+                    <div class="main-block3-block">
+                        <div class="main-block3-block-title">Свободная группа ВКонтакте</div>
+                        <div class="main-block3-block-text">Общение игроков и розыгрыши</div>
+                        <div class="main-block3-block-subs">10K+ подписчиков</div>
+                        <a href="https://vk.com/greentech_roleplay_free" class="main-block3-block-button">Вступить</a>
+                    </div>
+                    <div class="main-block3-block">
+                        <div class="main-block3-block-title">Официальный Youtube канал</div>
+                        <div class="main-block3-block-text">Стримы и видео на проекте</div>
+                        <div class="main-block3-block-subs">18K+ подписчиков</div>
+                        <a href="https://www.youtube.com/@GreenTechOfficialChannel" class="main-block3-block-button">Подписаться</a>
+                    </div>
+                    <div class="main-block3-block">
+                        <div class="main-block3-block-title">Официальный Discord канал</div>
+                        <div class="main-block3-block-text">Канал для общения с игроками</div>
+                        <div class="main-block3-block-subs">4K+ подписчиков</div>
+                        <a href="https://discord.gg/YxmyH4QxfR" class="main-block3-block-button">Вступить</a>
+                    </div>
+                </div>
+            </div>
+            <div class="main-block4">
+                <h4 class="main-block4-title">О нашем проекте</h4>
+                <p class="main-block4-text">GreenTech RolePlay - это игровой сервер в GTA Criminal Russia, который начал свою деятельность еще в 2012 году и с тех пор стал одним из наиболее популярных мест для ролевой игры на русскоязычной карте. Наш сервер предлагает уникальный и захватывающий опыт, сочетая в себе долголетний опыт администрации и страсть игроков к ролевой игре.<br><br>Особенности сервера GreenTech RolePlay включают в себя:<br><br><span class="text-main"><span class="text-title">1. Ролевой игровой процесс:</span> Наш сервер предлагает хороший уровень ролевой игры, где каждый игрок может воплотить свои идеи и фантазии в жизнь. Здесь вы можете стать кем угодно: от успешного бизнесмена до полицейского, от таксиста до криминального авторитета. Все действия игроков имеют последствия, и каждое решение влияет на игровой мир.</span><br><br><span class="text-main"><span class="text-title">2. Активное сообщество:</span> Наш сервер имеет большое и дружное сообщество игроков, которые всегда рады новым участникам. Здесь вы можете найти друзей, союзников и противников, а также принять участие в различных событиях, организованных другими игроками или администрацией.</span><br><br><span class="text-main"><span class="text-title">3. Постоянное развитие:</span> Мы постоянно работаем над улучшением сервера, добавляя новые возможности, исправляя ошибки и слушая отзывы наших игроков. Мы стремимся сделать игровой процесс более увлекательным и захватывающим для всех участников.</span><br><br>Присоединяйтесь к GreenTech RolePlay и окунитесь в захватывающий мир ролевой игры!</p>
+                <div class="shape3"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+    <div class="footer-wrapper">
+        <div class="footer-block">
+            <img src="/resource/img/logo2.png" alt="Логотип" class="footer-block-logo" loading="lazy">
+            <div class="footer-block-text-block">
+                <p class="footer-block-text">ИП Будагов Руслан Физули Оглы</p>
+                <p class="footer-block-text">ИНН 421106318582</p>
+                <p class="footer-block-text">ОГРН 324220200045128</p>
+            </div>
+        </div>
+        <div class="footer-block">
+            <div class="footer-block-text-block">
+                <p class="footer-block-title">НАВИГАЦИЯ</p>
+                <a href="" class="footer-block-text">Главная</a>
+                <div class="footer-block-text" onclick="toStart()">Начать играть</div>
+                <a href="/store" class="footer-block-text">Магазин</a>
+                <a href="https://forum.greentech-rp.com/" class="footer-block-text">Форум</a>
+            </div>
+        </div>
+        <div class="footer-block">
+            <div class="footer-block-text-block">
+                <p class="footer-block-title">ВАЖНАЯ ИНФОРМАЦИЯ</p>
+                <a href="/politika" class="footer-block-text">Политика конфиденциальности</a>
+                <a href="/oferta" class="footer-block-text">Публичная оферта</a>
+            </div>
+        </div>
+        <div class="footer-block">
+            <div class="footer-block-text-block">
+                <p class="footer-block-title">КОНТАКТЫ</p>
+                <a href="mailto:admin@greentech-rp.com" class="footer-block-text">admin@greentech-rp.com</a>
+                <a href="mailto:support@greentech-rp.com" class="footer-block-text">support@greentech-rp.com</a>
+            </div>
+        </div>
+        <div class="footer-block2">
+            <div class="footer-block-pays-block">
+                <img src="/resource/img/mir-pay.png" alt="МИР" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/visa-pay.png" alt="Виза" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/mastercard-pay.png" alt="Мастер Кард" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/sbp-pay.png" alt="СБП" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/yandex-pay.png" alt="Яндекс Пэй" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/tinkoff-pay.png" alt="Тинькоф Пэй" class="footer-block-pay" loading="lazy">
+            </div>
+            <div class="footer-block-pays-block2">
+                <img src="/resource/img/smirnov.png" alt="Smirnov Studio" class="footer-block-pay" loading="lazy">
+                <img src="/resource/img/wilman.png" alt="Powered by Wilman" class="footer-block-pay" loading="lazy">
+            </div>
+        </div>
+    </div>
+</footer></body>
+</html>
+<script>
+    // Гео-DNS, by @temasm
+    async function initializeGeoDns() {
+        const GEO_DNS_DOMAIN = 'geo.greentech-rp.com';
+        const DOWNLOAD_BUTTON_SELECTOR = '.main-block2-button';
+        const BASE_CDN_DOMAIN = 'greentech-samp-cdn.itcloud.io';
+        
+        // Список DoH серверов для фоллбека
+        const DOH_SERVERS = [
+            'https://8.8.8.8/resolve',
+            'https://1.1.1.1/dns-query',
+            'https://9.9.9.9/dns-query'
+        ];
+        
+        try {
+            const region = await resolveGeoRegion(GEO_DNS_DOMAIN, DOH_SERVERS);
+            
+            if (region && region.toUpperCase() !== 'NULL') {
+                const regionLower = region.toLowerCase();
+                console.log(`Определен географический регион: ${region}, используем региональный CDN с суффиксом: -${regionLower}`);
+                
+                const downloadButton = document.querySelector(DOWNLOAD_BUTTON_SELECTOR);
+                if (downloadButton) {
+                    const currentHref = downloadButton.href;
+                    const newHref = modifyCdnUrl(currentHref, BASE_CDN_DOMAIN, regionLower);
+                    
+                    if (newHref !== currentHref) {
+                        downloadButton.href = newHref;
+                        console.log(`Ссылка скачивания обновлена: ${currentHref} -> ${newHref}`);
+                    }
+                }
+            } else {
+                console.log('Географический регион не определен или равен NULL, используем основной CDN');
+            }
+        } catch (error) {
+            console.error('Ошибка при определении географического региона:', error);
+        }
+    }
+    
+    async function resolveGeoRegion(domain, dohServers) {
+        for (let i = 0; i < dohServers.length; i++) {
+            try {
+                console.log(`Попытка DNS запроса через сервер #${i + 1} (${dohServers[i]})`);
+                
+                const url = dohServers[i].includes('8.8.8.8') 
+                    ? `${dohServers[i]}?name=${domain}&type=TXT`
+                    : `${dohServers[i]}?name=${domain}&type=TXT`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/dns-json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.Answer && data.Answer.length > 0) {
+                    for (const answer of data.Answer) {
+                        if (answer.type === 16) { // TXT record type
+                            const txtValue = answer.data.replace(/"/g, '').trim();
+                            console.log(`Успешный DNS запрос через сервер #${i + 1}, получено значение: ${txtValue}`);
+                            return txtValue;
+                        }
+                    }
+                }
+                
+                console.log(`DNS сервер #${i + 1} не вернул TXT записей`);
+                
+            } catch (error) {
+                console.error(`Ошибка DNS запроса через сервер #${i + 1} (${dohServers[i]}):`, error.message);
+                
+                if (i < dohServers.length - 1) {
+                    console.log(`Переключаемся на резервный DNS сервер #${i + 2}`);
+                    continue;
+                }
+            }
+        }
+        
+        throw new Error('Все DNS серверы недоступны');
+    }
+    
+    function modifyCdnUrl(url, baseCdnDomain, region) {
+        try {
+            if (!url || !url.includes(baseCdnDomain) || !region) {
+                return url;
+            }
+            
+            const regionalDomain = insertGeoRegionInDomain(baseCdnDomain, region);
+            return url.replace(baseCdnDomain, regionalDomain);
+        } catch (error) {
+            console.error('Ошибка при модификации URL:', error);
+            return url;
+        }
+    }
+    
+    function insertGeoRegionInDomain(domain, region) {
+        try {
+            if (!domain || !region) {
+                return domain;
+            }
+            
+            const parts = domain.split('.');
+            
+            if (parts.length < 2) {
+                return domain;
+            }
+            
+            const mainDomain = parts.slice(-2).join('.');
+            const subdomain = parts.slice(0, -2).join('.');
+            
+            return `${subdomain}-${region}.${mainDomain}`;
+        } catch (error) {
+            console.error('Ошибка при вставке региона в домен:', error);
+            return domain;
+        }
+    }
+    
+    // Инициализация после загрузки страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeGeoDns();
+        
+        if (window.location.hash === '#start') {
+            document.querySelector('.main-block2-button').scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'center'
+            });
+        }
+    });
+</script>

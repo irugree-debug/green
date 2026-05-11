@@ -1,0 +1,526 @@
+.alcotester {
+    width: 36%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.alcotester-block {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.alcotester-screen {
+    position: absolute;
+    width: 28%;
+    height: 35%;
+    top: 15.1%;
+    left: 36.1%;
+    border-radius: 0.2vw;
+    background-color: black;
+    overflow: hidden;
+}
+
+.alcotester-screen-block {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: none;
+    color: white;
+    border-radius: 0.2vw;
+    background-color: #c2dbed;
+}
+
+.alcotester-screen-block#loading, .alcotester-screen-block#main, .alcotester-screen-block#offing {
+    background-color: #141414;
+}
+
+.alcotester-screen-loading-text {
+    font-size: 0.9vw;
+    font-weight: 600;
+    text-align: center;
+    top: 6%;
+    width: 100%;
+    position: absolute;
+}
+
+.alcotester-screen-loading-img {
+    width: 45%;
+    position: absolute;
+    top: 36%;
+    left: 27%;
+}
+
+.alcotester-screen-loading-text2 {
+    color: #2b79ed;
+    font-size: 0.8vw;
+    font-weight: 500;
+    text-align: center;
+    bottom: 2%;
+    width: 100%;
+    position: absolute;
+}
+
+.alcotester-switch-button {
+    width: 8.5%;
+    height: 3.5%;
+    background-color: transparent;
+    position: absolute;
+    top: 54.7%;
+    left: 53.3%;
+    cursor: pointer;
+}
+
+.alcotester-screen-offing-text {
+    font-size: 0.8vw;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 45%;
+}
+
+.alcotester-screen-main-time {
+    position: absolute;
+    width: 100%;
+    text-align: end;
+    font-size: 0.65vw;
+    font-weight: 500;
+    top: 3%;
+    right: 4%;
+}
+
+.alcotester-screen-main-date {
+    position: absolute;
+    width: 100%;
+    text-align: end;
+    font-size: 0.65vw;
+    font-weight: 500;
+    top: 9%;
+    right: 4%;
+}
+
+.alcotester-screen-main-battery {
+    position: absolute;
+    width: 14%;
+    top: 6.5%;
+    right: 42%;
+}
+
+.alcotester-screen-main-blocks {
+    position: absolute;
+    width: 90%;
+    height: 56%;
+    top: 17%;
+    left: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    row-gap: 5%;
+    column-gap: 12%;
+}
+
+.alcotester-screen-main-block {
+    width: 22%;
+    cursor: pointer;
+}
+
+.alcotester-screen-main-bottom {
+    position: absolute;
+    width: 92%;
+    height: 16%;
+    background: linear-gradient(180deg, rgba(232,255,250,1) 00%, rgba(98,159,200,1) 50%, rgba(16,39,54,1) 100%);
+    bottom: 6%;
+    left: 4%;
+}
+
+.alcotester-screen-main-bottom-text1 {
+    position: absolute;
+    font-size: 0.55vw;
+    width: 100%;
+    color: #662bdb;
+    top: 22%;
+    left: 2%;
+}
+
+.alcotester-screen-main-bottom-text2 {
+    position: absolute;
+    font-size: 0.55vw;
+    width: 100%;
+    color: #1334ab;
+    top: 51%;
+    left: 2%;
+}
+
+.alcotester-screen-top {
+    width: 100%;
+    height: 12%;
+    background-color: #5fd3f0;
+    display: flex;
+    align-items: center;
+}
+
+.alcotester-screen-top-text {
+    font-size: 0.7vw;
+    color: #595959;
+    margin-left: 4%;
+}
+
+.alcotester-screen-bottom {
+    position: absolute;
+    width: 100%;
+    height: 13%;
+    bottom: 0%;
+}
+
+.alcotester-screen-bottom#scrining {
+    display: flex;
+    justify-content: center;
+}
+
+.alcotester-screen-bottom#scriningresult {
+    display: flex;
+    justify-content: space-between;
+}
+
+.alcotester-screen-bottom-button {
+    width: 19%;
+    cursor: pointer;
+}
+
+.alcotester-screen-main {
+    position: absolute;
+    width: 100%;
+    height: 75%;
+}
+
+.alcotester-screen-main-progress {
+    position: absolute;
+    width: 74%;
+    height: 21%;
+    background-color: #9f9f9f;
+    top: 20%;
+    left: 13%;
+    border-top: 2px solid #757575;
+    border-left: 2px solid #757575;
+    display: flex;
+}
+
+.alcotester-screen-main-progress-span {
+    width: 100%;
+    height: 100%;
+    background-color: #7ec7dd;
+}
+
+.alcotester-screen-main-progress-text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9vw;
+    color: black;
+    font-weight: 600;
+}
+
+.alcotester-screen-main-button {
+    position: absolute;
+    width: 74%;
+    height: 21%;
+    background-color: #afafaf;
+    color: #595959;
+    top: 60%;
+    left: 13%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7vw;
+    font-weight: 500;
+    border: 2px solid black;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.alcotester-screen-main-button#button1 {
+    top: 22%;
+}
+
+.alcotester-screen-main-button-border {
+    position: absolute;
+    width: 88%;
+    height: 70%;
+    border: 2px solid #c50202;
+}
+
+.alcotester-vidoh {
+    width: 13vw;
+    height: 3.2vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.alcotester-vidoh-button {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 23%;
+    height: 100%;
+    background-color: #c1c1c1c7;
+    border-radius: 0.5vw;
+    overflow: hidden;
+}
+
+.alcotester-vidoh-button-text {
+    position: absolute;
+    width: 23%;
+    height: 100%;
+    font-family: Arial;
+    font-size: 1vw;
+    display: flex;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.alcotester-vidoh-button-span {
+    position: relative;
+    width: 100%;
+    height: 0%;
+    background-color: #2c61f2c7;
+    border-radius: 0.5vw;
+    transition: 2s linear;
+}
+
+.alcotester-vidoh-text {
+    font-family: Arial;
+    font-size: 0.9vw;
+    font-weight: 600;
+    color: white;
+}
+
+.alcotester-screen-main-textresult {
+    font-size: 0.8vw;
+    color: #00ab00;
+    position: absolute;
+    top: 42%;
+    left: 7%;
+}
+
+.alcotester-screen-main-textresult#false {
+    color: #00ab00;
+}
+
+.alcotester-screen-main-textresult#true {
+    color: #e10101;
+}
+
+.alcotester-screen-main-textresult#analiz {
+    color: #595959;
+    width: 100%;
+    text-align: center;
+    width: 100%;
+    left: 0;
+}
+
+.alcotester-screen-main-fulldata-input {
+    background-color: #99cbff;
+    border: transparent;
+    position: relative;
+    width: 90%;
+    height: 14%;
+    left: 3%;
+    top: 3%;
+    border-top: 2px solid #ababab;
+    border-left: 2px solid #ababab;
+    font-size: 0.7vw;
+    font-weight: 700;
+    padding: 0% 2%;
+}
+
+.alcotester-screen-main-fulldata-keyboard-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    top: 5%;
+}
+
+.alcotester-screen-main-fulldata-keyboard-line {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    justify-content: center;
+}
+
+.alcotester-screen-main-fulldata-keyboard-button {
+    color: rgb(229, 229, 229);
+    font-size: 0.8vw;
+    font-weight: 500;
+    padding: 2.7% 0;
+    width: 8.3%;
+    background-color: #5895d3;
+    border: 1px solid #354a85;
+    box-shadow: inset 1px 1px 2px 1px rgb(255 255 255 / 57%);
+    display: flex;
+    justify-content: center;
+}
+
+.alcotester-screen-main-fulldata-keyboard-button:active {
+    background-color: #ffffff;
+    color: #5895d3;
+}
+
+.alcotester-screen-main-fulldata-keyboard-button#del {
+    width: 22%;
+}
+
+.alcotester-screen-main-fulldata-keyboard-button#space {
+    width: 47%;
+}
+
+.alcotester-screen-main-full1 {
+    font-size: 0.8vw;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 16%;
+    color: #595959;   
+}
+
+.alcotester-screen-main-full2 {
+    font-size: 0.8vw;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    color: #595959;
+}
+
+.alcotester-screen-main-button#full {
+    height: 31%;
+    color: #595959;
+    top: 80%;
+}
+
+.alcotester-screen-main-button:active {
+    background-color: #3794c1;
+    color: white;
+}
+
+.alcotester-screen-main-fullresult-text {
+    font-size: 0.8vw;
+    font-weight: 600;
+    position: absolute;
+    color: #595959;
+    top: 22%;
+    left: 11%;
+}
+
+.alcotester-screen-main-fullresult-text2 {
+    position: absolute;
+    top: 43%;
+    left: 4%;
+    font-size: 1.8vw;
+}
+
+.alcotester-screen-main-fullresult-text2#false {
+    color: #00ab00;
+}
+
+.alcotester-screen-main-fullresult-text2#true {
+    color: #e10101;
+}
+
+.alcotester-screen-main-fullresult-text2#prervan {
+    color: #595959;
+    left: 10%;
+    font-size: 0.9vw;
+}
+
+.alcotester-screen-main-fullresult-text2#otkaz {
+    color: #595959;
+    left: 25%;
+    font-size: 0.9vw;
+}
+
+.alcotester-screen-main-fullresult-text2 span {
+    font-size: 1vw;
+    position: absolute;
+    width: 60%;
+    left: 124%;
+    top: 21%;
+    color: #595959;
+}
+
+.alcotester-check {
+    background:
+        linear-gradient(-45deg, #0000 6px, #ececec 7px),
+        linear-gradient( 45deg, #0000 6px, #ececec 7px),
+        linear-gradient(-45deg, #ececec calc(100% - 7px), #0000 calc(100% - 8px)),
+        linear-gradient( 45deg, #ececec calc(100% - 7px), #0000 calc(100% - 8px));
+    background-size: 10px 50%;
+    background-position: 0 100%, 0 100%, 0 0, 0 0;
+    background-repeat: repeat-x;
+    width: 15%;
+    border: none;
+    display: none;
+}
+
+.alcotester-check-text {
+    height: 66.9%;
+    margin: 3%;
+    font-family: 'Elves-mini', sans-serif;
+    overflow-y: auto;
+}
+
+.alcotester-full {
+    font-size: 0.7vw;
+    margin-top: 5%;
+    margin-left: 2%;
+}
+
+.alcotester-full.title {
+    text-align: center;
+    font-size: 0.45vw;
+    margin-top: 1%;
+}
+
+.alcotester-full.title:nth-child(1) {
+    margin-top: 5%;
+}
+
+.alcotester-full.second {
+    position: relative;
+    margin-top: 2%;
+}
+
+.alcotester-full.type {
+    margin-top: 8%;
+}
+
+.alcotester-full.under {
+    font-size: 0.3vw;
+    position: relative;
+    margin-top: 0%;
+}
+
+.alcotester-full.upper {
+    font-size: 0.3vw;
+    position: relative;
+    margin-top: 10%;
+}
+
+.alcotester-full.temp {
+    position: relative;
+    margin-top: 1%;
+}
+
+.alcotester-full.podpis {
+    position: relative;
+    margin-bottom: 15%;
+}

@@ -1,0 +1,152 @@
+.dialog {
+    background: linear-gradient(135deg, rgba(20, 53, 36, 0.8) 0%, rgba(11, 47, 30, 0.8) 37%, rgba(12, 47, 27, 0.8) 100%);
+    color: white;
+    font-family: 'Montserrat';
+    padding: 2vw 2.5vw;
+    border-radius: 1.5em;
+    width: max-content;
+    min-width: 22%;
+    display: flex;
+    flex-direction: column;
+    transition: .2s;
+}
+
+#dialog-2 {
+    max-height: 52%;
+}
+
+.dialog-title {
+    font-weight: 700;
+    font-size: min(36px, 1.1vw);
+}
+
+.dialog-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2.5vw;
+}
+
+.dialog-button1, .dialog-button2 {
+    color: white;
+    font-weight: 700;
+    font-size: min(24px, 0.9vw);
+    border-radius: 0.8em;
+    padding: 0.8vw 1.5vw;
+    cursor: pointer;
+    transition: .3s;
+    min-width: 5vw;
+    font-family: 'Montserrat';
+}
+
+.dialog-button1 {
+    background-color: #3B7053;
+}
+
+.dialog-button2 {
+    background-color: #00000066;
+    border: solid 1px #FFFFFF10;
+}
+
+.dialog-button1:hover {
+    background-color: #5cb685a7
+}
+
+.dialog-button2:hover {
+    background-color: #FFFFFF15;
+}
+
+.dialog-0-text {
+    font-weight: 300;
+    border-radius: 0.5em;
+    margin: 1.7vw 0;
+    font-size: min(24px, 0.9vw);
+    text-align: justify;
+    line-height: 1.4;
+}
+
+.dialog-block-container::-webkit-scrollbar-track {
+    background-color: #A0B6DF10;
+}
+
+.dialog-1-text, .dialog-3-text {
+    font-weight: 400;
+    margin: 1vw 0;
+    font-size: min(16px, 0.9vw);
+    line-height: 1.4;
+}
+
+.dialog-1-input {
+    background-color: #091811;
+    border: none;
+    padding: 1vw 1.5vw;
+    border-radius: 0.8em;
+    color: white;
+    font-size: min(24px, 0.7vw);
+    font-weight: 600;
+    margin-bottom: 1.3vw;
+    font-family: 'Montserrat';
+}
+
+.dialog-subtitle {
+    color: #B0B0B0;
+    font-size: min(36px, 1.2vw);
+}
+
+.dialog-block-container::-webkit-scrollbar {
+    width: 0.35em;
+}
+
+.dialog-0-text::-webkit-scrollbar-thumb, .dialog-block-container::-webkit-scrollbar-thumb {
+    background-color: #158649;
+    border-radius: 1em;
+    border: 1em solid #158649;
+}
+
+.dialog-block-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 1.7vw 0;
+    overflow-y: auto;
+    width: calc(100% + 1.5%);
+    padding-right: 0.5vw;
+}
+
+.dialog-block {
+    padding: 0.9vw;
+    background-color: #091811;
+    width: -webkit-fill-available;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .2s;
+    font-size: min(24px, 0.9vw);
+    text-align: center;
+    font-weight: 600;
+}
+
+.dialog-block:hover {
+    background-color: #10281d;
+}
+
+.dialog-block.select {
+    background-color: #3B7053;
+}
+
+#dialog-3-input {
+    background-color: #091811;
+    border: none;
+    padding: 1vw;
+    border-radius: 0.8em;
+    color: white;
+    font-size: min(24px, 0.7vw);
+    font-weight: 600;
+    margin-bottom: 1.3vw;
+    font-family: 'Montserrat';
+}
+
+.dialog-3-lang {
+    display: none;
+    font-size: min(16px, 1vw);
+    color: red;
+}

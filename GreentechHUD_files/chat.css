@@ -1,0 +1,375 @@
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-ExtraBold.eot");
+    src: local("../fonts/Gilroy/Gilroy ExtraBold"), local("../fonts/Gilroy/Gilroy-ExtraBold"), url("../fonts/Gilroy/Gilroy-ExtraBold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-ExtraBold.woff") format("woff"), url("../fonts/Gilroy/Gilroy-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Heavy.eot");
+    src: local("../fonts/Gilroy/Gilroy Heavy"), local("../fonts/Gilroy/Gilroy-Heavy"), url("../fonts/Gilroy/Gilroy-Heavy.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Heavy.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Heavy.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-LightItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Light Italic"), local("../fonts/Gilroy/Gilroy-LightItalic"), url("../fonts/Gilroy/Gilroy-LightItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-LightItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-ThinItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Thin Italic"), local("../fonts/Gilroy/Gilroy-ThinItalic"), url("../fonts/Gilroy/Gilroy-ThinItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-ThinItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-ThinItalic.ttf") format("truetype");
+    font-weight: 100;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-BlackItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Black Italic"), local("../fonts/Gilroy/Gilroy-BlackItalic"), url("../fonts/Gilroy/Gilroy-BlackItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-BlackItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-BlackItalic.ttf") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-BoldItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Bold Italic"), local("../fonts/Gilroy/Gilroy-BoldItalic"), url("../fonts/Gilroy/Gilroy-BoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-BoldItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy-SemiBold";
+    src: url("../fonts/Gilroy/Gilroy-SemiBold.eot");
+    src: local("../fonts/Gilroy/Gilroy SemiBold"), local("../fonts/Gilroy/Gilroy-SemiBold"), url("../fonts/Gilroy/Gilroy-SemiBold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-SemiBold.woff") format("woff"), url("../fonts/Gilroy/Gilroy-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-UltraLightItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy UltraLight Italic"), local("../fonts/Gilroy/Gilroy-UltraLightItalic"), url("../fonts/Gilroy/Gilroy-UltraLightItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-UltraLightItalic.woff") format("woff"),
+        url("../fonts/Gilroy/Gilroy-UltraLightItalic.ttf") format("truetype");
+    font-weight: 200;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-SemiBoldItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy SemiBold Italic"), local("../fonts/Gilroy/Gilroy-SemiBoldItalic"), url("../fonts/Gilroy/Gilroy-SemiBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-SemiBoldItalic.woff") format("woff"),
+        url("../fonts/Gilroy/Gilroy-SemiBoldItalic.ttf") format("truetype");
+    font-weight: 600;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Light.eot");
+    src: local("../fonts/Gilroy/Gilroy Light"), local("../fonts/Gilroy/Gilroy-Light"), url("../fonts/Gilroy/Gilroy-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Light.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-MediumItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Medium Italic"), local("../fonts/Gilroy/Gilroy-MediumItalic"), url("../fonts/Gilroy/Gilroy-MediumItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-MediumItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-MediumItalic.ttf") format("truetype");
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-ExtraBoldItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy ExtraBold Italic"), local("../fonts/Gilroy/Gilroy-ExtraBoldItalic"), url("../fonts/Gilroy/Gilroy-ExtraBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-ExtraBoldItalic.woff") format("woff"),
+        url("../fonts/Gilroy/Gilroy-ExtraBoldItalic.ttf") format("truetype");
+    font-weight: 800;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Regular.eot");
+    src: local("../fonts/Gilroy/Gilroy Regular"), local("../fonts/Gilroy/Gilroy-Regular"), url("../fonts/Gilroy/Gilroy-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Regular.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-HeavyItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Heavy Italic"), local("../fonts/Gilroy/Gilroy-HeavyItalic"), url("../fonts/Gilroy/Gilroy-HeavyItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-HeavyItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-HeavyItalic.ttf") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy-Medium";
+    src: url("../fonts/Gilroy/Gilroy-Medium.eot");
+    src: local("../fonts/Gilroy/Gilroy Medium"), local("../fonts/Gilroy/Gilroy-Medium"), url("../fonts/Gilroy/Gilroy-Medium.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Medium.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-RegularItalic.eot");
+    src: local("../fonts/Gilroy/Gilroy Regular Italic"), local("../fonts/Gilroy/Gilroy-RegularItalic"), url("../fonts/Gilroy/Gilroy-RegularItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-RegularItalic.woff") format("woff"), url("../fonts/Gilroy/Gilroy-RegularItalic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-UltraLight.eot");
+    src: local("../fonts/Gilroy/Gilroy UltraLight"), local("../fonts/Gilroy/Gilroy-UltraLight"), url("../fonts/Gilroy/Gilroy-UltraLight.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-UltraLight.woff") format("woff"), url("../fonts/Gilroy/Gilroy-UltraLight.ttf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Bold.eot");
+    src: local("../fonts/Gilroy/Gilroy Bold"), local("../fonts/Gilroy/Gilroy-Bold"), url("../fonts/Gilroy/Gilroy-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Bold.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Thin.eot");
+    src: local("../fonts/Gilroy/Gilroy Thin"), local("../fonts/Gilroy/Gilroy-Thin"), url("../fonts/Gilroy/Gilroy-Thin.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Thin.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("../fonts/Gilroy/Gilroy-Black.eot");
+    src: local("../fonts/Gilroy/Gilroy Black"), local("../fonts/Gilroy/Gilroy-Black"), url("../fonts/Gilroy/Gilroy-Black.eot?#iefix") format("embedded-opentype"), url("../fonts/Gilroy/Gilroy-Black.woff") format("woff"), url("../fonts/Gilroy/Gilroy-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+[v-cloak] {
+    display: none;
+}
+.chat-cefstudio {
+    position: absolute;
+    margin-left: 1vh;
+    margin-top: 1vh;
+    color: #FFFFFF;
+}
+.chat-cefstudio .chat-messages {
+    max-width: 100vh;
+    padding: 0 0 0.5vh 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.chat-cefstudio .chat-messages .chat-message {
+    padding: 0.3vh 0 0.3vh 0;
+    font-family: Gilroy-SemiBold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.chat-cefstudio .chat-messages .message-time {
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.6vh 1vh 0.6vh 1vh;
+    width: 2.3vw;
+    border-radius: 0.3vh;
+    font-size: 1.5vh;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+}
+.chat-cefstudio .chat-messages .message-category {
+    padding: 0.6vh 1vh 0.6vh 1vh;
+    border-radius: 0.3vh;
+    font-size: 1.5vh;
+    font-weight: 600;
+}
+.chat-cefstudio .chat-messages .message-text {
+    font-family: Gilroy-SemiBold;
+    font-weight: 600;
+    margin-left: 0.5vh;
+    text-shadow: -0.05vw -0.05vw 0 #000, 0.05vw -0.05vw 0 #000, -0.05vw 0.05vw 0 #000, 0.05vw 0.05vw 0 #000;
+}
+.chat-cefstudio input[type="text"] {
+    width: 60vh;
+    position: relative;
+    padding: 2vh;
+    outline: none;
+    border: none;
+    border-radius: 0.3vh;
+    color: rgba(255, 255, 255);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    font-family: Gilroy-Medium;
+    font-size: 1.7vh;
+    margin-top: 0.5vh;
+    transition: 0.3s;
+}
+.chat-cefstudio .settings-block {
+    position: relative;
+    display: flex;
+    margin-top: 0vh;
+}
+.chat-cefstudio .settings-block .settings-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 0.3vh;
+    padding: 0.5vh;
+    font-family: Gilroy-SemiBold;
+    font-size: 1.6vh;
+    transition: 0.3s;
+    margin-top: 0.5vh;
+    align-items: center;
+}
+.chat-cefstudio .settings-block .settings-button:hover {
+    background: rgba(255, 255, 255);
+    color: rgba(0, 0, 0);
+}
+.chat-cefstudio .settings-block .settings-button svg {
+    width: 2.5vh;
+    height: 2.5vh;
+    stroke: rgba(255, 255, 255);
+    margin-left: 0.4vh;
+    transition: 0.3s;
+}
+.chat-cefstudio .settings-block .settings-button .settings-text {
+    margin-left: 0.7vh;
+    margin-right: 1vh;
+}
+.chat-cefstudio .settings-block .command-hints {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    max-width: 50vh;
+    max-height: 7.5vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    transition: 0.3s;
+}
+.chat-cefstudio .settings-block .command-hints .command-hint {
+    position: relative;
+    margin-left: 0.5vh;
+    margin-top: 0.5vh;
+    border-radius: 0.3vh;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.7vh 1vh 0.6vh 1vh;
+    font-family: Gilroy-SemiBold;
+    font-size: 1.6vh;
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+}
+.chat-cefstudio .settings-block .command-hints .command-hint:hover {
+    background: rgba(255, 255, 255);
+    color: rgba(0, 0, 0);
+}
+.chat-cefstudio .chat-settings-menu {
+    width: 30vh;
+    height: 36vh;
+    display: inline-block;
+    position: absolute;
+    margin-top: 0.5vh;
+    margin-left: 0;
+    border-radius: 0.3vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-header {
+    font-size: 1.9vh;
+    font-family: Gilroy-SemiBold;
+    text-align: center;
+    margin-top: 1.5vh;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin: 20px;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider .chat-settings-description {
+    font-family: Gilroy-Medium;
+    font-size: 1.4vh;
+    text-align: center;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26.5vh;
+    outline: none;
+    border: none;
+    background: transparent;
+    height: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider input[type="range"]::-webkit-slider-runnable-track {
+    height: 5px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.622950819672131vh;
+    height: 1.622950819672131vh;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255);
+    border-radius: 2vh;
+    cursor: pointer;
+    margin-top: -5px;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider input[type="range"]::-moz-range-track {
+    height: 5px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-slider input[type="range"]::-moz-range-thumb {
+    width: 1.622950819672131vh;
+    height: 1.622950819672131vh;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255);
+    border-radius: 2vh;
+    cursor: pointer;
+    margin-top: -5px;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-actions {
+    width: 26.5vh;
+    position: absolute;
+    transform: translate(-50%);
+    left: 50%;
+    bottom: 2vh;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-actions .chat-settings-button {
+    border-radius: 0.3vh;
+    padding: 1vh 1.5vh 1vh 1.5vh;
+    background: rgba(0, 0, 0, 0.35);
+    font-family: Gilroy-SemiBold;
+    font-size: 1.5vh;
+    text-align: center;
+    outline: none;
+    border: none;
+    transition: 0.3s;
+    margin-top: 0.5vh;
+}
+.chat-cefstudio .chat-settings-menu .chat-settings-actions .chat-settings-button:hover {
+    background: rgba(255, 255, 255);
+    color: rgba(0, 0, 0);
+}
+.chat-cefstudio .chat-messages:root {
+    --scrollbarWidth: 0%;
+    --scrollbarBg: rgba(0, 0, 0, 0.2);
+    --scrollbarThumb: rgba(255, 255, 255);
+    --scrollbarBorderRadius: 0%;
+}
+.chat-cefstudio .chat-messages::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+}
+.chat-cefstudio .chat-messages::-webkit-scrollbar-track {
+    background: var(--scrollbarBg);
+    border-radius: var(--scrollbarBorderRadius);
+}
+.chat-cefstudio .chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbarThumb);
+    border-radius: var(--scrollbarBorderRadius);
+    border: var(--scrollbarBorder);
+}

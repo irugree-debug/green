@@ -1,0 +1,109 @@
+var price = 0;
+
+function showAzsmenu() {
+    document.querySelector('.azs-menu').style.visibility = 'visible';
+    document.querySelector('#logo').style.display = 'none';
+    // document.querySelector('.azs-menu-start-container#oplata').style.visibility = 'visible';
+    document.querySelector('.azs-menu-start-container#choice-type').style.visibility = 'visible';
+    document.querySelectorAll('.azs-menu-start-container').forEach(element => {
+        element.style.opacity = '0';
+    });
+    setTimeout(() => {
+        document.querySelector('.azs-menu').style.opacity = '1';
+        document.querySelector('.azs-menu-start-container#choice-type').style.opacity = '1';
+        // document.querySelector('.azs-menu-start-container#oplata').style.opacity = '1';
+    }, 200);
+}
+
+function showAzsmenuCharge(current, pricetank) {
+    document.querySelector('.azs-menu-charge').style.visibility = 'visible';
+    document.querySelector('#logo').style.display = 'none';
+    document.querySelector('.azs-menu-start-container#oplataCharge').style.visibility = 'visible';
+    document.querySelectorAll('.azs-menu-start-container').forEach(element => {
+        element.style.opacity = '0';
+    });
+    setTimeout(() => {
+        document.querySelector('.azs-menu-charge').style.opacity = '1';
+        document.querySelector('.azs-menu-start-container#oplataCharge').style.opacity = '1';
+    }, 200);
+
+    price = pricetank;
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-tank-block#current #tank-var').textContent = current.toFixed(1)+' %';
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-tank-block#full #tank-var').textContent = '100 %';
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-input').setAttribute('max', 100-current);
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-input').value = 1;
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-input-text #count').textContent = '1 %';
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-price').innerHTML = moneyFormat(price)+'<span>₽</span>';
+}
+
+function hideAzsmenu() {
+    document.querySelector('.azs-menu').style.opacity = '0';
+    document.querySelector('.azs-menu-charge').style.opacity = '0';
+    document.querySelector('#logo').style.display = '';
+    setTimeout(() => {
+        document.querySelector('.azs-menu').style.visibility = 'hidden';
+        document.querySelector('.azs-menu-charge').style.visibility = 'hidden';
+        document.querySelectorAll('.azs-menu-start-container').forEach(element => {
+            element.style.visibility = 'hidden';
+        });
+    }, 300);
+}
+
+function setAzsmenuPage(type, current, max, pricetank) {
+    if (type == 'choice-kolonka') {text = 'Выбор колонки'};
+    if (type == 'choice-gasoline') {text = 'Выбор топлива'};
+    if (type == 'oplata') {
+        text = 'Оплата топлива';
+        price = pricetank;
+        document.querySelector('.azs-menu-oplata-tank-block#current #tank-var').textContent = current.toFixed(1)+' л';
+        document.querySelector('.azs-menu-oplata-tank-block#full #tank-var').textContent = max+' л';
+        document.querySelector('.azs-menu-oplata-input').setAttribute('max', max-current);
+        document.querySelector('.azs-menu-oplata-input').value = 1;
+        document.querySelector('.azs-menu-oplata-input-text #count').textContent = '1 л';
+        document.querySelector('.azs-menu-oplata-price').innerHTML = moneyFormat(price)+'<span>₽</span>';
+    };
+
+    document.querySelectorAll('.azs-menu-start-container').forEach(element => {
+        element.style.opacity = '0';
+    });
+    document.querySelector('.azs-menu-start-container#'+type).style.visibility = 'visible';
+    document.querySelector('.azs-menu-text-3').textContent = text;
+    setTimeout(() => {
+        document.querySelector('.azs-menu-start-container#'+type).style.opacity = '1';
+    }, 400);
+}
+
+function changeCountFuel() {
+    document.querySelector('.azs-menu-oplata-input-text #count').textContent = document.querySelector('.azs-menu-oplata-input').value+' л';
+    document.querySelector('.azs-menu-oplata-price').innerHTML = moneyFormat(document.querySelector('.azs-menu-oplata-input').value*price)+'<span>₽</span>';
+}
+
+function changeCountCharge() {
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-input-text #count').textContent = document.querySelector('.azs-menu-charge .azs-menu-oplata-input').value+' %';
+    document.querySelector('.azs-menu-charge .azs-menu-oplata-price').innerHTML = moneyFormat(document.querySelector('.azs-menu-charge .azs-menu-oplata-input').value*price)+'<span>₽</span>';
+}
+
+function selectTypeOplata(type) {
+    if (document.querySelector('.azs-menu-oplata-button-oplata.selectOplata')) {
+        document.querySelector('.azs-menu-oplata-button-oplata.selectOplata').classList.remove('selectOplata');
+    }
+    type.classList.add('selectOplata');
+}
+
+function oplataFuel() {
+    if (document.querySelector('.azs-menu-oplata-button-oplata.selectOplata')) {
+        if (document.querySelector('.azs-menu-oplata-button-oplata.selectOplata').getAttribute('id') == 'card') {typeoplata = 1}
+        if (document.querySelector('.azs-menu-oplata-button-oplata.selectOplata').getAttribute('id') == 'cash') {typeoplata = 2}
+        uCefJS.triggerEvent('Azs:Response', 4, Number(document.querySelector('.azs-menu-oplata-input').value), typeoplata);
+    }
+}
+
+function oplataCharge() {
+    if (document.querySelector('.azs-menu-charge .azs-menu-oplata-button-oplata.selectOplata')) {
+        console.log("++")
+        if (document.querySelector('.azs-menu-charge .azs-menu-oplata-button-oplata.selectOplata').getAttribute('id') == 'card') {typeoplata = 1}
+        if (document.querySelector('.azs-menu-charge .azs-menu-oplata-button-oplata.selectOplata').getAttribute('id') == 'cash') {typeoplata = 2}
+        console.log('Azs:Response', 5, Number(document.querySelector('.azs-menu-charge .azs-menu-oplata-input').value), typeoplata)
+        uCefJS.triggerEvent('Azs:Response', 5, Number(document.querySelector('.azs-menu-charge .azs-menu-oplata-input').value), typeoplata);
+    }
+}

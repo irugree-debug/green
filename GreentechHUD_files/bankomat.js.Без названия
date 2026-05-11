@@ -1,0 +1,530 @@
+var pinCode = 1234;
+var pinCodeInts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var pinCodeWrite = '';
+var bankomatBalanceMobile = 0;
+var bankomatPage = '';
+var bankomatType = 0;
+var bankomatLastNalog = [];
+var bankomatLastIpoteka = 0;
+
+document.addEventListener('keydown', function(event) {
+    if (document.querySelector('.bankomat-page#pincode').style.display != 'none') {
+        if (pinCodeInts.indexOf(Number(event.key)) != -1) {
+            pinCodeWrite += event.key;
+            for (i = 1; i <= pinCodeWrite.split('').length; i++) {
+                document.querySelector('.bankomat-page-pincode-circle[pincodenum="'+i+'"]').classList.add('active');
+                if (i == 4) {
+                    setTimeout(() => {
+                        document.querySelector('.bankomat-page-pincode-fail').style.display = 'none';
+                        document.querySelectorAll('.bankomat-page-pincode-circle').forEach(element => {
+                            element.classList.remove('active');
+                        });
+                        if (pinCodeWrite == pinCode) {
+                            if (bankomatType == 0) {
+                                bankomatPage = 'bankomat-main';
+                                bankomatSetPage('bankomat-main');
+                            }
+                            else if (bankomatType == 1) {
+                                bankomatPage = 'terminal-main';
+                                bankomatSetPage('terminal-main');
+                            }
+                        }
+                        else {
+                            document.querySelector('.bankomat-page-pincode-fail').style.display = 'block';
+                        }
+                        pinCodeWrite = '';
+                    }, 200);
+                }
+            }
+        }
+    }
+    else if (document.querySelector('.bankomat-page#buttons').style.display != 'none') {
+        if (pinCodeInts.indexOf(Number(event.key)) != -1) {
+            bankomatButtonsClick(event.key);
+        }
+        else if (event.key == 'Backspace') {
+            bankomatButtonsClick('del');
+        }
+    }
+});
+
+function showBankomat(type, nickname, pincode, numberCard, phoneBalance) {
+    pinCode = pincode;
+    bankomatType = type;
+    bankomatBalanceMobile = phoneBalance;
+    document.querySelectorAll('.bankomat-page-main-img-nickname').forEach(element => {
+        element.textContent = nickname
+    });
+    if (numberCard == 'None') {
+        numberCard = '0000 0000 0000 0000';
+    }
+    document.querySelectorAll('.bankomat-page-main-img-number').forEach(element => {
+        element.textContent = numberCard;
+    });
+    document.querySelector('.bankomat').style.display = '';
+    if (type == 0 || type == 1) {
+        bankomatPage = 'pincode';
+        bankomatSetPage('pincode');
+    }
+    else if (type == 2) {
+        bankomatPage = 'bank-main';
+        bankomatSetPage('bank-main');
+    }
+    switch (type) {
+        case 0: document.querySelector('.bankomat-esc-text').innerHTML = 'Закрыть<br>банкомат'; break;
+        case 1: document.querySelector('.bankomat-esc-text').innerHTML = 'Закрыть<br>терминал'; break;
+        case 2: document.querySelector('.bankomat-esc-text').innerHTML = 'Закрыть<br>банк'; break;
+    }
+}
+
+function hideBankomat() {
+    document.querySelector('.bankomat').style.display = 'none';
+}
+
+function deleteNalogi() {
+    document.querySelectorAll('.bankomat-page-nalogi-choose-block').forEach(element => {
+        element.remove();
+    });
+}
+
+function bankomatSetPage(type, title, mount, id) {
+    if (type == 'back') {
+        switch (bankomatPage) {
+            case 'getCash': bankomatSetPage('bankomat-main'), bankomatPage = 'bankomat-main'; break;
+            case 'putCash': bankomatSetPage('terminal-main'), bankomatPage = 'terminal-main'; break;
+            case 'mobile': bankomatSetPage('terminal-main'), bankomatPage = 'terminal-main'; break;
+            case 'nalogi': bankomatSetPage('terminal-main'), bankomatPage = 'terminal-main'; break;
+            case 'nalogiButtons': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'nalogiChoose-houses': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'nalogiChoose-garages': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'nalogiChoose-biz': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'nalogiChoose-cars': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'nalogiChoose-ipoteka': bankomatSetPage('nalogi'), bankomatPage = 'nalogi'; break;
+            case 'ticketButtons': bankomatSetPage('terminal-main'), bankomatPage = 'terminal-main'; break;
+            case 'tickets': bankomatSetPage('terminal-main'), bankomatPage = 'terminal-main'; break;
+            case 'getCashBank': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+            case 'newCard': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+            case 'ipoteka': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+            case 'ipoteka-choose': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+            case 'ipoteka-success': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+            case 'bank-main': bankomatSetPage('bank-main'), bankomatPage = 'bank-main'; break;
+        }
+        return;
+    }
+    else if (type == 'getCash' || type == 'getCashBank') {
+        document.querySelector('.bankomat-page-buttons-title').textContent = 'Снятие наличных';
+        document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Введите сумму';
+        document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> ₽';
+        document.querySelector('.bankomat-page-button-main').textContent = 'Снять наличные';
+        document.querySelector('.bankomat-page-button-main').setAttribute('id', 'getCash');
+        document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'balance');
+        document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'На вашем счету<br><span>'+moneyFormat(document.querySelector('#text_card').textContent.replace(' ₽', '').replaceAll('.', ''))+'</span> ₽';
+        bankomatPage = type;
+        type = 'buttons';
+    }
+    else if (type == 'putCash') {
+        document.querySelector('.bankomat-page-buttons-title').textContent = 'Пополнение счета';
+        document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Введите сумму';
+        document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> ₽';
+        document.querySelector('.bankomat-page-button-main').textContent = 'Пополнить';
+        document.querySelector('.bankomat-page-button-main').setAttribute('id', 'putCash');
+        document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'balance');
+        document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'На вашем счету<br><span>'+moneyFormat(document.querySelector('#text_card').textContent.replace(' ₽', '').replaceAll('.', ''))+'</span> ₽';
+        type = 'buttons';
+        bankomatPage = 'putCash';
+    }
+    else if (type == 'success') {
+        document.querySelector('.bankomat-page-success-title').textContent = title;
+        document.querySelector('.bankomat-page-success-mount').textContent = mount;
+    }
+    else if (type == 'fail') {
+        document.querySelector('.bankomat-page-success-title#fail-title').textContent = title;
+    }
+    else if (type == 'mobile') {
+        document.querySelector('.bankomat-page-buttons-title').textContent = 'Пополнение баланса телефона';
+        document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Введите сумму';
+        document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> ₽';
+        document.querySelector('.bankomat-page-button-main').textContent = 'Пополнить';
+        document.querySelector('.bankomat-page-button-main').setAttribute('id', 'mobile');
+        document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'balance');
+        document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'На вашем счету телефона<br><span>'+moneyFormat(bankomatBalanceMobile)+'</span> ₽';
+        type = 'buttons';
+        bankomatPage = 'mobile';
+    }
+    else if (type == 'nalogiChoose-houses') {
+        document.querySelector('.bankomat-page-nalogi-title').textContent = 'Выберите недвижимость';
+        //test bankomatResponse('nalogiChoose', 'houses', 10, 2500)
+        nalogiHouseHTML = `<div class="bankomat-page-nalogi-choose-block" idnalog="`+id+`" onclick="uCefJS.triggerEvent('bankomat:NalogiChoose', 'houses', `+id+`); bankomatLastNalog.push(`+id+`);">
+            <div class="bankomat-page-nalogi-choose-block-text-block">
+                <div class="bankomat-page-nalogi-choose-block-title">`+title+`</div>
+                <div class="bankomat-page-nalogi-choose-block-text">`+mount+`</div>
+            </div>
+            <img src="/cefNew/img/bank/house.png" class="bankomat-page-nalogi-choose-block-img">
+        </div>`
+        document.querySelector('.bankomat-page-nalogi-choose-blocks').insertAdjacentHTML('beforeend', nalogiHouseHTML);
+        type = 'nalogi-choose';
+        bankomatPage = 'nalogiChoose-houses';
+        bankomatLastNalog = ['house'];
+    }
+    else if (type == 'nalogiChoose-garages') {
+        document.querySelector('.bankomat-page-nalogi-title').textContent = 'Выберите гараж';
+        //test bankomatResponse('nalogiChoose', 'garages', 10, 2500)
+        nalogiHouseHTML = `<div class="bankomat-page-nalogi-choose-block" idnalog="`+id+`" onclick="uCefJS.triggerEvent('bankomat:NalogiChoose', 'garages', `+id+`); bankomatLastNalog.push(`+id+`);">
+            <div class="bankomat-page-nalogi-choose-block-text-block">
+                <div class="bankomat-page-nalogi-choose-block-title">`+title+`</div>
+                <div class="bankomat-page-nalogi-choose-block-text">`+mount+`</div>
+            </div>
+            <img src="/cefNew/img/bank/garage.png" class="bankomat-page-nalogi-choose-block-img">
+        </div>`
+        document.querySelector('.bankomat-page-nalogi-choose-blocks').insertAdjacentHTML('beforeend', nalogiHouseHTML);
+        type = 'nalogi-choose';
+        bankomatPage = 'nalogiChoose-garages';
+        bankomatLastNalog = ['garage'];
+    }
+    else if (type == 'nalogiChoose-biz') {
+        document.querySelector('.bankomat-page-nalogi-title').textContent = 'Выберите бизнес';
+        //test bankomatResponse('nalogiChoose', 'biz', 10, 2500)
+        nalogiHouseHTML = `<div class="bankomat-page-nalogi-choose-block" idnalog="`+id+`" onclick="uCefJS.triggerEvent('bankomat:NalogiChoose', 'biz', `+id+`); bankomatLastNalog.push(`+id+`);">
+            <div class="bankomat-page-nalogi-choose-block-text-block">
+                <div class="bankomat-page-nalogi-choose-block-title">`+title+`</div>
+                <div class="bankomat-page-nalogi-choose-block-text">`+mount+`</div>
+            </div>
+            <img src="/cefNew/img/bank/biz.png" class="bankomat-page-nalogi-choose-block-img">
+        </div>`
+        document.querySelector('.bankomat-page-nalogi-choose-blocks').insertAdjacentHTML('beforeend', nalogiHouseHTML);
+        type = 'nalogi-choose';
+        bankomatPage = 'nalogiChoose-biz';
+        bankomatLastNalog = ['biz'];
+    }
+    else if (type == 'nalogiChoose-cars') {
+        document.querySelector('.bankomat-page-nalogi-title').textContent = 'Выберите автомобиль';
+        //test bankomatResponse('nalogiChoose', 'cars', 10, 2500)
+        nalogiHouseHTML = `<div class="bankomat-page-nalogi-choose-block" idnalog="`+id+`" onclick="uCefJS.triggerEvent('bankomat:NalogiChoose', 'cars', `+id+`); bankomatLastNalog.push(`+id+`);">
+            <div class="bankomat-page-nalogi-choose-block-text-block">
+                <div class="bankomat-page-nalogi-choose-block-title">`+title+`</div>
+                <div class="bankomat-page-nalogi-choose-block-text">`+mount+`</div>
+            </div>
+            <img src="/cefNew/img/bank/cars.png" class="bankomat-page-nalogi-choose-block-img">
+        </div>`
+        document.querySelector('.bankomat-page-nalogi-choose-blocks').insertAdjacentHTML('beforeend', nalogiHouseHTML);
+        type = 'nalogi-choose';
+        bankomatPage = 'nalogiChoose-cars';
+        bankomatLastNalog = ['cars'];
+    }
+    else if (type == 'nalogiChoose-ipoteka') {
+        document.querySelector('.bankomat-page-nalogi-title').textContent = 'Выберите недвижимость';
+        //test bankomatResponse('nalogiChoose', 'ipoteka', 30000, 52)
+        nalogiHouseHTML = `<div class="bankomat-page-nalogi-choose-block" idnalog="`+id+`" onclick="uCefJS.triggerEvent('bankomat:NalogiChoose', 'ipoteka', `+id+`); bankomatLastNalog.push(`+id+`);">
+            <div class="bankomat-page-nalogi-choose-block-text-block">
+                <div class="bankomat-page-nalogi-choose-block-title">`+title+`</div>
+                <div class="bankomat-page-nalogi-choose-block-text">`+mount+`</div>
+            </div>
+            <img src="/cefNew/img/bank/ipoteka.png" class="bankomat-page-nalogi-choose-block-img">
+        </div>`
+        document.querySelector('.bankomat-page-nalogi-choose-blocks').insertAdjacentHTML('beforeend', nalogiHouseHTML);
+        type = 'nalogi-choose';
+        bankomatPage = 'nalogiChoose-ipoteka';
+        bankomatLastNalog = ['ipoteka'];
+    }
+    else if (type == 'nalogiButtons') {
+        if (bankomatLastNalog[0] == 'cars') {
+            document.querySelector('.bankomat-page-buttons-title').textContent = 'Оплата налога';
+            document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Сколько дней';
+            document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> дн.';
+            document.querySelector('.bankomat-page-button-main').textContent = 'Оплатить';
+            document.querySelector('.bankomat-page-button-main').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'Оплачено до: '+title+'<br><span>Стоимость налога за день:<br>'+moneyFormat(mount)+' ₽</span>';
+            type = 'buttons';
+            bankomatPage = 'nalogiButtons';
+        }
+        else if (bankomatLastNalog[0] == 'ipoteka') {
+            document.querySelector('.bankomat-page-buttons-title').textContent = 'Оплата ипотеки';
+            document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Сколько внести';
+            document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> ₽';
+            document.querySelector('.bankomat-page-button-main').textContent = 'Внести';
+            document.querySelector('.bankomat-page-button-main').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'Баланс: '+title+'<br><span>Снятие произойдет через: '+mount+' ч.</span>';
+            type = 'buttons';
+            bankomatPage = 'nalogiButtons';
+        }
+        else {
+            document.querySelector('.bankomat-page-buttons-title').textContent = 'Оплата налога';
+            document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Сколько дней';
+            document.querySelector('.bankomat-page-buttons-input').innerHTML = '<span></span> дн.';
+            document.querySelector('.bankomat-page-button-main').textContent = 'Оплатить';
+            document.querySelector('.bankomat-page-button-main').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').setAttribute('id', 'nalog');
+            document.querySelector('.bankomat-page-button-notify-text').innerHTML = 'Оплачено дней: '+title+'<br><span>Стоимость налога за день:<br>'+moneyFormat(mount)+' ₽</span>';
+            type = 'buttons';
+            bankomatPage = 'nalogiButtons';
+        }
+        
+    }
+    else if (type == 'ticketNumber') {
+        document.querySelector('.bankomat-page-buttons-title').textContent = 'Оплата штрафа';
+        document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Номер штрафа';
+        document.querySelector('.bankomat-page-buttons-input').innerHTML = '№ <span></span>';
+        document.querySelector('.bankomat-page-button-main').textContent = 'Оплатить';
+        document.querySelector('.bankomat-page-button-main').setAttribute('id', 'ticket');
+        document.querySelector('.bankomat-page-button-notify').style.display = 'none';
+        type = 'buttons';
+        bankomatPage = 'ticketButtons';
+    }
+    else if (type == 'newCard') {
+        document.querySelector('#numberNewCard').textContent = title;
+        document.querySelector('.bankomat-page-newCard-title span').textContent = +mount;
+        type = 'newCard';
+        bankomatPage = 'newCard';
+    }
+    else if (type == 'ipoteka') {
+        document.querySelector('.bankomat-page-buttons-title').textContent = 'Покупка недвижимости';
+        document.querySelector('.bankomat-page-buttons-type-text').textContent = 'Введите номер недвижимости';
+        document.querySelector('.bankomat-page-buttons-input').innerHTML = '№ <span></span>';
+        document.querySelector('.bankomat-page-button-main').textContent = 'Далее';
+        document.querySelector('.bankomat-page-button-main').setAttribute('id', 'ipoteka');
+        document.querySelector('.bankomat-page-button-notify').style.display = 'none';
+        bankomatPage = type;
+        type = 'buttons';
+    }
+    else {
+        bankomatPage = type;
+    }
+
+    document.querySelector('.bankomat-footer-back').style.visibility = 'hidden';
+    if (type == 'buttons' || type == 'nalogi' || type == 'nalogi-choose' || type == 'ipoteka-choose') {
+        document.querySelector('.bankomat-footer-back').style.visibility = 'visible';
+    }
+
+    document.querySelectorAll('.bankomat-page').forEach(element => {
+        element.style.display = 'none';
+    });
+    document.querySelector('.bankomat-page#'+type).style.display = '';
+}
+
+function bankomatButtonsMainClick(type) {
+    if (type == 'getCash' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:getCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:getCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        // bankomatResponse('success', 'getCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent)); //test
+    }
+    else if (type == 'putCash' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:putCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:putCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        //bankomatResponse('success', 'putCash', Number(document.querySelector('.bankomat-page-buttons-input span').textContent)); //test
+        // bankomatResponse('fail', 'putCash', 'Недостаточно средств'); //test
+    }
+    else if (type == 'mobile' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:mobile', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:mobile', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        // bankomatResponse('success', 'mobile', Number(document.querySelector('.bankomat-page-buttons-input span').textContent)); //test
+    }
+    else if (type == 'nalog' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:nalog', bankomatLastNalog[0], bankomatLastNalog[1], Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:nalog', bankomatLastNalog[0], bankomatLastNalog[1], Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        // bankomatResponse('success', 'nalog', Number(document.querySelector('.bankomat-page-buttons-input span').textContent)); //test
+    }
+    else if (type == 'ticket' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:ticket', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:ticket', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        // bankomatResponse('success', 'ticket'); //test
+    }
+    else if (type == 'ipoteka' && Number(document.querySelector('.bankomat-page-buttons-input span').textContent)) {
+        console.log('bankomat:ipoteka', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        uCefJS.triggerEvent('bankomat:ipoteka', Number(document.querySelector('.bankomat-page-buttons-input span').textContent));
+        bankomatLastIpoteka = Number(document.querySelector('.bankomat-page-buttons-input span').textContent);
+        // bankomatResponse('ipoteka', 'Квартира/123/10000000', '100000/12000000', '200000/16000000', '300000/30000000');
+        // bankomatResponse('fail', 'ipoteka', 'Недостаточно средств'); //test
+    }
+}
+
+function bankomatResponse(type, subtype, value, value2, value3) {
+    if (type == 'success') {
+        if (subtype == 'putCash') {
+            bankomatSetPage('success', 'Счет пополнен', value+' ₽');
+        }
+        else if (subtype == 'mobile') {
+            bankomatSetPage('success', 'Счет телефона пополнен', value+' ₽');
+        }
+        else if (subtype == 'getCash') {
+            bankomatSetPage('success', 'Наличные выданы', value+' ₽');
+        }
+        else if (subtype == 'nalog') {
+            if (bankomatLastNalog[0] == 'ipoteka') {
+                bankomatSetPage('success', 'Сумма внесена', value+' ₽');
+            }
+            else {
+                bankomatSetPage('success', 'Налог оплачен', value+' дней');
+            }
+        }
+        else if (subtype == 'ticket') {
+            bankomatSetPage('success', 'Штраф оплачен');
+        }
+
+    }
+    else if (type == 'fail') {
+        bankomatSetPage('fail', value);
+    }
+    else if (type == 'nalogi') {
+        bankomatSetPage('nalogiChoose-'+subtype, value, value2, value3);
+    }
+    else if (type == 'nalogiChoose') {
+        bankomatSetPage('nalogiButtons', value, value2);
+    }
+    else if (type == 'ticket') {
+        ticketHTML = `<tr>
+            <td><input type="checkbox" name="bankomatTickets" id="bankomatTickets" onclick="bankomatTicketCheck(this)"></td>
+            <td>`+subtype.split('/')[0]+`</td>
+            <td>`+subtype.split('/')[1]+`</td>
+            <td>`+subtype.split('/')[2]+`</td>
+            <td>`+subtype.split('/')[3]+`</td>
+            <td>`+subtype.split('/')[4]+`</td>
+        </tr>`
+        document.querySelector('.bankomat-page-tickets-table tbody').insertAdjacentHTML('beforeend', ticketHTML);
+        bankomatSetPage('tickets');
+    }
+    else if (type == 'newCard') {
+        bankomatSetPage('newCard', subtype, value);
+    }
+    else if (type == 'ipoteka') {
+        document.querySelector('#ipoteka-choose-type').textContent = subtype.split('/')[0];
+        document.querySelector('#ipoteka-choose-id').textContent = '№'+subtype.split('/')[1];
+        document.querySelector('#ipoteka-choose-price').textContent = moneyFormat(Number(subtype.split('/')[2]))+' ₽';
+        document.querySelector('#ipoteka-choose-12 .bankomat-page-ipoteka-choose-block-amount').textContent = moneyFormat(Number(value.split('/')[0]))+' ₽';
+        document.querySelector('#ipoteka-choose-12 .bankomat-page-ipoteka-choose-block-summa-block-summa').textContent = moneyFormat(Number(value.split('/')[1]))+' ₽';
+        document.querySelector('#ipoteka-choose-6 .bankomat-page-ipoteka-choose-block-amount').textContent = moneyFormat(Number(value2.split('/')[0]))+' ₽';
+        document.querySelector('#ipoteka-choose-6 .bankomat-page-ipoteka-choose-block-summa-block-summa').textContent = moneyFormat(Number(value2.split('/')[1]))+' ₽';
+        document.querySelector('#ipoteka-choose-3 .bankomat-page-ipoteka-choose-block-amount').textContent = moneyFormat(Number(value3.split('/')[0]))+' ₽';
+        document.querySelector('#ipoteka-choose-3 .bankomat-page-ipoteka-choose-block-summa-block-summa').textContent = moneyFormat(Number(value3.split('/')[1]))+' ₽';
+        document.querySelectorAll('.bankomat-page-ipoteka-choose-block').forEach(element => {
+            element.classList.remove('active');
+        });
+        document.querySelector('.bankomat-page-ipoteka-choose-button').classList.add('disable');
+        bankomatSetPage('ipoteka-choose');
+    }
+    else if (type == 'ipotekaChoose') {
+        switch (subtype.split('/')[1]) {
+            case 'Дом в деревне': document.querySelector('#ipoteka-success-type').textContent = 'Номер дома';
+            case 'Квартира': document.querySelector('#ipoteka-success-type').textContent = 'Номер квартиры';
+            case 'Элитная Квартира': document.querySelector('#ipoteka-success-type').textContent = 'Номер квартиры';
+        }
+        document.querySelector('#ipoteka-success-id').textContent = '#'+subtype.split('/')[0];
+        document.querySelector('#ipoteka-success-type2').textContent = subtype.split('/')[1];
+        document.querySelector('#ipoteka-success-date').textContent = subtype.split('/')[2];
+        document.querySelector('#ipoteka-success-amount').textContent = subtype.split('/')[3];
+        document.querySelector('#ipoteka-success-summa').textContent = subtype.split('/')[4]+' ₽';
+        bankomatSetPage('ipoteka-success');
+    }
+}
+
+function bankomatIpotekaChoose(type) {
+    document.querySelectorAll('.bankomat-page-ipoteka-choose-block').forEach(element => {
+        element.classList.remove('active');
+    });
+    type.classList.add('active');
+    document.querySelector('.bankomat-page-ipoteka-choose-button').classList.remove('disable');
+}
+
+function bankomatIpotekaNext() {
+    if (document.querySelector('.bankomat-page-ipoteka-choose-button').classList[1] != 'disable') {
+        console.log('bankomat:ipotekaChoose', Number(document.querySelector('.bankomat-page-ipoteka-choose-block.active').getAttribute('id').replace('ipoteka-choose-', '')), bankomatLastIpoteka);
+        uCefJS.triggerEvent('bankomat:ipotekaChoose', Number(document.querySelector('.bankomat-page-ipoteka-choose-block.active').getAttribute('id').replace('ipoteka-choose-', '')), bankomatLastIpoteka);
+        // bankomatResponse('ipotekaChoose', '123/Квартира/23.07.2024/6/200000'); //test
+        // bankomatResponse('fail', 'ipoteka', 'Недостаточно средств'); //test
+    }
+}
+
+function bankomatShowBalance() {
+    switch (bankomatType) {
+        case 0: docBalance = '#bankomat-balance'; break;
+        case 1: docBalance = '#terminal-balance'; break;
+        case 2: docBalance = '#bank-balance'; break;
+    }
+    if (document.querySelector(docBalance).getAttribute('isshow') == 'false') {
+        document.querySelector(docBalance).setAttribute('isshow', 'true');
+        document.querySelector(docBalance).textContent = moneyFormat2(document.querySelector('#text_card').textContent.replace(' ₽', '').replaceAll('.', ''))+' ₽';
+    }
+    else if (document.querySelector(docBalance).getAttribute('isshow') == 'true') {
+        document.querySelector(docBalance).setAttribute('isshow', 'false');
+        document.querySelector(docBalance).textContent = '* *** *** ₽';
+    }
+}
+
+function bankomatButtonsClick(type) {
+    if (type != 'del' && document.querySelector('.bankomat-page-buttons-input span').textContent.length <= 9) {
+        if (type == 0 && document.querySelector('.bankomat-page-buttons-input span').textContent.length == 0) return;
+        document.querySelector('.bankomat-page-buttons-input span').textContent += type;
+    }
+    else if (type == 'del' && document.querySelector('.bankomat-page-buttons-input span').textContent) {
+        document.querySelector('.bankomat-page-buttons-input span').textContent = document.querySelector('.bankomat-page-buttons-input span').textContent.slice(0, -1);
+    }
+}
+
+function bankomatDeleteTickets() {
+    document.querySelectorAll('.bankomat-page-tickets-table tbody tr').forEach(element => {
+        element.remove();
+    });
+    document.querySelector('input[name="bankomatTicketsAll"]').checked = false;
+}
+
+function bankomatTicketsAll() {
+    if (document.querySelector('input[name="bankomatTicketsAll"]').checked) {
+        document.querySelectorAll('#bankomatTickets').forEach(element => {
+            element.checked = true;
+        });
+    }
+    else {
+        document.querySelectorAll('#bankomatTickets').forEach(element => {
+            element.checked = false;
+        });
+    }
+
+    isTickets = false;
+    document.querySelectorAll('#bankomatTickets').forEach(element => {
+        if (element.checked) {
+            isTickets = true;
+            document.querySelector('.bankomat-page-tickets-button-oplata').classList.remove('disable');
+        }
+    });
+    if (!isTickets) {
+        document.querySelector('.bankomat-page-tickets-button-oplata').classList.add('disable');
+    }
+}
+
+function bankomatTicketCheck(element) {
+    isTickets = false;
+    isTicketsAll = true;
+    document.querySelectorAll('#bankomatTickets').forEach(element => {
+        if (element.getAttribute('name') != 'bankomatTicketsAll') {
+            if (element.checked) {
+                isTickets = true;
+                document.querySelector('.bankomat-page-tickets-button-oplata').classList.remove('disable');
+            }
+            else {
+                isTicketsAll = false;
+            }
+        }
+    });
+
+    if (!isTickets) {
+        document.querySelector('.bankomat-page-tickets-button-oplata').classList.add('disable');
+    }
+    
+    if (isTicketsAll) {
+        document.querySelector('input[name="bankomatTicketsAll"]').checked = true;
+    }
+    else {
+        document.querySelector('input[name="bankomatTicketsAll"]').checked = false;
+    }
+}
+
+function bankomatTicketPay() {
+    document.querySelectorAll('input[name="bankomatTickets"]').forEach(element => {
+        if (element.checked) {
+            console.log('bankomat:ticket', Number(element.parentElement.parentElement.querySelectorAll('td')[1].textContent));
+            uCefJS.triggerEvent('bankomat:ticket', Number(element.parentElement.parentElement.querySelectorAll('td')[1].textContent));
+            // bankomatResponse('success', 'ticket'); //test
+        }
+    });
+}

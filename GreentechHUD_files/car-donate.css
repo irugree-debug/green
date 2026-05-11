@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Yandex Sans Display';
+    src: url('../fonts/Yandex/YandexSansDisplay-RegularItalic.eot');
+    src: local('Yandex Sans Display Regular Italic'), local('../fonts/Yandex/YandexSansDisplay-RegularItalic'),
+        url('../fonts/Yandex/YandexSansDisplay-RegularItalic.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Yandex/YandexSansDisplay-RegularItalic.woff2') format('woff2'),
+        url('../fonts/Yandex/YandexSansDisplay-RegularItalic.woff') format('woff'),
+        url('../fonts/Yandex/YandexSansDisplay-RegularItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+#car-donate {
+    font-family: 'Yandex Sans Display';
+    width: 23%;
+    height: 7%;
+    border-radius: 0.7em;
+    background: linear-gradient(259deg, rgba(14,69,39,1) 0%, rgba(10,34,21,1) 100%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.car-donate-container {
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid #545454;
+    width: 94%;
+    height: 78%;
+    border-radius: 0.4em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    padding: 0 1.5%;
+}
+
+.car-donate-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    column-gap: 5%;
+    height: 100%;
+}
+
+.car-donate-left, .car-donate-right {
+    border: 1px solid #545454;
+    padding: 1.5% 2%;
+    border-radius: 0.8em;
+    cursor: pointer;
+    width: 11%;
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+
+.car-donate-access, .car-donate-quit {
+    border: 1px solid #545454;
+    padding: 1.5% 2%;
+    border-radius: 0.25em;
+    cursor: pointer;
+    width: 49%;
+    height: 47.6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+
+.car-donate-left:hover, .car-donate-right:hover, .car-donate-access:hover, .car-donate-quit:hover {
+    background-color: #FFFFFF15;
+}

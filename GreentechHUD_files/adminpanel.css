@@ -1,0 +1,183 @@
+.admin-panel-main {
+    background: linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(34, 34, 34, 1) 100%);
+    opacity: 0.80;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    left: 4vw;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1.2vw;
+    min-width: 16vw;
+    border-radius: 1vw;
+    border: 0.15vw solid #C5C5C5;
+}
+
+.admin-panel-main-top {
+    background-color: #161616;
+    padding: 1vw;
+    border-radius: 0.8vw;
+}
+
+.admin-panel-main-top-nickname {
+    font-size: 0.8vw;
+    font-weight: 600;
+}
+
+.admin-panel-main-top-fioblock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1vw;
+}
+
+.admin-panel-main-top-fioblock-fixed {
+    font-size: 0.75vw;
+    font-weight: 300;
+    line-height: 1.7;
+}
+
+.admin-panel-main-top-fioblock-text {
+    font-size: 0.75vw;
+    font-weight: 500;
+    line-height: 1.7;
+    text-align: right;
+}
+
+.admin-panel-main-info {
+    margin-top: 1vw;
+    padding: 0 0.5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.admin-panel-main-info-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-panel-main-info-line-fixed {
+    font-size: 0.75vw;
+    font-weight: 500;
+    color: #FFFFFF90;
+}
+
+.admin-panel-main-info-line-text {
+    font-size: 0.75vw;
+    font-weight: 600;
+}
+
+.admin-panel-car {
+    background: linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(34, 34, 34, 1) 100%);
+    opacity: 0.80;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 80%;
+    left: 4vw;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1.2vw;
+    min-width: 16vw;
+    border-radius: 1vw;
+    border: 0.15vw solid #C5C5C5;
+}
+
+.admin-panel-buttons {
+    background: linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(34, 34, 34, 1) 100%);
+    opacity: 0.80;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    right: 2vw;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1vw;
+    min-width: 10vw;
+    border-radius: 1vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7vw;
+    border: 0.15vw solid #C5C5C5;
+}
+
+.admin-panel-button {
+    text-align: center;
+    background-color: #5E5E5E;
+    height: 2.3vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    font-size: 0.7vw;
+    font-weight: 600;
+}
+
+.admin-panel-history-table {
+    background: linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(34, 34, 34, 1) 100%);
+    opacity: 0.80;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1vw;
+    min-width: 10vw;
+    border-radius: 1vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7vw;
+    border: 0.15vw solid #C5C5C5;
+}
+
+.admin-panel-history-table-title {
+    font-size: 0.9vw;
+    font-weight: 600;
+    text-align: center;
+}
+
+.admin-panel-history-table-block thead {
+    font-size: 0.8vw;
+}
+
+.admin-panel-history-table-block tbody tr td {
+    padding: 0.2vw 0.5vw;
+    font-size: 0.8vw;
+    text-align: center;
+}
+
+.admin-panel-history-table-container {
+    max-height: 25vw;
+    overflow-y: auto;
+}
+
+.admin-panel-history-table-container::-webkit-scrollbar {
+    width: 0;
+}
+
+.admin-panel-accounts-container {
+    background: linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(34, 34, 34, 1) 100%);
+    opacity: 0.80;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1vw;
+    min-width: 10vw;
+    border-radius: 1vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7vw;
+    border: 0.15vw solid #C5C5C5;
+    max-height: 25vw;
+    overflow-y: auto;
+}
+
+.admin-panel-accounts-container::-webkit-scrollbar {
+    width: 0;
+}

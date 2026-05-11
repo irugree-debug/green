@@ -1,0 +1,180 @@
+var lastDialogType = 0;
+var currentDialogType = -1;
+
+let clicked;
+let lastClicked;
+let isDoubleClick;
+
+console.log("DIALOGS ENABLED");
+
+document.addEventListener('click', function(event) {
+    clicked = event.target;
+    if (clicked.classList[0] == 'dialog-block') {
+        console.log('CLICK')
+        if (isDoubleClick && clicked == lastClicked) {
+            isDoubleClick = false;
+            selectButton(1);
+        }
+        else {
+            isDoubleClick = true;
+            setTimeout(() => {
+                isDoubleClick = false;
+            }, 500);
+        }
+    
+        lastClicked = clicked;
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    if (this.activeElement.getAttribute('id') == 'dialog-3-input') {
+        var regexp = /^[а-яё]+$/i;
+        var text1 = document.getElementById('dialog-3-input').value;
+            if (text1.match(regexp)) {
+                document.querySelector('.dialog-3-lang').style.display = 'block';
+            }
+            else {
+                document.querySelector('.dialog-3-lang').style.display = 'none';
+            }
+    }
+    if (event.key == 'Enter' && currentDialogType != -1) {
+        selectButton(1)
+    }
+    else if (event.key == 'ArrowDown' && currentDialogType == 2) {
+        currentBlock = document.querySelector('.dialog-block.select').getAttribute('id').replace('block-', '');
+        if (document.querySelector('#block-'+(Number(currentBlock)+1))) {
+            selectBlock(document.querySelector('#block-'+(Number(currentBlock)+1)))
+        }
+    }
+    else if (event.key == 'ArrowUp' && currentDialogType == 2) {
+        currentBlock = document.querySelector('.dialog-block.select').getAttribute('id').replace('block-', '');
+        if (document.querySelector('#block-'+(Number(currentBlock)-1))) {
+            selectBlock(document.querySelector('#block-'+(Number(currentBlock)-1)))
+        }
+    }
+});
+
+function percentwidth(elem){
+    var pa= elem.offsetParent || elem;
+    return ((elem.offsetWidth/pa.offsetWidth)*100).toFixed(2);
+}
+
+function percentheight(elem){
+    var pa= elem.offsetParent || elem;
+    return ((elem.offsetHeight/pa.offsetHeight)*100).toFixed(2);
+}
+
+function showDialog(type, title, text, button1, button2) {
+    console.log('SHOW DIALOG '+ type, title, text, button1, button2);
+    document.querySelector('#dialog-1-input').value = '';
+    document.querySelector('#dialog-3-input').value = '';
+    document.querySelectorAll('.dialog-block').forEach(block => {
+        block.remove();
+    });
+    title = title.replaceAll('{', '</font><font color="#').replaceAll('}', '">')
+    text = text.replaceAll('{', '</font><font color="#').replaceAll('}', '">')
+    text = text.replaceAll(/\n/g, '</font>\n')
+
+    document.getElementById('dialog-'+type).style.visibility = 'visible';
+    document.getElementById('dialog-'+type).style.opacity = '1';
+    document.querySelector(`#dialog-${type} .dialog-title`).innerHTML = title;
+    lastDialogType = type;
+    currentDialogType = type;
+    if (button1 && button2) {
+        document.querySelector(`#dialog-${type} .dialog-button1`).style.display = 'block';
+        document.querySelector(`#dialog-${type} .dialog-button2`).style.display = 'block';
+        document.querySelector(`#dialog-${type} .dialog-button1`).innerHTML = button1;
+        document.querySelector(`#dialog-${type} .dialog-button2`).innerHTML = button2;
+        width1 = document.querySelector(`#dialog-${type} .dialog-button1`).offsetWidth;
+        width2 = document.querySelector(`#dialog-${type} .dialog-button2`).offsetWidth;
+        if (width1 > width2) {
+            document.querySelector(`#dialog-${type} .dialog-button2`).style.width = width1+'px';
+            document.querySelector(`#dialog-${type} .dialog-button2`).style.textAlign = 'center';
+        }
+        else if (width2 > width1) {
+            document.querySelector(`#dialog-${type} .dialog-button1`).style.width = width2+'px';
+            document.querySelector(`#dialog-${type} .dialog-button1`).style.textAlign = 'center';
+        }
+    }
+    else if (button1 && !button2) {
+        document.querySelector(`#dialog-${type} .dialog-button1`).innerHTML = button1;
+        document.querySelector(`#dialog-${type} .dialog-button2`).style.display = 'none';
+    }
+    else if (!button1 && button2) {
+        document.querySelector(`#dialog-${type} .dialog-button2`).innerHTML = button2;
+        document.querySelector(`#dialog-${type} .dialog-button1`).style.display = 'none';
+    }
+
+    if (type == 0 || type == 1 || type == 3) {
+        text = text.replace(/\n/g, '<br>');
+        document.querySelector(`#dialog-${type} .dialog-${type}-text`).innerHTML = text;
+    }
+    if (type == 1 || type == 3) {
+        document.querySelector('#dialog-'+type+'-input').focus();
+        setTimeout(() => {
+            document.querySelector('#dialog-'+type+'-input').focus();
+        }, 100);
+    }
+    else if (type == 2) {
+        blocks = text.split('\n');
+        blocks.forEach(element => {
+            if (element) {
+                block = document.createElement('div');
+                block.classList.add('dialog-block');
+                block.setAttribute('id', 'block-'+blocks.indexOf(element));
+                block.setAttribute('onclick', 'selectBlock(this)');
+                block.setAttribute('dblclick', 'selectButton(1)');
+                block.innerHTML = element;
+                document.querySelector('.dialog-block-container').appendChild(block);
+                if (blocks.indexOf(element) == 0) {
+                    block.classList.add('select');
+                }
+            }
+        });
+        document.querySelector(`#dialog-${type} .dialog-title`).innerHTML = title.split('\n')[0];
+        if (!title.split('\n')[1]) {
+            document.querySelector(`#dialog-${type} .dialog-subtitle`).innerHTML = '';
+        }
+        else {
+            document.querySelector(`#dialog-${type} .dialog-subtitle`).innerHTML = title.split('\n')[1];
+        }
+    }
+}
+
+function hideDialog() {
+    currentDialogType = -1;
+    document.querySelectorAll('.dialog').forEach(element => {
+        element.style.opacity = '0';
+        element.style.visibility = 'hidden';
+        // setTimeout(() => {
+        //     element.style.visibility = 'hidden';
+        //     document.querySelectorAll('.dialog-block').forEach(element => {
+        //         element.remove();
+        //     });
+        // }, 200)
+    });
+}
+
+function selectBlock(element) {
+    id = element.getAttribute('id').replace('block-', '');
+    document.querySelectorAll('.dialog-block').forEach(element => {
+        element.classList.remove('select');
+    });
+    element.classList.add('select');
+    
+}
+
+function selectButton(responseType, id='') {
+    console.log("ID " + id + " TYPE " + responseType);
+    string = "";
+    id = 0;
+    if (lastDialogType === 1 || lastDialogType === 3) {
+        var inputElement = document.getElementById(`dialog-${lastDialogType}-input`);
+        string = inputElement.value;
+    }
+    else if (lastDialogType === 2) {
+        id = document.querySelector('.dialog-block.select').getAttribute('id').replace('block-', '');
+    }
+
+    uCefJS.triggerEvent('Dialog:DialogResponse', responseType, Number(id), string);
+}

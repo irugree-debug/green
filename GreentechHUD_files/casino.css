@@ -1,0 +1,1278 @@
+.casino {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background: linear-gradient(141deg, rgba(1,39,0,1) 0%, rgba(0,21,0,1) 76%); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    color: #FFFFFF;
+}
+
+.casino-window {
+    width: 60vw;
+    height: 37vw;
+    background: linear-gradient(141deg, #001405 0%, #000C00 100%);
+    overflow: hidden;
+    border-radius: 0.5vw;
+    position: relative;
+}
+
+.casino-window-header {
+    background-color: #000D02;
+    width: 95%;
+    height: 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5vw;
+}
+
+.casino-window-header-title {
+    font-size: 1vw;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.casino-window-header-title img {
+    width: 1.3vw;
+    margin-left: 1vw;
+}
+
+.casino-window-header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+}
+
+.casino-window-body {
+    width: 93.4%;
+    height: 86.5%;
+    padding: 1vw 2vw;
+    position: relative;
+}
+
+.casino-window-body-money-block, .casino-window-body-money-block-poker {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #011D04;
+    width: fit-content;
+    padding: 0.5vw 0.7vw;
+    border-radius: 0.3vw;
+    gap: 0.7vw;
+    font-size: 0.9vw;
+    font-weight: 600;
+}
+
+.casino-window-body-money-img {
+    width: 1.3vw;
+}
+
+.casino-window-body-dice-poly-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1vw;
+}
+
+.casino-window-body-dice-poly {
+    background-color: #001B01;
+    width: 27vw;
+    height: 14vw;
+    border-radius: 0.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5vw 0;
+}
+
+.casino-window-body-dice-poly-nickname {
+    font-size: 1vw;
+    font-weight: 600;
+}
+
+.casino-window-body-dice-poly-score {
+    font-size: 1.15vw;
+    font-weight: 700;
+}
+
+.own .casino-window-body-dice-poly-score span {
+    color: #23AC01;
+}
+
+.vs .casino-window-body-dice-poly-score span {
+    color: #E20338;
+}
+
+.casino-window-body-dice-poly-dices-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7vw;
+}
+
+.casino-window-body-dice-poly-dice {
+    width: 6vw;
+    height: 6vw;
+    background-color: #FFFFFF;
+    border-radius: 1vw;
+}
+
+.casino-window-body-dice-poly-dice-pips {
+    width: 77%;
+    height: 77%;
+    display: flex;
+    padding: 0.7vw;
+    justify-content: space-between;
+}
+
+.dice-pip {
+    width: 1.2vw;
+    height: 1.2vw;
+    border-radius: 100%;
+    background-color: #064901;
+}
+
+.dice-pip-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.casino-window-body-dice-poly-dice-pips#pip1 {
+    align-items: center;
+    justify-content: center;
+}
+
+.casino-window-body-dice-bottom {
+    display: flex;
+    margin-top: 3vw;
+    flex-direction: column;
+    align-items: center;
+}
+
+.casino-window-body-dice-bottom-text-stavka {
+    font-size: 1.4vw;
+    font-weight: 700;
+}
+
+.casino-window-body-dice-bottom-buttons {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5vw;
+    margin: 1vw 0;
+}
+
+.casino-window-body-dice-bottom-button {
+    background-color: #012309;
+    font-size: 1vw;
+    font-weight: 600;
+    width: 3vw;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3vw;
+    transition: .3s;
+}
+
+.casino-window-body-dice-bottom-button:hover {
+    background-color: #01310d;
+}
+
+.casino-window-body-dice-bottom-input, .casino-window-body-role-bottom-input {
+    background-color: #012309;
+    font-size: 1vw;
+    font-weight: 600;
+    width: 6vw;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3vw;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 0 1vw;
+}
+
+.casino-window-body-dice-bottom-main-button {
+    border: 0.15vw solid #003806;
+    font-size: 0.9vw;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8vw;
+    height: 2.5vw;
+    border-radius: 0.3vw;
+    transition: .3s;
+}
+
+.casino-window-body-dice-bottom-main-button:hover {
+    background-color: #003806;
+}
+
+.casino-window-dialog {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000c00a6;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: .3s;
+}
+
+.casino-window-dialog-block {
+    background-color: #011c01;
+    padding: 1.4vw 1vw;
+    border-radius: 0.4vw;
+}
+
+.casino-window-dialog-block-title {
+    font-size: 1.3vw;
+    font-weight: 700;
+    margin-bottom: 0.5vw;
+}
+
+.casino-window-dialog-block-text-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5vw;    
+}
+
+.casino-window-dialog-block-text-block-textfixed {
+    font-size: 0.8vw;
+    color: #FFFFFF80;
+    margin-bottom: 0.2vw;
+    font-weight: 600;
+}
+
+.casino-window-dialog-block-text-block-text {
+    font-size: 0.8vw;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.casino-window-dialog-block-buttons-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3vw;
+    margin-top: 1vw;
+}
+
+.casino-window-dialog-block-button-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3vw;
+    margin-top: 1vw;
+}
+
+.casino-window-dialog-block-button {
+    border: 0.1vw solid #003806;
+    border-radius: 0.3vw;
+    width: 7vw;
+    height: 1.9vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8vw;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.casino-window-dialog-block-button.active {
+    border: 0.1vw solid #005f0a;
+}
+
+.casino-window-dialog-block-button:hover {
+    background-color: #003806;
+}
+
+.casino-window-dialog-block-button.active:hover {
+    background-color: #005f0a;
+}
+
+.casino-window-dialog-block-info-title {
+    font-size: 1.1vw;
+    font-weight: 700;
+    text-align: center;
+}
+
+.casino-window-dialog#rules .casino-window-dialog-block, .casino-window-dialog#poker-cards .casino-window-dialog-block {
+    width: 60%;
+    height: 75%;
+}
+
+.casino-window-dialog#poker-result .casino-window-dialog-block {
+    min-width: 20%;
+}
+
+.casino-window-dialog-block-rules-title {
+    font-size: 1.3vw;
+    font-weight: 700;
+    margin-bottom: 0.4vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.casino-window-dialog-block-rules-title img {
+    width: 3.5%;
+}
+
+.casino-window-dialog-block-rules-textarea {
+    width: 98%;
+    height: 90%;
+    padding-right: 0.5vw;
+    overflow-y: auto;
+}
+
+.casino-window-dialog-block-rules-textarea-subtitle {
+    font-size: 0.9vw;
+    font-weight: 600;
+    margin-bottom: 0.3vw;
+    margin-top: 0.8vw;
+}
+
+.casino-window-dialog-block-rules-textarea-text, .casino-window-dialog-block-poker-cards-block-textblock-text {
+    font-size: 0.85vw;
+    font-weight: 500;
+    color: #FFFFFF80;
+}
+
+.casino-rules-tab {
+    margin: 0.3vw 0;
+}
+
+.casino-rules-tab2 {
+    margin: 0 0.5vw;
+}
+
+.casino-window-dialog-block-rules-textarea::-webkit-scrollbar {
+    width: 0.2vw;
+}
+
+.casino-window-dialog-block-rules-textarea::-webkit-scrollbar-track {
+    background: #012b01;
+}
+
+.casino-window-dialog-block-rules-textarea::-webkit-scrollbar-thumb {
+    border-radius: 1vw;
+    border: 0.3vw solid #014901;
+}
+
+.casino-window-body-page-role-start-time, .casino-window-body-page-poker-start-time {
+    position: absolute;
+    right: 2vw;
+    top: 1vw;
+    font-size: 0.9vw;
+    font-weight: 600;
+    padding: 0.5vw 0.7vw;
+    visibility: hidden;
+}
+
+.casino-window-body-page#role {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.casino-window-body-page-role-table {
+    width: 95%;
+}
+
+.casino-window-body-page-role-table-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 1vw;
+}
+
+.casino-window-body-page-role-table-svg {
+    position: absolute;
+    height: 86%;
+}
+
+.casino-window-body-role-bottom-stavka {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.casino-window-body-page-role-bottom-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 88%;
+    margin-top: 2vw;
+}
+
+.casino-window-body-role-bottom-player {
+    background-color: #0c1e0c;
+    padding: 1vw 0.5vw;
+    width: 14vw;
+    border-radius: 0.5vw;
+}
+
+.casino-window-body-role-bottom-player-nickname {
+    font-size: 0.9vw;
+    font-weight: 500;
+    color: #FFFFFF80;
+}
+
+.casino-window-body-role-bottom-player-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5vw;
+}
+
+.casino-window-body-role-bottom-player-bottom-stavka {
+    font-size: 1.1vw;
+    font-weight: 600;
+    color: #15C627;
+}
+
+.casino-window-body-role-bottom-player-bottom-summa {
+    font-size: 1.1vw;
+    font-weight: 600;
+}
+
+.casino-window-body-role-bottom-players-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 1vw;
+}
+
+.casino-window-body-page-role-table-buttons {
+    position: absolute;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="00"] {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    width: 7.7%;
+    height: 35%;
+    border-radius: 0.5vw 0 0 0.5vw;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="0"] {
+    position: absolute;
+    left: 0%;
+    top: 35%;
+    width: 7.7%;
+    height: 35%;
+    border-radius: 0.5vw 0 0 0.5vw;
+}
+
+.casino-window-body-page-role-table-buttons-block {
+    position: absolute;
+    left: 8%;
+    top: 0%;
+    width: 84%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.casino-window-body-page-role-table-buttons-block .casino-window-body-page-role-table-button {
+    width: 8%;
+    height: 32%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="3col"] {
+    position: absolute;
+    right: 0%;
+    top: 0;
+    width: 7.7%;
+    height: 23%;
+    border-top-right-radius: 0.5vw;
+    border-bottom-right-radius: 0.5vw;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="2col"] {
+    position: absolute;
+    right: 0%;
+    top: 23.5%;
+    width: 7.7%;
+    height: 23%;
+    border-top-right-radius: 0.5vw;
+    border-bottom-right-radius: 0.5vw;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="1col"] {
+    position: absolute;
+    right: 0%;
+    top: 47%;
+    width: 7.7%;
+    height: 23%;
+    border-top-right-radius: 0.5vw;
+    border-bottom-right-radius: 0.5vw;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="1st12"] {
+    position: absolute;
+    left: 8%;
+    bottom: 15.5%;
+    width: 27.7%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="2nd12"] {
+    position: absolute;
+    left: 36%;
+    bottom: 15.5%;
+    width: 27.7%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="3rd12"] {
+    position: absolute;
+    right: 8%;
+    bottom: 15.5%;
+    width: 27.7%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="1-18"] {
+    position: absolute;
+    left: 8%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+    border-bottom-left-radius: 0.5vw;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="chet"] {
+    position: absolute;
+    left: 22%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="red"] {
+    position: absolute;
+    left: 36.3%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="black"] {
+    position: absolute;
+    right: 36.3%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="nechet"] {
+    position: absolute;
+    right: 22%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+}
+
+.casino-window-body-page-role-table-button[casinoRoleButton="19-36"] {
+    position: absolute;
+    right: 8%;
+    bottom: 0.7%;
+    width: 13.5%;
+    height: 14%;
+    border-bottom-right-radius: 0.5vw;
+}
+
+.casino-window-dialog-block-rules-textarea-text li {
+    margin: 0.5vw;
+}
+
+.casino-window-body-page-role-ball-container {
+    position: absolute;
+    background-color: #000c02ab;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: .5s;
+}
+.casino-window-body-page-role-ball-block {
+    position: absolute;
+    height: 30%;
+    top: 20%;
+    display: flex;
+    transform-origin: bottom;
+    transition: 10s ease-out;
+    align-items: flex-start;
+}
+
+.casino-window-body-page-role-ball-img {
+    width: 2vw;
+}
+
+.casino-window-body-page-role-ball-bg-sectors {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32vw;
+    transition: 9s ease-out;
+}
+
+.casino-window-body-page-role-ball-bg-sector {
+    position: absolute;
+    width: 6%;
+    height: 39%;
+    top: 11%;
+    transform-origin: bottom;
+}
+
+.casino-window-dialog-block-role-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw;
+    font-weight: 700;
+    margin: 2vw 7vw;
+    border: 0.2vw solid #FFFFFF;
+    border-radius: 0.5vw;
+    width: 4.5vw;
+    height: 4.5vw;
+}
+
+.casino-window-dialog-block-role-result.red {
+    background-color: #460000;
+}
+
+.casino-window-dialog-block-role-result.black {
+    background-color: #1A2026;
+}
+
+.casino-window-body-page-poker-table-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 1vw;
+}
+
+.casino-window-body-page-poker-table {
+    width: 65%;
+}
+
+.casino-window-body-page-poker-table-cards-bg {
+    position: absolute;
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
+}
+
+.casino-window-body-page-poker-table-card-bg {
+    background-color: #033d03b0;
+    width: 3vw;
+    height: 4.6vw;
+    border-radius: 0.5vw;
+    border: dashed 0.15vw #000000d1;
+}
+
+.casino-window-body-page-poker-table-cards {
+    position: absolute;
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
+}
+
+.casino-window-body-page-poker-table-card {
+    width: 3vw;
+    height: 4.6vw;
+    position: relative;
+    font-size: 1vw;
+    font-weight: 800;
+    backface-visibility: hidden;
+    padding: 0.15vw;
+}
+
+.casino-window-body-page-poker-table-card-front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    backface-visibility: hidden;
+    transition: .5s;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.casino-window-body-page-poker-table-card-back {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5vw;
+    transform: rotateY(-180deg);
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .5s;
+}
+
+.casino-window-body-page-poker-table-card.rotate .casino-window-body-page-poker-table-card-front {
+    transform: rotateY(-180deg);
+}
+
+.casino-window-body-page-poker-table-card.rotate .casino-window-body-page-poker-table-card-back {
+    transform: rotateY(0deg);
+}
+
+.casino-window-body-page-poker-table-card[pokercardtype="bubny"], .casino-window-body-page-poker-table-card[pokercardtype="chervy"] {
+    color: red;
+}
+
+.casino-window-body-page-poker-table-card[pokercardtype="piki"], .casino-window-body-page-poker-table-card[pokercardtype="kresty"] {
+    color: black;
+}
+
+.casino-window-body-page-poker-table-card-img {
+    width: 40%;
+}
+
+.casino-window-body-page-poker-table-card-symbol-1 {
+    position: absolute;
+    top: 0.1vw;
+    left: 0.15vw;
+}
+
+.casino-window-body-page-poker-table-card-symbol-2 {
+    position: absolute;
+    bottom: 0.1vw;
+    right: 0.15vw;
+}
+
+.casino-window-body-page-poker-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    bottom: 2vw;
+    width: 93.5%;
+}
+
+.casino-window-body-page-poker-bottom-cards-block {
+    background-color: #0c1e0c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 3vw;
+    gap: 0.7vw;
+    border-radius: 0.5vw;
+    height: 9vw;
+    justify-content: center;
+}
+
+.casino-window-body-page-poker-bottom-cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 0.4vw;
+}
+
+.casino-window-body-page-poker-bottom-cards-title {
+    font-size: 1vw;
+    font-weight: 700;
+}
+
+.casino-window-body-page-poker-bottom-game-buttons-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #0c1e0c;
+    border-radius: 0.5vw;
+    height: 9vw;
+    padding: 0 1vw;
+    gap: 0.3vw;
+}
+
+.casino-window-body-page-poker-bottom-game-title {
+    font-size: 1vw;
+    font-weight: 700;
+}
+
+.casino-window-body-page-poker-bottom-game-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 12vw;
+    height: 5.8vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1vw;
+    font-weight: 600;
+    border-radius: 0.3vw;
+    height: 2vw;
+    transition: .3s;
+}
+
+.casino-window-body-page-poker-bottom-game-button.disable {
+    background-color: #282828 !important;
+    border: solid 0.15vw #282828 !important;
+    pointer-events: none;
+}
+
+.casino-window-body-page-poker-bottom-game-button.call {
+    border: solid 0.15vw #00DC7D;
+    width: 6.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button.call:hover {
+    background-color: #00DC7D;
+}
+
+.casino-window-body-page-poker-bottom-game-button.check {
+    border: solid 0.15vw #dc9300;
+    width: 6.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button.check:hover {
+    background-color: #dc9300;
+}
+
+.casino-window-body-page-poker-bottom-game-button.allin {
+    border: solid 0.15vw #761CEA;
+    width: 4.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button.allin:hover {
+    background-color: #761CEA;
+}
+
+.casino-window-body-page-poker-bottom-game-button.x2 {
+    border: solid 0.15vw #4A69FF;
+    width: 8.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button.x2:hover {
+    background-color: #4A69FF;
+}
+
+.casino-window-body-page-poker-bottom-game-button.pass {
+    border: solid 0.15vw #E20338;
+    width: 2.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-button.pass:hover {
+    background-color: #E20338;
+}
+
+.casino-window-body-page-poker-bottom-bank-block {
+    background-color: #0c1e0c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1vw 2.5vw;
+    border-radius: 0.5vw;
+    height: 3vw;
+}
+
+.casino-window-body-page-poker-bottom-bank-title {
+    font-size: 1vw;
+    font-weight: 700;
+}
+
+.casino-window-body-page-poker-bottom-bank {
+    display: flex;
+    align-items: center;
+    font-size: 1.3vw;
+    font-weight: 700;
+    gap: 0.5vw;
+    text-wrap: nowrap;
+}
+
+.casino-window-body-page-poker-bottom-bank-img {
+    width: 22%;
+}
+
+.casino-window-body-page-poker-bottom-cards-view {
+    position: absolute;
+    top: -2.5vw;
+    left: 0;
+    background-color: #0c1e0c;
+    width: 2vw;
+    height: 2vw;
+    border-radius: 0.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.casino-window-body-page-poker-bottom-cards-view img {
+    width: 60%;
+}
+
+.casino-window-body-page-poker-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0c1e0ceb;
+    position: absolute;
+    padding: 0.5vw 1vw;
+    gap: 0.3vw;
+    border-radius: 0.5vw;
+    transform: translate(-50%, -50%);
+    min-width: 7vw;
+    min-height: 2.45vw;
+    transition: .5s;
+}
+
+.casino-window-body-page-poker-player.active {
+    border: 0.1vw solid rgb(255, 145, 0);
+}
+
+.casino-window-body-page-poker-player-count {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    background-color: #0c1e0cd9;
+    gap: 0.5vw;
+    font-size: 0.9vw;
+    font-weight: 600;
+    padding: 0.5vw 0.8vw;
+    border-radius: 0.3vw;
+}
+
+.casino-window-body-page-poker-player-count img {
+    width: 15%;
+}
+
+.casino-window-body-page-poker-player-count {
+    top: 3.8vw;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="1"] {
+    left: 50%;
+    bottom: 35%;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="2"] {
+    top: 35%;
+    left: 20%;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="3"] {
+    top: 14%;
+    left: 50%;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="4"] {
+    top: 35%;
+    right: 5%;
+}
+
+.casino-window-body-page-poker-player-nickname {
+    font-size: 0.9vw;
+    font-weight: 600;
+    color: #FFFFFF70;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.poker-diler {
+    margin-left: 0.5vw;
+    border: solid 0.15vw #ffb341;
+    color: #ffb341;
+    border-radius: 100%;
+    font-size: 0.7vw;
+    width: 1vw;
+    height: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.casino-window-body-page-poker-player-do {
+    font-size: 0.9vw;
+    font-weight: 600;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="bet"] {
+    color: #e2cf03;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="x2"] {
+    color: #4A69FF;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="call"] {
+    color: #00DC7D;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="check"] {
+    color: #dc9300;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="pass"] {
+    color: #E20338;
+}
+
+.casino-window-body-page-poker-player-do[pokertypedo="allin"] {
+    color: #761CEA;
+}
+
+.casino-window-body-page-poker-player-cards {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5vw;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="1"] .casino-window-body-page-poker-player-cards {
+    left: -7.5vw;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="2"] .casino-window-body-page-poker-player-cards {
+    top: -5.5vw;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="3"] .casino-window-body-page-poker-player-cards {
+    right: -7.5vw;
+}
+
+.casino-window-body-page-poker-player[pokerplayer="4"] .casino-window-body-page-poker-player-cards {
+    bottom: -7.8vw;
+}
+
+.casino-window-dialog-block-poker-cards-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 6.5vw;
+}
+
+.casino-window-dialog-block-poker-cards-block-textblock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2vw;
+}
+
+.casino-window-dialog-block-poker-cards-block-textblock-title {
+    font-size: 1vw;
+    font-weight: 600;
+}
+
+.casino-window-dialog-block-poker-cards-block-cardsblock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5vw;
+}
+
+.casino-window-body-page-poker-table-card-bg2 {
+    background-color: #000000;
+    width: 3vw;
+    height: 4.6vw;
+    border-radius: 0.5vw;
+    border: solid 0.15vw #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 1vw;
+    font-weight: 800;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #0c1e0c;
+    border-radius: 0.5vw;
+    padding: 1vw 1vw;
+    gap: 0.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #0c1e0c;
+    border-radius: 0.5vw;
+    padding: 1vw 1vw;
+    gap: 0.5vw;
+    width: 10.55vw;
+    height: 5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-title {
+    font-size: 1vw;
+    font-weight: 700;
+    margin-bottom: 0.3vw;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-input-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-input-block-input {
+    background-color: #02320d;
+    font-size: 1vw;
+    font-weight: 600;
+    width: 5vw;
+    height: 2vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3vw;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 0 0.5vw;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-input-block-button {
+    background-color: #02320d;
+    font-size: 1vw;
+    font-weight: 600;
+    width: 2.5vw;
+    height: 2vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3vw;
+    transition: .3s;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-input-block-button:hover {
+    background-color: #024511;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9vw;
+    font-weight: 600;
+    border: solid 0.15vw #00DC7D;
+    border-radius: 0.3vw;
+    width: 100%;
+    height: 2vw;
+    transition: .3s;
+}
+
+.casino-window-body-page-poker-bottom-game-start-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9vw;
+    font-weight: 600;
+    border: solid 0.15vw #00DC7D;
+    border-radius: 0.3vw;
+    width: 100%;
+    height: 2vw;
+    transition: .3s;
+}
+
+.casino-window-body-page-poker-bottom-game-start-button.disable {
+    background-color: #282828 !important;
+    border: solid 0.15vw #282828 !important;
+    pointer-events: none;
+}
+
+.casino-window-body-page-poker-bottom-game-smallblind-button:hover, .casino-window-body-page-poker-bottom-game-start-button:hover {
+    background-color: #00DC7D;
+}
+
+.casino-window-dialog-block-poker-result-title {
+    font-size: 1.2vw;
+    font-weight: 700;
+    font-weight: 700;
+    margin-bottom: 0.5vw;
+}
+
+.casino-window-dialog-block-poker-result-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.casino-window-dialog-block-poker-result-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.casino-window-dialog-block-poker-result-block-nickname {
+    font-size: 0.9vw;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3vw;
+}
+
+.casino-window-dialog-block-poker-result-block-nickname img {
+    width: 1vw;
+}
+
+.casino-window-dialog-block-poker-result-block-result {
+    font-size: 0.8vw;
+    font-weight: 500;
+    color: #FFFFFF80;
+}

@@ -1,0 +1,530 @@
+.boxbet {
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 62vw;
+    border-radius: 0.7vw;
+    font-family: 'Montserrat', sans-serif;
+    color: #FFFFFF;
+}
+
+.boxbet-header {
+    background-color: #06111e;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5vw 1vw;
+    border-radius: 0.5vw 0.5vw 0 0;
+}
+
+.boxbet-header-logo-img {
+    width: 10vw;
+    margin-left: 0.5vw;
+}
+
+.boxbet-header-account-block-img-block {
+    width: 3vw;
+    height: 3vw;
+    overflow: hidden;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #282930;
+}
+
+.boxbet-header-account-block-img {
+    width: 100%;
+    height: 100%;
+}
+
+.boxbet-header-account-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7vw;
+    margin-right: 1.5vw;
+}
+
+.boxbet-header-account-block-info-block-nickname {
+    font-size: 0.8vw;
+    font-weight: 700;
+}
+
+.boxbet-header-account-block-info-block-money {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    font-size: 0.8vw;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.boxbet-header-account-block-info-block-money-add {
+    color: #0B3214;
+    background-color: #32E058;
+    font-size: 1.1vw;
+    font-weight: 600;
+    font-style: normal;
+    width: 1vw;
+    height: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.2vw;
+    margin-left: 0.3vw;
+}
+
+.boxbet-header-account-block-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.boxbet-main {
+    width: 100%;
+    height: 25vw;
+    background-color: #282930f2;
+    padding: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    border-radius: 0 0 0.5vw 0.5vw;
+}
+
+.boxbet-main-nav-block {
+    background-color: #06111e;
+    width: 18vw;
+    height: 95%;
+    margin-left: 1vw;
+    border-radius: 0.7vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.8vw 0.6vw 0.8vw 0.6vw;
+    gap: 0.5vw;
+    justify-content: space-between;
+    box-shadow: 0px 0px 1vw 0px #06111ebd;
+}
+
+.boxbet-main-nav-block-blocks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5vw;
+    width: 100%;
+}
+
+.boxbet-main-nav-block-block {
+    background-color: #202732;
+    width: 100%;
+    height: 3.3vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 0.5vw;
+    gap: 0.1vw;
+    position: relative;
+    overflow: hidden;
+    transition: .3s;
+}
+
+.boxbet-main-nav-block-block-title {
+    font-size: 0.8vw;
+    font-weight: 700;
+    margin-left: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.boxbet-main-nav-block-block-subtitle {
+    font-size: 0.75vw;
+    font-weight: 700;
+    margin-left: 1.8vw;
+    color: #627189;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+
+.boxbet-main-nav-block-block-subtitle span {
+    color: #FF6D2F;
+    font-size: 1.8vw;
+    position: absolute;
+    left: -0.8vw;
+    top: -0.75vw;
+}
+
+.boxbet-main-nav-block-block-title-img {
+    position: absolute;
+    width: 5vw;
+    right: 0.8vw;
+}
+
+.boxbet-main-nav-block-block-title-img-account {
+    width: 1.7vw;
+    margin-right: 0.6vw;
+    margin-left: 0.5vw;
+}
+
+.boxbet-main-nav-block-block.active {
+    background-color: #F7971E;
+}
+
+.boxbet-main-nav-block-block.active .boxbet-main-nav-block-block-title {
+    color: #1B1B1B;
+}
+
+.boxbet-main-nav-block-block.active .boxbet-main-nav-block-block-subtitle span {
+    color: #FFFFFF;
+}
+
+.boxbet-main-nav-block-block.active .boxbet-main-nav-block-block-subtitle {
+    color: #374254;
+}
+
+.boxbet-main-nav-block-block.active .boxbet-main-nav-block-block-title-img, .boxbet-main-nav-block-block.active .boxbet-main-nav-block-block-title-img-account {
+    filter: invert(1);
+}
+
+.boxbet-main-page {
+    width: 100%;
+    height: 100%;
+}
+
+.boxbet-main-page-today-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8vw;
+}
+
+.boxbet-main-page-today-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #0C1016;
+    border: 0.1vw solid #0C1016;
+    padding: 0.5vw 0.7vw;
+    font-size: 0.9vw;
+    font-weight: 600;
+    gap: 0.3vw;
+    border-radius: 0.5vw;
+    box-shadow: 0px 0px 1vw 0px #0c1016a8;
+    transition: .3s;
+}
+
+.boxbet-main-page-today-list-item:hover {
+    border: 0.1vw solid #d65b27;
+}
+
+.boxbet-main-page-today-list-item.active {
+    border: 0.1vw solid #FF6E30;
+    box-shadow: 0px 0px 1vw 0px rgb(255 110 48 / 67%);
+}
+
+.boxbet-main-page-today-table {
+    width: 100%;
+    background-color: #0A0E13;
+    border-spacing: unset;
+    text-align: center;
+    font-size: 0.75vw;
+    font-weight: 400;
+    border-radius: 0.5vw;
+}
+
+.boxbet-main-page-today-table thead tr {
+    height: 2.5vw;
+    background-color: #354052;
+}
+
+.boxbet-main-page-today-table tbody tr {
+    height: 3vw;
+    transition: .3s;
+}
+
+.boxbet-main-page-today-table tbody tr:hover {
+    background-color: #202732;
+}
+
+.boxbet-main-page-today-table th, .boxbet-main-page-today-table td {
+    border: none;
+}
+
+.boxbet-main-page-today-table-block {
+    margin-right: 1vw;
+    overflow-y: scroll;
+    max-height: 86.5%;
+    border: solid #3F4C62 0.15vw;
+    margin-top: 1vw;
+    border-radius: 0.5vw;
+}
+
+#mybet .boxbet-main-page-today-table-block {
+    max-height: 90.5%;
+}
+
+.boxbet-main-page-today-table-block::-webkit-scrollbar {
+    width: 0;
+}
+
+.boxbet-main-page-mybet-title {
+    font-size: 1.1vw;
+    font-weight: 700;
+}
+
+.boxbet-main-page-lc-bg {
+    background-color: #03070C80;
+    border-radius: 0.5vw;
+    width: 88%;
+    height: 91%;
+    padding: 1.2vw 2vw;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.boxbet-main-page-lc-bg-img {
+    position: absolute;
+    width: 40%;
+    right: -4.5vw;
+    top: 3.7vw;
+}
+
+.boxbet-main-page-lc-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;
+    margin-bottom: 1vw;
+}
+
+.boxbet-main-page-lc-block-title-block {
+    display: flex;
+    align-items: center;
+    gap: 0.7vw;
+}
+
+.boxbet-main-page-lc-block-title-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.boxbet-main-page-lc-block-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1vw;
+}
+
+.boxbet-main-page-lc-block-button-remove {
+    background-color: #FFFFFF10;
+    border: solid 0.1vw #FFFFFF15;
+    font-size: 0.9vw;
+    font-weight: 600;
+    width: 12vw;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    transition: .3s;
+}
+
+.boxbet-main-page-lc-block-button-remove:hover {
+    background-color: #FFFFFF20;
+}
+
+.boxbet-main-page-lc-block-button-add {
+    background-color: #F7971E;
+    border: solid 0.1vw #FF6E30;
+    font-size: 0.9vw;
+    font-weight: 600;
+    width: 12vw;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    transition: .3s;
+}
+
+.boxbet-main-page-lc-block-button-add:hover {
+    background-color: #fdac46;
+    border: solid 0.1vw #ffa73c;
+}
+
+.boxbet-dialogs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #00000070;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: .3s;
+}
+
+.boxbet-dialog {
+    background-color: #19191D;
+    min-width: 23vw;
+    max-width: 30vw;
+    min-height: 8vw;
+    border-radius: 1vw;
+    padding: 1.5vw;
+    gap: 0.7vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.boxbet-dialog-title {
+    font-size: 1.2vw;
+    font-weight: 700;
+}
+
+.boxbet-dialog-text {
+    font-size: 0.8vw;
+    font-weight: 500;
+}
+
+.boxbet-dialog-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3vw;
+}
+
+.boxbet-dialog-input-container-text {
+    font-size: 0.8vw;
+    color: #FFFFFF70;
+    border-bottom: 0.5vw;
+}
+
+.boxbet-dialog-input-container-input {
+    background-color: #FFFFFF05;
+    border: solid 0.1vw #FFFFFF15;
+    color: #FFFFFF;
+    font-size: 1vw;
+    padding: 0.7vw 1vw;
+    border-radius: 0.5vw;
+    width: -webkit-fill-available;
+}
+
+.boxbet-dialog-buttons-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5%;
+    margin-top: 0.5vw;
+}
+
+.boxbet-dialog-button1 {
+    background-color: #FF6E30;
+    font-size: 0.85vw;
+    font-weight: 500;
+    width: -webkit-fill-available;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    transition: .3s;
+}
+
+.boxbet-dialog-button2 {
+    background-color: #FFFFFF10;
+    font-size: 0.85vw;
+    font-weight: 500;
+    width: -webkit-fill-available;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    transition: .3s;
+}
+
+.boxbet-dialog-button1:hover {
+    background-color: #F7971E;
+}
+
+.boxbet-dialog-button2:hover {
+    background-color: #FFFFFF20;
+}
+
+.boxbet-dialog-stavka-commands-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 3%;
+}
+
+.boxbet-dialog-stavka-commands-container-command {
+    background-color: #0C1016;
+    border: solid 0.1vw #0C1016;
+    width: -webkit-fill-available;
+    height: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75vw;
+    font-weight: 600;
+    border-radius: 0.3vw;
+    transition: .3s;
+}
+
+.boxbet-dialog-stavka-commands-container-command:hover {
+    border: solid 0.1vw #FFFFFF20;
+}
+
+.boxbet-dialog-stavka-commands-container-command.active {
+    border: solid 0.1vw #FF6E30;
+    color: #FF6E30;
+}
+
+.boxbet-dialog-fails {
+    font-size: 0.8vw;
+}
+
+.boxbet-dialog-fails-red {
+    color: red;
+}
+
+.boxbet-dialog-fails-green span {
+    color: green;
+}
+
+.boxbet-close {
+    position: absolute;
+    top: 0;
+    color: #320000;
+    background-color: #E24A4A;
+    padding: 0.2vw 0.5vw;
+    border-radius: 0.3vw;
+    font-size: 0.8vw;
+    font-weight: 600;
+    right: -11.5%;
+    box-shadow: 0px 0px 0.5vw 0px rgb(0 0 0 / 46%);
+}
+
+.boxbet-main-page-today-table-tr-red {
+    background-color: #230000;
+    pointer-events: none;
+}

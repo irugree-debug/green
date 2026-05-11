@@ -1,0 +1,1928 @@
+var casinoNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var casinoNickname = '';
+var casinoLastBet = 0;
+var casinoIsGame = false;
+var casinoDiceSound = new Audio('/cefNew/sounds/casinoDice.wav');
+var casinoRoleSound = new Audio('/cefNew/sounds/casinoRole.wav');
+var casinoRolePoly = {
+    '1col': ['1', '4', '7', '10', '13', '16', '19', '22', '25', '28', '31', '34'],
+    '2col': ['2', '5', '8', '11', '14', '17', '20', '23', '26', '29', '32', '35'],
+    '3col': ['3', '6', '9', '12', '15', '18', '21', '24', '27', '30', '33', '36'],
+    'red': ['1', '3', '5', '7', '9', '12', '14', '16', '18', '19', '21', '23', '25', '27', '30', '32', '34', '36'],
+    'black': ['2', '4', '6', '8', '10', '11', '13', '15', '17', '20', '22', '24', '26', '28', '29', '31', '33', '35']
+}
+var casinoRoleLastPolys = [];
+var casinoRoleStartTime = '';
+var casinoRoleOneSector = 9.473684210526315;
+var casinoRoleSectors = ['00', '1', '13', '36', '24', '3', '15', '34', '22', '5', '17', '32', '20', '7', '11', '30', '26',
+    '9', '28', '0', '2', '14', '35', '23', '4', '16', '33', '21', '6', '18', '31', '19', '8', '12', '29', '25', '10', '27'];
+var casinoRoleLastBet = '';
+var casinoRoleIsBet = false;
+var casinoPokerTypeTable = {
+    1: [500, 5000, 50000],
+    2: [5000, 50000, 500000]
+}
+var casinoPokerTypeTableLast = 1;
+var casinoPokerLastResponse = '';
+var casinoPokerLastResponseList = [];
+var casinoPokerSmallBlind = 0;
+var casinoPokerCardBgDiv = '<div class="casino-window-body-page-poker-table-card-bg"></div>';
+var values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+var suits = ['C', 'B', 'K', 'P'];
+var casinoPokerIsStarter = false;
+var casinoATPInterval = '';
+var casinoRoleStartTime = '';
+var casinoPokerShowAll = false;
+var casinoPokerExitList = [];
+var casinoPokerLastTypeCard = '';
+var casinoPokerIsAllin = false;
+
+window.addEventListener('mouseover', function (event) {
+    document.querySelectorAll('.casino-window-body-page-role-table-svg [casinorole]').forEach(element => {
+        if (element.getAttribute('stroke') != '#FFE603') {
+            element.setAttribute('stroke', 'white');
+        }
+    });
+
+    casinoRoleLastPolys.forEach(element => {
+        if (!casinoRoleIsBet) {
+            document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+element+'"]').setAttribute('stroke', '#FFE603');
+        }
+    });
+
+	if (event.target.getAttribute('casinorolebutton') && !casinoRoleIsBet) {
+        if (document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').getAttribute('stroke') == '#FFE603') {
+            return;
+        }
+
+        document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').setAttribute('stroke', '#03FF3B');
+
+        if (casinoRolePoly[event.target.getAttribute('casinorolebutton')]) {
+            casinoRolePoly[event.target.getAttribute('casinorolebutton')].forEach(element => {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+element+'"]').setAttribute('stroke', '#03FF3B');
+            });
+        }
+        else if (event.target.getAttribute('casinorolebutton') == '1st12') {
+            for (i = 1; i <= 12; i++) {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+i+'"]').setAttribute('stroke', '#03FF3B');
+            }
+        }
+        else if (event.target.getAttribute('casinorolebutton') == '2nd12') {
+            for (i = 13; i <= 24; i++) {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+i+'"]').setAttribute('stroke', '#03FF3B');
+            }
+        }
+        else if (event.target.getAttribute('casinorolebutton') == '3rd12') {
+            for (i = 25; i <= 36; i++) {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+i+'"]').setAttribute('stroke', '#03FF3B');
+            }
+        }
+        else if (event.target.getAttribute('casinorolebutton') == '1-18') {
+            for (i = 1; i <= 18; i++) {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+i+'"]').setAttribute('stroke', '#03FF3B');
+            }
+        }
+        else if (event.target.getAttribute('casinorolebutton') == '19-36') {
+            for (i = 19; i <= 36; i++) {
+                document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+i+'"]').setAttribute('stroke', '#03FF3B');
+            }
+        }
+        else if (event.target.getAttribute('casinorolebutton') == 'chet') {
+            document.querySelectorAll('.casino-window-body-page-role-table-svg [casinorole]').forEach(element => {
+                if (Number(element.getAttribute('casinorole')) % 2 == 0 && Number(element.getAttribute('casinorole')) >= 1 && Number(element.getAttribute('casinorole')) <= 36) {
+                    element.setAttribute('stroke', '#03FF3B');
+                }
+            });
+        }
+        else if (event.target.getAttribute('casinorolebutton') == 'nechet') {
+            document.querySelectorAll('.casino-window-body-page-role-table-svg [casinorole]').forEach(element => {
+                if (Number(element.getAttribute('casinorole')) % 2 != 0 && Number(element.getAttribute('casinorole')) >= 1 && Number(element.getAttribute('casinorole')) <= 36) {
+                    element.setAttribute('stroke', '#03FF3B');
+                }
+            });
+        }
+    }
+})
+
+window.addEventListener('click', function (event) {
+	if (event.target.getAttribute('casinorolebutton') && !casinoRoleIsBet) {
+        document.querySelectorAll('.casino-window-body-page-role-table-svg [stroke="#FFE603"]').forEach(element => {
+            element.setAttribute('stroke', 'white');
+        });
+        casinoRoleLastBet = event.target.getAttribute('casinoRoleButton');
+        casinoRoleLastPolys = [];
+        document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').setAttribute('stroke', '#FFE603');
+        if (Number(document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').getAttribute('casinorole')) >= 1 && Number(document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').getAttribute('casinorole')) <= 35) {
+            casinoRoleLastPolys.push(document.querySelector('.casino-window-body-page-role-table-svg [casinorole="'+event.target.getAttribute('casinorolebutton')+'"]').getAttribute('casinorole'));
+        }
+        document.querySelectorAll('.casino-window-body-page-role-table-svg [stroke="#03FF3B"]').forEach(element => {
+            element.setAttribute('stroke', '#FFE603');
+            if (Number(element.getAttribute('casinorole')) >= 1 && Number(element.getAttribute('casinorole')) <= 36) {
+                casinoRoleLastPolys.push(element.getAttribute('casinorole'));
+            }
+        });
+        
+        if (casinoRoleLastPolys.length == 0) {
+            casinoRoleLastPolys = [event.target.getAttribute('casinoRoleButton')];
+        }
+    }
+})
+
+function showCasino(type, nickname, table) {
+    document.querySelectorAll('.casino-window-body-page').forEach(element => {
+        element.style.display = 'none';
+    });
+
+    casinoNickname = nickname;
+    casinoLastBet = 0;
+    casinoIsGame = false;
+    casinoPokerShowAll = false;
+
+    switch (type) {
+        case 'dice': 
+            document.querySelector('.casino-window-header-title span').textContent = 'Кости';
+            document.querySelector('.casino-window-header-title img').setAttribute('onclick', "casinoShowDialog('rules', 'Кости - инструкция', 'dice-rules')");
+            document.querySelector('.casino-window-body-dice-poly.own .casino-window-body-dice-poly-nickname').textContent = nickname;
+            document.querySelector('.casino-window-body-dice-poly.vs .casino-window-body-dice-poly-nickname').textContent = '';
+            document.querySelectorAll('.casino-window-body-dice-poly-dice').forEach(element => {
+                element.style.display = 'none';
+            });
+            document.querySelectorAll('.casino-window-body-dice-poly-dice-pips').forEach(element => {
+                element.style.display = 'none';
+            });
+            document.querySelectorAll('.casino-window-body-dice-poly-score').forEach(element => {
+                element.style.display = 'none';
+            });
+            document.querySelector('.casino-window-body-money-block').style.display = '';
+            document.querySelector('.casino-window-body-money-block-poker').style.display = 'none';
+            break;
+        case 'role':
+            document.querySelector('.casino-window-header-title span').textContent = 'Рулетка';
+            document.querySelector('.casino-window-header-title img').setAttribute('onclick', "casinoShowDialog('rules', 'Рулетка - инструкция', 'role-rules')");
+            setTimeout(() => {
+                document.querySelector('.casino-window-body-page-role-table-buttons').style.width = document.querySelector('.casino-window-body-page-role-table-svg').getBoundingClientRect().width+'px';
+                document.querySelector('.casino-window-body-page-role-table-buttons').style.height = document.querySelector('.casino-window-body-page-role-table-svg').getBoundingClientRect().height+'px';
+            }, 1000);
+            document.querySelectorAll('.casino-window-body-role-bottom-player').forEach(element => {
+                element.querySelector('.casino-window-body-role-bottom-player-nickname').textContent = 'Nick_Name';
+                element.querySelector('.casino-window-body-role-bottom-player-nickname').style.visibility = 'hidden';
+                element.querySelector('.casino-window-body-role-bottom-player-bottom').style.visibility = 'hidden';
+            });
+            document.querySelector('[casinoroleplayer="1"] .casino-window-body-role-bottom-player-nickname').textContent = nickname;
+            document.querySelector('[casinoroleplayer="1"] .casino-window-body-role-bottom-player-nickname').style.visibility = 'visible';
+            document.querySelector('.casino-window-body-money-block').style.display = '';
+            document.querySelector('.casino-window-body-money-block-poker').style.display = 'none';
+
+            casinoRoleLastBet = '';
+            casinoRoleLastPolys = [];
+            casinoLastBet = 0;
+            casinoRoleResult = 0;
+            casinoRoleIsBet = false;
+            casinoIsGame = false;
+            break;
+        case 'poker':
+            casinoHideDialog('role-result');
+            document.querySelector('.casino-window-header-title span').textContent = 'Покер';
+            document.querySelector('.casino-window-header-title img').setAttribute('onclick', "casinoShowDialog('rules', 'Покер - инструкция', 'poker-rules')");
+            document.querySelector('.casino-window-body-money-text-poker span').textContent = '0';
+            casinoPokerReload();
+            document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent = '';
+            });
+            document.querySelector('.casino-window-body-money-block').style.display = 'none';
+            document.querySelector('.casino-window-body-money-block-poker').style.display = '';
+            casinoPokerTypeTableLast = table;
+            break;
+    }
+
+    document.querySelector('.casino-window-body-page#'+type).style.display = '';
+    document.querySelector('.casino').style.display = '';
+}
+
+function hideCasino() {
+    document.querySelector('.casino').style.display = 'none';
+}
+
+function casinoExit() {
+    if (casinoIsGame) {
+        casinoShowDialog('info', 'Нельзя выйти во время игры.', 'Хорошо');
+    }
+    else {
+        casinoShowDialog('switch', 'Вы уверены, что хотите<br>покинуть игру?', 'Нет', 'Да');
+    }
+}
+
+function casinoResponse(type, response, response2) {
+    switch (type) {
+        case 'dice':
+            if (response.split('/')[0] == 'join') {
+                document.querySelector('.casino-window-body-dice-poly.vs .casino-window-body-dice-poly-nickname').textContent = response.split('/')[1];
+            }
+            else if (response.split('/')[0] == 'bet') {
+                if (Number(document.querySelector('.casino-window-body-money-text span').textContent.replaceAll('.', '')) < Number(response.split('/')[2])) {
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'noMoneyBet');
+                    return;
+                }
+                casinoShowDialog('askToPlay', response.split('/')[1], response.split('/')[2]);
+                casinoLastBet = Number(response.split('/')[2]);
+            }
+            else if (response.split('/')[0] == 'noMoneyBet') {
+                casinoLastBet = 0;
+                casinoHideDialog();
+                setTimeout(() => {
+                    casinoShowDialog('info', 'У игрока недостаточно денег.', 'Хорошо');
+                }, 300);
+            }
+            else if (response.split('/')[0] == 'noResponseBet') {
+                setTimeout(() => {
+                    casinoShowDialog('info', 'Игрок не ответил на ставку и был исключен из игры.', 'Хорошо');
+                }, 300);
+            }
+            else if (response.split('/')[0] == 'cancelBet') {
+                clearInterval(casinoBetInterval);
+                casinoHideDialog();
+                setTimeout(() => {
+                    casinoShowDialog('info', 'Игрок отказался от вашей ставки.', 'Хорошо');
+                }, 300);
+            }
+            else if (response.split('/')[0] == 'agreeBet') {
+                uCefJS.triggerEvent('casino:removeMoney', casinoLastBet);
+                clearInterval(casinoBetInterval);
+                casinoHideDialog();
+                casinoDiceStart(true);
+            }
+            else if (response.split('/')[0] == 'exit') {
+                if (casinoIsGame) {
+                    uCefJS.triggerEvent('casino:giveMoney', casinoNickname, casinoLastBet);
+                    casinoShowDialog('info', 'Игрок покинул игру, деньги возвращены.', 'Хорошо');
+                }
+                showCasino('dice', casinoNickname);
+            }
+            else if (response.split('/')[0] == 'update') {
+                casinoDiceUpdate(response.split('/')[1], response.split('/')[2], response.split('/')[3]);
+            }
+            else if (response.split('/')[0] == 'starterStop') {
+                casinoDiceNonStarterStart();
+            }
+            else if (response.split('/')[0] == 'nonStarterStop') {
+                setTimeout(() => {
+                    casinoDiceCheckWinner();
+                }, 2000);
+            }
+            else if (response.split('/')[0] == 'stopGame') {
+                casinoDiceStopGame();
+            }
+            else if (response.split('/')[0] == 'showDialog') {
+                casinoShowDialog(response.split('/')[1], response.split('/')[2], response.split('/')[3]);
+            }
+            break;
+        case 'role':
+            if (response.split('/')[0] == 'join') {
+                isJoin = false;
+                document.querySelectorAll('[casinoroleplayer] .casino-window-body-role-bottom-player-nickname').forEach(element => {
+                    if (element.style.visibility == 'hidden' && !isJoin) {
+                        element.textContent = response.split('/')[1];
+                        element.style.visibility = 'visible';
+                        isJoin = true;
+                    }
+                });
+            }
+            else if (response.split('/')[0] == 'exit') {
+                document.querySelectorAll('[casinoroleplayer]').forEach(element => {
+                    if (element.querySelector('.casino-window-body-role-bottom-player-nickname').textContent == response.split('/')[1]) {
+                        element.querySelector('.casino-window-body-role-bottom-player-nickname').style.visibility = 'hidden';
+                        element.querySelector('.casino-window-body-role-bottom-player-bottom').style.visibility = 'hidden';
+                    }
+                });
+            }
+            else if (response.split('/')[0] == 'bet') {
+                document.querySelectorAll('[casinoroleplayer]').forEach(element => {
+                    if (element.querySelector('.casino-window-body-role-bottom-player-nickname').textContent == response.split('/')[1]) {
+                        stavka = response.split('/')[2];
+                        if (stavka == 'chet') {
+                            stavka = 'ЧЕТ';
+                        }
+                        else if (stavka == 'nechet') {
+                            stavka = 'НЕЧЕТ';
+                        }
+                        else if (stavka == 'red') {
+                            stavka = 'КРАСН';
+                        }
+                        else if (stavka == 'black') {
+                            stavka = 'ЧЕРН';
+                        }
+                        element.querySelector('.casino-window-body-role-bottom-player-bottom-stavka').textContent = stavka;
+                        element.querySelector('.casino-window-body-role-bottom-player-bottom-summa').textContent = moneyFormat(Number(response.split('/')[3]))+' ₽';
+                        element.querySelector('.casino-window-body-role-bottom-player-bottom').style.visibility = 'visible';
+                    }
+                });
+            }
+            else if (response.split('/')[0] == 'startTime') {
+                document.querySelector('.casino-window-body-page-role-start-time span').textContent = '15';
+                document.querySelector('.casino-window-body-page-role-start-time').style.visibility = 'visible';
+                casinoRoleStartTime = setInterval(() => {
+                    document.querySelector('.casino-window-body-page-role-start-time span').textContent = Number(document.querySelector('.casino-window-body-page-role-start-time span').textContent)-1;
+
+                    if (document.querySelector('.casino-window-body-page-role-start-time span').textContent == '0') {
+                        clearInterval(casinoRoleStartTime);
+                        document.querySelector('.casino-window-body-page-role-start-time').style.visibility = 'hidden';
+                        
+                        if (casinoRoleLastBet) {
+                            casinoResponse('role', 'start/'+casinoRoleOneSector*Number(response.split('/')[1])+'/'+casinoRoleOneSector*Number(response.split('/')[2])); //TEST
+                        }
+                        else {
+                            uCefJS.triggerEvent("Casino:Close", 1);
+                            casinoHideDialog();
+                            showNotice(4, 'Казино', 'Вы не поставили ставку и были исключены из игры.');
+                        }
+
+                        // casinoResponse('role', 'start/'+casinoRandom(casinoRoleOneSector*200, casinoRoleOneSector*400)+'/'+casinoRandom(casinoRoleOneSector*200, casinoRoleOneSector*400)); //TEST
+                        // casinoResponse('role', 'start/10000/10000'); //TEST
+                    }
+                }, 1000);
+            }
+            else if (response.split('/')[0] == 'stopTime') {
+                clearInterval(casinoRoleStartTime);
+                document.querySelector('.casino-window-body-page-role-start-time').style.visibility = 'hidden';
+            }
+            else if (response.split('/')[0] == 'start') {
+                casinoIsGame = true;
+                uCefJS.triggerEvent('casino:removeMoney', casinoLastBet);
+                uCefJS.triggerEvent('casino:startRole', 1);
+                console.log('casino:removeMoney', casinoLastBet)
+                setTimeout(() => {
+                    document.querySelector('.casino-window-body-page-role-ball-bg-sectors').style = 'transform: rotate(0deg);';
+                    document.querySelector('.casino-window-body-page-role-ball-block').style = 'transform: rotate(-0deg);';
+                    document.querySelector('.casino-window-body-page-role-ball-container').style.display = '';
+                    setTimeout(() => {
+                        document.querySelector('.casino-window-body-page-role-ball-container').style.opacity = '1';
+                    }, 500);
+
+                    setTimeout(() => {
+                        document.querySelector('.casino-window-body-page-role-ball-bg-sectors').style = 'transform: rotate('+response.split('/')[1]+'deg);';
+                        document.querySelector('.casino-window-body-page-role-ball-block').style = 'transform: rotate(-'+response.split('/')[2]+'deg);';
+                        cefSoundPlay('casinoRole.wav');
+
+                        setTimeout(() => {
+                            degBG = document.querySelector('.casino-window-body-page-role-ball-bg-sectors').style.transform.replace('rotate(', '').replace('deg)', '');
+                            degBall = document.querySelector('.casino-window-body-page-role-ball-block').style.transform.replace('rotate(', '').replace('deg)', '');
+                            
+                            degBG2 = degBG-(360*Math.floor(degBG/360));
+                            degBall2 = Math.abs(degBall)-(360*Math.floor(Math.abs(degBall/360)));
+                            casinoRoleResult = 1;
+    
+                            if (degBG2+degBall2 < 360) {
+                                casinoRoleResult = Math.round(Math.abs(degBG2+degBall2)/casinoRoleOneSector);
+                            }
+                            else if (degBG2+degBall2 > 360) {
+                                casinoRoleResult = Math.round(Math.abs(degBG2+degBall2-360)/casinoRoleOneSector);
+                            }
+                            else if (degBG2+degBall2 == 360) {
+                                casinoRoleResult = 0;
+                            }
+
+                            document.querySelector('.casino-window-body-page-role-ball-container').style.opacity = '0';
+                            setTimeout(() => {
+                                document.querySelector('.casino-window-body-page-role-ball-container').style.display = 'none';
+                                casinoShowDialog('role-result', casinoRoleSectors[casinoRoleResult])
+                                uCefJS.triggerEvent('casino:RoleResult', casinoRoleSectors[casinoRoleResult]);
+                            }, 1000);
+                            
+                        }, 12000);
+                    }, 2000);
+                }, 1000);
+            }
+            else if (response.split('/')[0] == 'stopBet') {
+                document.querySelectorAll('[casinoroleplayer]').forEach(element => {
+                    if (element.querySelector('.casino-window-body-role-bottom-player-nickname').textContent == response.split('/')[1]) {
+                        element.querySelector('.casino-window-body-role-bottom-player-bottom').style.visibility = 'hidden';
+                    }
+                });
+            }
+            break;
+        case 'poker':
+            if (response.split('/')[0] == 'join') {
+                document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+response.split("/")[2]+'"] .casino-window-body-page-poker-player-nickname span').textContent = response.split('/')[1];
+
+                pokerCountPlayers = 0;
+                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                    if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent) {
+                        pokerCountPlayers++;
+                    }
+                });
+                if (pokerCountPlayers > 1) {
+                    if (document.querySelector('.casino-window-body-page-poker-bottom-game-start-button.disable')) {
+                        document.querySelector('.casino-window-body-page-poker-bottom-game-start-button.disable').classList.remove('disable');
+                    }
+                }
+            }
+            else if (response.split('/')[0] == 'exit') {
+                if (!casinoIsGame) {
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split("/")[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent = '';
+                            if (element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler')) {
+                                element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler').remove();
+                            }
+                        }
+                    });
+                }
+                else {
+                    casinoPokerExitList.push(response.split("/")[1]);
+                    casinoResponse('poker', 'bet/'+response.split('/')[1]+'pass');
+                }
+            }
+            else if (response.split('/')[0] == 'startTime') {
+                document.querySelector('.casino-window-body-page-poker-start-time span').textContent = '15';
+                document.querySelector('.casino-window-body-page-poker-start-time').style.visibility = 'visible';
+                document.querySelector('.casino-window-body-page-poker-bottom-game-start-button').classList.add('disable');
+                pokerStartTimeInterval = setInterval(() => {
+                    document.querySelector('.casino-window-body-page-poker-start-time span').textContent = Number(document.querySelector('.casino-window-body-page-poker-start-time span').textContent)-1;
+
+                    if (Number(document.querySelector('.casino-window-body-page-poker-start-time span').textContent) < 1) {
+                        clearInterval(pokerStartTimeInterval);
+                        document.querySelector('.casino-window-body-page-poker-start-time').style.visibility = 'hidden';
+                        if (casinoPokerIsStarter) {
+                            uCefJS.triggerEvent('Start:Poker', 2, casinoPokerTypeTableLast);
+                            casinoPokerIsStarter = false;
+                        }
+                    }
+                }, 1000);
+            }
+            else if (response.split('/')[0] == 'stopTime') {
+                clearInterval(pokerStartTimeInterval);
+                document.querySelector('.casino-window-body-page-poker-start-time').style.visibility = 'hidden';
+            }
+            else if (response.split('/')[0] == 'start') {
+                clearInterval(pokerStartTimeInterval);
+                casinoIsGame = true;
+                document.querySelector('.casino-window-body-page-poker-start-time').style.visibility = 'hidden';
+                document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+response.split('/')[1]+'"] .casino-window-body-page-poker-player-nickname').insertAdjacentHTML('beforeend', '<div class="poker-diler">D</div>');
+                document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(response.split('/')[1])+'"]').classList.add('active');
+                document.querySelector('.casino-window-body-page-poker-bottom-game-buttons-block').style.display = '';
+                document.querySelector('.casino-window-body-page-poker-bottom-game-start').style.display = 'none';
+                document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind').style.display = 'none';
+
+                document.querySelector('.casino-window-body-money-text-poker span').textContent = moneyFormat(casinoPokerTypeTable[casinoPokerTypeTableLast][2]);
+                // uCefJS.triggerEvent('casino:removeMoney', casinoPokerTypeTable[casinoPokerTypeTableLast][2]);
+
+                if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(response.split('/')[1])+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                    document.querySelector('.casino-window-body-page-poker-bottom-game-buttons-block').style.display = 'none';
+                    document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind').style.display = '';
+                    document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-title span').textContent = '15';
+                    pokerBlindTimer = setInterval(() => {
+                        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-title span').textContent = Number(document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-title span').textContent)-1;
+    
+                        if (Number(document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-title span').textContent) < 1) {
+                            clearInterval(pokerBlindTimer);
+                            uCefJS.triggerEvent('casino:noBlind');
+                            uCefJS.triggerEvent('casino:Response', 'poker', 'exit/'+casinoNickname, casinoPokerTypeTableLast);
+                            hideCasino();
+                            showNotice(4, 'Казино', 'Вы не поставили малый блайнд и были исключены из игры.');
+                        }
+                    }, 1000);
+                }
+            }
+            else if (response.split('/')[0] == 'bet') {
+                if (response.split('/')[4] == 'upToBlind') {
+                    casinoPokerLastResponse = response.split('/')[0]+'/'+response.split('/')[1]+'/'+response.split('/')[2]+'/'+(Number(response.split('/')[3])*2);
+                    casinoPokerLastResponseList.push(response.split('/')[0]+'/'+response.split('/')[1]+'/'+response.split('/')[2]+'/'+(Number(response.split('/')[3])*2));
+                }
+                else {
+                    casinoPokerLastResponse = response;
+                    casinoPokerLastResponseList.push(response);
+                }
+
+                if (response.split('/')[2] == 'smallBlind') {
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank').style.visibility = 'visible';
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent = moneyFormat(response.split('/')[3]);
+                    cefSoundPlay('casinoPokerBetSmallBlind.wav');
+
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Поставил';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'bet');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(response.split('/')[3]);
+
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                // casinoResponse('poker', 'bet/'+casinoNickname+'/bigBlind/'+Number(response.split('/')[3])*2);
+                                uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/bigBlind/'+Number(response.split('/')[3])*2, casinoPokerTypeTableLast);
+                                casinoPokerSetMoney(-Number(response.split('/')[3])*2);
+                            }
+                        }
+                    });
+                }
+                else if (response.split('/')[2] == 'bigBlind') {
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent = moneyFormat(Number(document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent.replace('.', ''))+Number(response.split('/')[3]));
+                    cefSoundPlay('casinoPokerBetBigBlind.wav');
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Ответил';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'call');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(response.split('/')[3]);
+
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+
+                    uCefJS.triggerEvent('casino:PreFlop', casinoPokerTypeTableLast);
+
+                    // casinoResponse('poker', 'preFlop', '["BK", "C8"]'); //TEST from server
+                }
+                else if (response.split('/')[2] == 'call') {
+                    cefSoundPlay('casinoPokerCall.wav');
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent = moneyFormat(Number(document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent.replaceAll('.', ''))+Number(response.split('/')[3]));
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Ответил';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'call');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            if (response.split('/')[4] == 'upToBlind') {
+                                casinoPokerSmallBlind = 0;
+                                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element2 => {
+                                    if (element2.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler')) {
+                                        element.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element2.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(Number(response.split('/')[3])+Number(document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element2.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-count-text span').textContent.replaceAll('.', '')));
+                                    }
+                                });
+                            }
+                            else {
+                                element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(response.split('/')[3]);
+                            }
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+                else if (response.split('/')[2] == 'x2') {
+                    cefSoundPlay('casinoPokerX2.wav');
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent = moneyFormat(Number(document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent.replaceAll('.', ''))+Number(response.split('/')[3]));
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Повысил';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'x2');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            if (response.split('/')[4] == 'upToBlind') {
+                                casinoPokerSmallBlind = 0;
+                                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element2 => {
+                                    if (element2.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler')) {
+                                        element.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element2.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(Number(response.split('/')[3])+Number(element.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element2.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-count-text span').textContent.replaceAll('.', '')));
+                                    }
+                                });
+                            }
+                            else {
+                                element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(response.split('/')[3]);
+                            }
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+                else if (response.split('/')[2] == 'check') {
+                    cefSoundPlay('casinoPokerCheck.wav');
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Чек';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'check');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+                else if (response.split('/')[2] == 'pass') {
+                    cefSoundPlay('casinoPokerPass.wav');
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Пас';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'pass');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = 'none';
+
+                            if (!casinoPokerExitList.includes(response.split('/')[1]) && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+
+                    iPokerPlayer = 0;
+                    iPokerPassPlayer = 0;
+                    iPokerPlayerThisPass = false;
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') == 'pass') {
+                            iPokerPassPlayer++;
+                            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                iPokerPlayerThisPass = true;
+                            }
+                        }
+                        else if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass') {
+                            iPokerPlayer++;
+                        }
+                    });
+                    if (!iPokerPlayerThisPass && iPokerPlayer == 1) {
+                        if (casinoPokerLastTypeCard == 'preFlop') {
+                            uCefJS.triggerEvent('casino:Flop', casinoPokerTypeTableLast);
+                            uCefJS.triggerEvent('casino:Tern', casinoPokerTypeTableLast);
+                            uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                        }
+                        else if (casinoPokerLastTypeCard == 'flop') {
+                            uCefJS.triggerEvent('casino:Tern', casinoPokerTypeTableLast);
+                            uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                        }
+                        else if (casinoPokerLastTypeCard == 'tern') {
+                            uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                        }
+                        uCefJS.triggerEvent('casino:ShowAll', casinoPokerTypeTableLast);
+                        // casinoResponse('poker', 'showAll'); //from server
+
+                        setTimeout(() => {
+                            uCefJS.triggerEvent('casino:CheckComb', casinoPokerTypeTableLast);
+                        }, 3000);
+                    }
+                }
+                else if (response.split('/')[2] == 'allin') {
+                    casinoPokerIsAllin = true;
+                    cefSoundPlay('casinoPokerAllin.wav');
+                    document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent = moneyFormat(Number(document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent.replaceAll('.', ''))+Number(response.split('/')[3]));
+                    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                            element.querySelector('.casino-window-body-page-poker-player-do').textContent = 'Олл-ин';
+                            element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', 'allin');
+                            element.querySelector('.casino-window-body-page-poker-player-count').style.display = '';
+                            element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent = moneyFormat(response.split('/')[3]);
+                            if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                                setTimeout(() => {
+                                    casinoPokerOpenButtons();
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+
+                setTimeout(() => {
+                    if (document.querySelector('.casino-window-body-page-poker-player.active')) {
+                        document.querySelector('.casino-window-body-page-poker-player.active').classList.remove('active');
+                    }
+                }, 1000);
+
+                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                    if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                        setTimeout(() => {
+                            document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"]').classList.add('active');
+                        }, 1000);
+                    }
+
+                    if (element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler') && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                        if (response.split('/')[1] == document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+casinoPokerGetNext(element.getAttribute('pokerplayer'))+'"] .casino-window-body-page-poker-player-nickname span').textContent && !casinoPokerSmallBlind) {
+                            pokerListStavka = true;
+                            document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element2 => {
+                                if (element2.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element2.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass') {
+                                    if (element2.querySelector('.casino-window-body-page-poker-player-count-text span').textContent != element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent) {
+                                        pokerListStavka = false;
+                                    }
+                                }
+                            });
+                            if (pokerListStavka && casinoPokerLastResponse.split('/')[2] != 'allin') {
+                                iCardTable = 0;
+                                document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card').forEach(element => {
+                                    iCardTable++;
+                                });
+
+                                if (iCardTable == 0) {
+                                    uCefJS.triggerEvent('casino:Flop', casinoPokerTypeTableLast);
+                                
+                                    // casinoResponse('poker', 'flop/C5/BJ/CJ'); //TEST from server
+                                }
+                                else if (iCardTable == 3) {
+                                    uCefJS.triggerEvent('casino:Tern', casinoPokerTypeTableLast);
+                                
+                                    // casinoResponse('poker', 'tern/BA'); //TEST from server
+                                }
+                                else if (iCardTable == 4) {
+                                    uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                                
+                                    // casinoResponse('poker', 'river/BQ'); //TEST from server
+                                }
+                                else if (iCardTable == 5) {
+                                    uCefJS.triggerEvent('casino:ShowAll', casinoPokerTypeTableLast);
+                                    // casinoResponse('poker', 'showAll'); //from server
+
+                                    setTimeout(() => {
+                                        uCefJS.triggerEvent('casino:CheckComb', casinoPokerTypeTableLast);
+                                    }, 3000);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            else if (response == 'preFlop') {
+                casinoPokerLastTypeCard = response;
+                document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+                    element.remove();
+                });
+                document.querySelector('.casino-window-body-page-poker-bottom-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[0], true));
+                document.querySelector('.casino-window-body-page-poker-bottom-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[1], true));
+                setTimeout(() => {
+                    document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[0].classList.remove('rotate');
+                    document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[1].classList.remove('rotate');
+                    cefSoundPlay('casinoPokerShowOwnCards.wav');
+                }, 500);
+            }
+            else if (response == 'flop') {
+                casinoPokerLastTypeCard = response;
+                document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+                    element.remove();
+                });
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[0], true));
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[1], true));
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[2], true));
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerCardBgDiv);
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerCardBgDiv);
+                setTimeout(() => {
+                    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card')[0].classList.remove('rotate');
+                    cefSoundPlay('casinoPokerRotate.wav');
+                    setTimeout(() => {
+                        document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card')[1].classList.remove('rotate');
+                        cefSoundPlay('casinoPokerRotate.wav');
+                        setTimeout(() => {
+                            document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card')[2].classList.remove('rotate');
+                            cefSoundPlay('casinoPokerRotate.wav');
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }
+            else if (response == 'tern') {
+                casinoPokerLastTypeCard = response;
+                document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+                    element.remove();
+                });
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[0], true));
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerCardBgDiv);
+                setTimeout(() => {
+                    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card')[3].classList.remove('rotate');
+                    cefSoundPlay('casinoPokerRotate.wav');
+                }, 1000);
+            }
+            else if (response == 'river') {
+                casinoPokerLastTypeCard = response;
+                document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+                    element.remove();
+                });
+                document.querySelector('.casino-window-body-page-poker-table-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(JSON.parse(response2)[0], true));
+                setTimeout(() => {
+                    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card')[4].classList.remove('rotate');
+                    cefSoundPlay('casinoPokerRotate.wav');
+                }, 1000);
+            }
+            else if (response == 'showAll') {
+                casinoPokerCloseButtons();
+                casinoPokerShowAll = true;
+                if (document.querySelector('.casino-window-body-page-poker-player.active')) {
+                    document.querySelector('.casino-window-body-page-poker-player.active').classList.remove('active');
+                }
+
+                card1 = document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[0].getAttribute('pokercardtype')[0].toUpperCase()+document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[0].getAttribute('pokercardsymbol').toUpperCase();
+                card2 = document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[1].getAttribute('pokercardtype')[0].toUpperCase()+document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card')[1].getAttribute('pokercardsymbol').toUpperCase();
+                uCefJS.triggerEvent('casino:Response', 'poker', 'show/'+casinoNickname+'/'+card1+'/'+card2, casinoPokerTypeTableLast);
+                // casinoResponse('poker', 'show/'+casinoNickname+'/'+card1+'/'+card2);
+
+                document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card').forEach(element => {
+                    element.remove();
+                });
+                document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+                    element.remove();
+                });
+                for (let i = 0; i < 2; i++) {
+                    pokerCardBg = document.createElement('div');
+                    pokerCardBg.classList.add('casino-window-body-page-poker-table-card-bg');
+                    document.querySelector('.casino-window-body-page-poker-bottom-cards').appendChild(pokerCardBg);
+                }
+            }
+            else if (response.split('/')[0] == 'show') {
+                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                    if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == response.split('/')[1]) {
+                        element.querySelector('.casino-window-body-page-poker-player-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(response.split('/')[2], false));
+                        element.querySelector('.casino-window-body-page-poker-player-cards').insertAdjacentHTML('beforeend', casinoPokerGetCard(response.split('/')[3], false));
+                    }
+                });
+            }
+            else if (response == 'checkComb') {
+                casinoPokerCheckComb();
+            }
+            break;
+    }
+}
+
+function casinoPokerSetMoney(money) {
+    document.querySelector('.casino-window-body-money-text-poker span').textContent = moneyFormat(Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', ''))+money);
+}
+
+function casinoPokerReload() {
+    casinoPokerLastResponse = '';
+    casinoPokerLastResponseList = [];
+    casinoPokerSmallBlind = 0;
+    casinoPokerIsStarter = false;
+    casinoPokerShowAll = false;
+    casinoPokerLastTypeCard = '';
+    casinoIsGame = false;
+    casinoPokerIsAllin = false;
+
+    if (casinoPokerExitList) {
+        for (const key in casinoPokerExitList) {
+            document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+                if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent ==casinoPokerExitList[key]) {
+                    element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent = '';
+                    if (element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler')) {
+                        element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler').remove();
+                    }
+                }
+            });
+        }    
+    }
+    casinoPokerExitList = [];
+
+    iPokerCountPlayer = 0;
+    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+        iPokerCountPlayer++;
+        if (element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler')) {
+            element.querySelector('.casino-window-body-page-poker-player-nickname .poker-diler').remove();
+        }
+        element.querySelector('.casino-window-body-page-poker-player-do').textContent = '';
+        element.querySelector('.casino-window-body-page-poker-player-do').setAttribute('pokertypedo', '');
+        element.querySelector('.casino-window-body-page-poker-player-count').style.display = 'none';
+
+        if (element.classList[1] == 'active') {
+            element.classList.remove('active');
+        }
+
+        if (iPokerCountPlayer > 1) {
+            if (document.querySelector('.casino-window-body-page-poker-bottom-game-start-button.disable')) {
+                document.querySelector('.casino-window-body-page-poker-bottom-game-start-button').classList.remove('disable');
+            }
+            else {
+                if (!document.querySelector('.casino-window-body-page-poker-bottom-game-start-button.disable')) {
+                    document.querySelector('.casino-window-body-page-poker-bottom-game-start-button').classList.add('disable');
+                }
+            }
+        }
+    });
+
+    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card').forEach(element => {
+        element.remove();
+    });
+    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+        element.remove();
+    });
+    for (let i = 0; i < 5; i++) {
+        pokerCardBg = document.createElement('div');
+        pokerCardBg.classList.add('casino-window-body-page-poker-table-card-bg');
+        document.querySelector('.casino-window-body-page-poker-table-cards').appendChild(pokerCardBg);
+    }
+    document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card').forEach(element => {
+        element.remove();
+    });
+    document.querySelectorAll('.casino-window-body-page-poker-bottom-cards .casino-window-body-page-poker-table-card-bg').forEach(element => {
+        element.remove();
+    });
+    for (let i = 0; i < 2; i++) {
+        pokerCardBg = document.createElement('div');
+        pokerCardBg.classList.add('casino-window-body-page-poker-table-card-bg');
+        document.querySelector('.casino-window-body-page-poker-bottom-cards').appendChild(pokerCardBg);
+    }
+    document.querySelector('.casino-window-body-page-poker-bottom-bank').style.visibility = 'hidden';
+    document.querySelector('.casino-window-body-page-poker-bottom-bank span').textContent = '0';
+    document.querySelectorAll('.casino-window-body-page-poker-bottom-game-button').forEach(element => {
+        if (element.classList[2] != 'disable') {
+            element.classList.add('disable');
+        }
+    });
+    
+    document.querySelectorAll('.casino-window-body-page-poker-player-cards .casino-window-body-page-poker-table-card').forEach(element => {
+        element.remove();
+    });
+    document.querySelector('.casino-window-body-page-poker-bottom-game-buttons-block').style.display = 'none';
+    document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind').style.display = 'none';
+    document.querySelector('.casino-window-body-page-poker-bottom-game-start').style.display = '';
+
+    // uCefJS.triggerEvent('casino:giveMoney', casinoNickname, Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', ''))*0.9);
+    document.querySelector('.casino-window-body-money-text-poker span').textContent = '0';
+}
+
+function casinoPokerStartButton() {
+    casinoPokerCountPlayers = 0;
+    casinoPokerCountPlayersList = [];
+    casinoPokerIsStarter = true;
+    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent) {
+            casinoPokerCountPlayers++;
+            casinoPokerCountPlayersList.push(element.getAttribute('pokerplayer'));
+        }
+    });
+
+    uCefJS.triggerEvent('Start:Poker', 1, casinoPokerTypeTableLast);
+    document.querySelector('.casino-window-body-page-poker-bottom-game-start-button').classList.add('disable');
+}
+
+function casinoPokerCheckComb() {
+    cardsAll5 = [];
+    cardsAll = {};
+    document.querySelectorAll('.casino-window-body-page-poker-table-cards .casino-window-body-page-poker-table-card').forEach(element => {
+        cardsAll5.push(element.getAttribute('pokercardtype')[0].toUpperCase()+element.getAttribute('pokercardsymbol'));
+    });
+
+    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass') {
+            card1 = element.querySelectorAll('.casino-window-body-page-poker-player-cards .casino-window-body-page-poker-table-card')[0].getAttribute('pokercardtype')[0].toUpperCase()+element.querySelectorAll('.casino-window-body-page-poker-player-cards .casino-window-body-page-poker-table-card')[0].getAttribute('pokercardsymbol');
+            card2 = element.querySelectorAll('.casino-window-body-page-poker-player-cards .casino-window-body-page-poker-table-card')[1].getAttribute('pokercardtype')[0].toUpperCase()+element.querySelectorAll('.casino-window-body-page-poker-player-cards .casino-window-body-page-poker-table-card')[1].getAttribute('pokercardsymbol');
+            idPlayer = Number(element.getAttribute('pokerplayer'));
+            cardsAll[idPlayer] = [card1, card2];
+            cardsAll[idPlayer] = cardsAll5.concat(cardsAll[idPlayer]);
+        }
+        else if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') == 'pass') {
+            idPlayer = Number(element.getAttribute('pokerplayer'));
+            cardsAll[idPlayer] = 'pass';
+        }
+    });
+
+    // cardsAll = {
+    //     1: ['CA', 'KK', 'B9', 'KA', 'C9', 'PQ', 'BK'],
+    //     2: 'pass',
+    //     3: ['CA', 'KK', 'B9', 'KA', 'C9', 'K10', 'BJ'],
+    //     4: ['CA', 'KK', 'B9', 'KA', 'C9', 'CK', 'BQ']
+    // }
+    playersResult = {};
+
+    for (const key in cardsAll) {
+        if (cardsAll[key] != 'pass') {
+            playersResult[key] = casinoCheckCombination(cardsAll[key]);
+        }
+        else {
+            playersResult[key] = 'pass';
+        }
+    }
+
+    cardsCombination = {
+        'pass': [0, 'Пас'],
+        'starhaya': [1, 'Старшая карта'],
+        'para': [2, 'Пара'],
+        '2para': [3, 'Две пары'],
+        'set': [4, 'Сет'],
+        'strit': [5, 'Стрит'],
+        'flesh': [6, 'Флеш'],
+        'fullHouse': [7, 'Фулл хаус'],
+        'kare': [8, 'Каре'],
+        'stritFlesh': [9, 'Стрит-флеш'],
+        'fleshRoyal': [10, 'Флеш-рояль']
+    }
+
+    playersResultInt = [];
+    for (const key in playersResult) {
+        playersResultInt[key] = cardsCombination[playersResult[key]][0];
+    }
+
+    playersResultMax = 0;
+    for (const key in playersResultInt) {
+        if (playersResultInt[key] > playersResultMax) {
+            playersResultMax = playersResultInt[key];
+        }
+    }
+
+    playersResultDupl = casinoCountDuplicates(playersResultInt);
+    playersWithDuplResult = [];
+    for (const key in playersResultDupl) {
+        console.log(key, playersResultDupl[key])
+        if (playersResultDupl[key] > 1 && Number(key) == playersResultMax) {
+            for (const key2 in playersResultInt) {
+                if (playersResultInt[key2] == playersResultMax) {
+                    playersWithDuplResult.push(Number(key2));
+                }
+            }
+        }
+    }
+
+    playersMaxResult = [];
+    if (playersWithDuplResult[0]) {
+        cardsPrivate = {};
+        playersWithDuplResult.forEach(element => {
+            cardsPrivate[element] = Number(cardsAll[element][5].replace(cardsAll[element][5][0], '').replace('J', 11).replace('Q', 12).replace('K', 13).replace('A', 14))+Number(cardsAll[element][6].replace(cardsAll[element][6][0], '').replace('J', 11).replace('Q', 12).replace('K', 13).replace('A', 14));
+        });
+        cardsMaxCount = 0;
+        for (const key in cardsPrivate) {
+            if (cardsPrivate[key] > cardsMaxCount) {
+                cardsMaxCount = cardsPrivate[key];
+            }
+        }
+        for (const key in cardsPrivate) {
+            if (cardsPrivate[key] == cardsMaxCount) {
+                playersMaxResult.push(Number(key));
+            }
+        }
+    }
+    else {
+        for (const key in playersResultInt) {
+            if (playersResultInt[key] == playersResultMax) {
+                playersMaxResult.push(Number(key));
+            }
+        }
+    }
+
+    document.querySelectorAll('.casino-window-dialog-block-poker-result-block').forEach(element => {
+        element.style.display = 'none';
+    });
+    
+    for (const key in playersResult) {
+        document.querySelector('.casino-window-dialog-block-poker-result-block#player'+key).style.display = '';
+        document.querySelector('.casino-window-dialog-block-poker-result-block#player'+key+' .casino-window-dialog-block-poker-result-block-nickname').textContent = document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+key+'"] .casino-window-body-page-poker-player-nickname span').textContent;
+        document.querySelector('.casino-window-dialog-block-poker-result-block#player'+key+' .casino-window-dialog-block-poker-result-block-result').textContent = cardsCombination[playersResult[key]][1];
+    }
+    playersMaxResult.forEach(element => {
+        document.querySelector('.casino-window-dialog-block-poker-result-block#player'+element+' .casino-window-dialog-block-poker-result-block-nickname').innerHTML = document.querySelector('.casino-window-dialog-block-poker-result-block#player'+element+' .casino-window-dialog-block-poker-result-block-nickname').textContent+'<img src="/cefNew/img/casino/crown.png">';
+    
+        casinoPokerIsWin = false;
+        if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+element+'"] .casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+            cefSoundPlay('casinoPokerWin.wav');
+            casinoPokerIsWin = true;
+            // uCefJS.triggerEvent('casino:giveMoney', casinoNickname, ((Number(document.querySelector('.casino-window-body-page-poker-bottom-bank-count span').textContent.replaceAll('.', ''))/playersMaxResult.length)*0.9));
+        }
+    });
+
+    if (!casinoPokerIsWin && casinoRandom(1, 100) == 52) {
+        cefSoundPlay('casinoFail.wav');
+    }
+
+    casinoShowDialog('poker-result');
+
+    casinoPokerResultIntervalCount = 10;
+    casinoPokerResultInterval = setInterval(() => {
+        casinoPokerResultIntervalCount--;
+
+        if (casinoPokerResultIntervalCount == 5) {
+            casinoHideDialog();
+        }
+        if (casinoPokerResultIntervalCount == 0) {
+            casinoPokerReload();
+            clearInterval(casinoPokerResultInterval);
+        }
+    }, 1000);
+    // console.log(casinoCheckCombination(['K5', 'P3', 'B6', 'C6', 'B8', 'K10', 'KJ']));
+}
+
+function casinoCheckCombination(cardsFull) {
+    casinoCombination = '';
+    cards = [];
+    cardsFull.forEach(card => {
+        cards.push([card[0], Number(card.replace(card[0], '').replace('J', 11).replace('Q', 12).replace('K', 13).replace('A', 14))]);
+    });
+
+    // Проверка флеш-рояль, стрит-флеш
+    casinoFlesh = [];
+    cards.forEach(card => {
+        casinoFlesh.push(card[0]);
+    });
+    casinoFleshCount = casinoCountDuplicates(casinoFlesh)
+    for (const key in casinoFleshCount) {
+        if (casinoFleshCount[key] >= 5) {
+            casinoStrit = [];
+            cards.forEach(card => {
+                if (card[0] == key) {
+                    casinoStrit.push(card[1]);
+                }
+            });
+            if (casinoStrit.includes(10) && casinoStrit.includes(11) && casinoStrit.includes(12) && casinoStrit.includes(13) && casinoStrit.includes(14)) {
+                return 'fleshRoyal';
+            }
+            else if (casinoHasConsecutiveNumbers(casinoStrit)) {
+                return 'stritFlesh';
+            }
+        }
+    }
+
+    // Проверка каре
+    casinoKare = [];
+    cards.forEach(card => {
+        casinoKare.push(card[1]);
+    });
+    if (casinoHasDuplicates(casinoKare, 4)) {
+        return 'kare';
+    }
+
+    // Проверка фулл хаус
+    casinoFullHouse = [];
+    cards.forEach(card => {
+        casinoFullHouse.push(card[1]);
+    });
+    casinoCheckPara = false;
+    casinoCheckSet = false;
+    casinoFullHouseCount = casinoCountDuplicates(casinoFullHouse);
+    for (const key in casinoFullHouseCount) {
+        if (casinoFullHouseCount[key] >= 3) {
+            casinoCheckSet = true;
+            delete casinoFullHouseCount[key];
+        }
+        if (casinoFullHouseCount[key] >= 2) {
+            casinoCheckPara = true;
+            delete casinoFullHouseCount[key];
+        }
+    }
+    if (casinoCheckSet && casinoCheckPara) {
+        return 'fullHouse';
+    }
+
+    // Проверка флеш
+    casinoFlesh = [];
+    cards.forEach(card => {
+        casinoFlesh.push(card[0]);
+    });
+    if (casinoHasDuplicates(casinoFlesh, 5)) {
+        return 'flesh';
+    }
+
+    // Проверка стрит
+    casinoStrit = [];
+    cards.forEach(card => {
+        casinoStrit.push(card[1]);
+    });
+    if (casinoHasConsecutiveNumbers(casinoStrit)) {
+        return 'strit';
+    }
+
+    // Проверка сет
+    casinoSet = [];
+    cards.forEach(card => {
+        casinoSet.push(card[1]);
+    });
+    if (casinoHasDuplicates(casinoSet, 3)) {
+        return 'set';
+    }
+
+    // Проверка пар
+    casinoPara = [];
+    cards.forEach(card => {
+        casinoPara.push(card[1]);
+    });
+    casinoCheckPara1 = false;
+    casinoCheckPara2 = false;
+    casinoParaCount = casinoCountDuplicates(casinoPara);
+    for (const key in casinoParaCount) {
+        if (casinoParaCount[key] >= 2) {
+            if (!casinoCheckPara1) {
+                casinoCheckPara1 = true;
+            }
+            else if (casinoCheckPara1) {
+                casinoCheckPara2 = true;
+            }
+            delete casinoParaCount[key];
+        }
+    }
+    if (casinoCheckPara1 && casinoCheckPara2) {
+        return '2para';
+    }
+    else if (casinoCheckPara1) {
+        return 'para';
+    }
+
+    return 'starhaya';
+}
+
+function casinoCountDuplicates(arr) {
+    const counts = {};
+    arr.forEach(str => {
+        counts[str] = (counts[str] || 0) + 1;
+    });
+
+    return counts;
+}
+
+function casinoHasConsecutiveNumbers(arr) {
+    const sortedArr = arr.slice().sort((a, b) => a - b);
+    for (let i = 0; i <= sortedArr.length - 5; i++) {
+        let count = 1;
+        for (let j = i; j < sortedArr.length - 1; j++) {
+            if (sortedArr[j + 1] - sortedArr[j] === 1) {
+                count++;
+                if (count === 5) {
+                    return true;
+                }
+            } else {
+                count = 1;
+            }
+        }
+    }
+    return false;
+}
+
+function casinoHasDuplicates(arr, countCheck) {
+    const count = {};
+    arr.forEach(item => {
+        count[item] = (count[item] || 0) + 1;
+    });
+    for (let key in count) {
+        if (count[key] >= countCheck) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function casinoPokerButton(type) {
+    casinoLastBetMoney = 0;
+    for (let i = casinoPokerLastResponseList.length-1; i > 0; i--) {
+        if (!casinoLastBetMoney && casinoPokerLastResponseList[i].split('/')[1] != casinoNickname && Number(casinoPokerLastResponseList[i].split('/')[3])) {
+            casinoLastBetMoney = Number(casinoPokerLastResponseList[i].split('/')[3]);
+        }
+    }
+    if (type == 'call') {
+        document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                if (casinoPokerSmallBlind != 0) {
+                    uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/call/'+(Number(casinoPokerLastResponse.split('/')[3])-casinoPokerSmallBlind)+'/upToBlind', casinoPokerTypeTableLast);
+                    casinoPokerSetMoney(-(Number(casinoPokerLastResponse.split('/')[3])-casinoPokerSmallBlind));
+                    // casinoResponse('poker', 'bet/'+casinoNickname+'/call/'+(Number(casinoPokerLastResponse.split('/')[3])-casinoPokerSmallBlind)+'/upToBlind');
+                }
+                else {
+                    uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/call/'+casinoLastBetMoney, casinoPokerTypeTableLast);
+                    casinoPokerSetMoney(-Number(casinoLastBetMoney));
+                    // casinoResponse('poker', 'bet/'+casinoNickname+'/call/'+casinoLastBetMoney);
+                }
+            }
+        });
+    }
+    else if (type == 'x2') {
+        document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                if (casinoPokerSmallBlind != 0) {
+                    uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/x2/'+(Number(casinoPokerLastResponse.split('/')[3])*2-casinoPokerSmallBlind)+'/upToBlind', casinoPokerTypeTableLast);
+                    casinoPokerSetMoney(-(Number(casinoPokerLastResponse.split('/')[3])*2-casinoPokerSmallBlind));
+                    // casinoResponse('poker', 'bet/'+casinoNickname+'/x2/'+(Number(casinoPokerLastResponse.split('/')[3])*2-casinoPokerSmallBlind)+'/upToBlind');
+                    casinoPokerSmallBlind = 0;
+                }
+                else {
+                    uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/x2/'+Number(casinoLastBetMoney)*2, casinoPokerTypeTableLast);
+                    casinoPokerSetMoney(-Number(casinoLastBetMoney)*2);
+                }
+            }
+        });
+    }
+    else if (type == 'check') {
+        document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/check/'+element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent.replaceAll('.', ''), casinoPokerTypeTableLast);
+                // casinoResponse('poker', 'bet/'+casinoNickname+'/check/'+element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent.replaceAll('.', ''));
+            }
+        });
+    }
+    else if (type == 'pass') {
+        document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                casinoIsGame = false;
+                uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/pass', casinoPokerTypeTableLast);
+                // casinoResponse('poker', 'bet/'+casinoNickname+'/pass');
+            }
+        });
+    }
+    else if (type == 'allin') {
+        document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+            if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+                uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/allin/'+document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', ''), casinoPokerTypeTableLast);
+                casinoPokerSetMoney(-Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', '')));
+                pokerListAllin = true;
+                document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element2 => {
+                    if (element2.querySelector('.casino-window-body-page-poker-player-nickname span').textContent && element2.querySelector('.casino-window-body-page-poker-player-nickname span').textContent != casinoNickname && element2.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass') {
+                        if (element2.querySelector('.casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'allin') {
+                            pokerListAllin = false;
+                        }
+                    }
+                });
+
+                if (pokerListAllin) {
+                    if (casinoPokerLastTypeCard == 'preFlop') {
+                        uCefJS.triggerEvent('casino:Flop', casinoPokerTypeTableLast);
+                        uCefJS.triggerEvent('casino:Tern', casinoPokerTypeTableLast);
+                        uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                    }
+                    else if (casinoPokerLastTypeCard == 'flop') {
+                        uCefJS.triggerEvent('casino:Tern', casinoPokerTypeTableLast);
+                        uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                    }
+                    else if (casinoPokerLastTypeCard == 'tern') {
+                        uCefJS.triggerEvent('casino:River', casinoPokerTypeTableLast);
+                    }
+                    uCefJS.triggerEvent('casino:ShowAll', casinoPokerTypeTableLast);
+
+                    setTimeout(() => {
+                        uCefJS.triggerEvent('casino:CheckComb', casinoPokerTypeTableLast);
+                    }, 3000);
+                }
+                // casinoResponse('poker', 'bet/'+casinoNickname+'/allin/'+document.querySelector('.casino-window-body-money-text span').textContent.replaceAll('.', ''));
+            }
+        });
+    }
+
+    casinoPokerCloseButtons();
+}
+
+function casinoPokerOpenButtons() {
+    if (casinoPokerShowAll) return;
+    document.querySelector('.casino-window-body-page-poker-bottom-game-buttons-block').style.display = '';
+    document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind').style.display = 'none';
+    document.querySelector('.casino-window-body-page-poker-bottom-game-start').style.display = 'none';
+
+    document.querySelector('.casino-window-body-page-poker-bottom-game-button.pass').classList.remove('disable');
+    document.querySelector('.casino-window-body-page-poker-bottom-game-button.allin').classList.remove('disable');
+
+    if (document.querySelector('.casino-window-body-page-poker-bottom-game-button.check')) {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-button.check').classList.add('call');
+        document.querySelector('.casino-window-body-page-poker-bottom-game-button.check').textContent = 'Ответить';
+        document.querySelector('.casino-window-body-page-poker-bottom-game-button.check').classList.remove('check');
+    }
+
+    document.querySelectorAll('.casino-window-body-page-poker-player').forEach(element => {
+        if (element.querySelector('.casino-window-body-page-poker-player-nickname span').textContent == casinoNickname) {
+            casinoLastBetMoney = 0;
+            for (let i = casinoPokerLastResponseList.length-1; i > 0; i--) {
+                if (!casinoLastBetMoney && casinoPokerLastResponseList[i].split('/')[1] != casinoNickname && Number(casinoPokerLastResponseList[i].split('/')[3])) {
+                    casinoLastBetMoney = Number(casinoPokerLastResponseList[i].split('/')[3]);
+                }
+            }
+            
+            if (casinoLastBetMoney == Number(element.querySelector('.casino-window-body-page-poker-player-count-text span').textContent.replaceAll('.', ''))) {
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.call').classList.add('check');
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.call').classList.remove('disable');
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.call').textContent = 'Чек';
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.call').classList.remove('call');
+            }
+            else if (casinoLastBetMoney <= Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', ''))) {
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.call').classList.remove('disable');
+            }
+            
+            if (!casinoPokerIsAllin && casinoLastBetMoney*2 <= Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', ''))) {
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.x2').classList.remove('disable');
+            }
+
+            if (casinoPokerIsAllin) {
+                document.querySelectorAll('.casino-window-body-page-poker-bottom-game-button').forEach(element => {
+                    if (element.classList[1] != 'disable') {
+                        element.classList.add('disable');
+                    }
+                });
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.allin').classList.remove('disable');
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.pass').classList.remove('disable');
+            }
+            if (Number(document.querySelector('.casino-window-body-money-text-poker span').textContent.replaceAll('.', '')) <= 0) {
+                document.querySelectorAll('.casino-window-body-page-poker-bottom-game-button').forEach(element => {
+                    if (element.classList[1] != 'disable') {
+                        element.classList.add('disable');
+                    }
+                });
+                document.querySelector('.casino-window-body-page-poker-bottom-game-button.pass').classList.remove('disable');
+            }
+        }
+    });
+
+    document.querySelector('.casino-window-body-page-poker-bottom-game-title').innerHTML = 'Игра (<span>30</span>с)';
+    casinoButtonsInterval = setInterval(() => {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-title span').textContent = Number(document.querySelector('.casino-window-body-page-poker-bottom-game-title span').textContent)-1;
+
+        if (Number(document.querySelector('.casino-window-body-page-poker-bottom-game-title span').textContent) == 0) {
+            clearInterval(casinoButtonsInterval);
+            casinoPokerButton('pass');
+        }
+    }, 1000);
+}
+
+function casinoPokerCloseButtons() {
+    clearInterval(casinoButtonsInterval);
+    document.querySelector('.casino-window-body-page-poker-bottom-game-title').innerHTML = 'Игра';
+    document.querySelectorAll('.casino-window-body-page-poker-bottom-game-button').forEach(element => {
+        if (element.classList[2] != 'disable') {
+            element.classList.add('disable');
+        }
+    });
+}
+
+function casinoPokerGetCard(type, isRotate) {
+    switch (type[0]) {
+        case 'B': typeCard = 'bubny'; break;
+        case 'C': typeCard = 'chervy'; break;
+        case 'P': typeCard = 'piki'; break;
+        case 'K': typeCard = 'kresty'; break;
+    }
+    rotateClass = '';
+    if (isRotate) {rotateClass = 'rotate';}
+    casinoPokerCardDiv = `<div class="casino-window-body-page-poker-table-card `+rotateClass+`" pokercardtype="`+typeCard+`" pokercardsymbol="`+type.replace(type[0], '')+`">
+        <div class="casino-window-body-page-poker-table-card-front">
+            <img src="/cefNew/img/casino/poker-`+typeCard+`.png" class="casino-window-body-page-poker-table-card-img">
+            <div class="casino-window-body-page-poker-table-card-symbol-1">`+type.replace(type[0], '')+`</div>
+            <div class="casino-window-body-page-poker-table-card-symbol-2">`+type.replace(type[0], '')+`</div>
+        </div>
+        <div class="casino-window-body-page-poker-table-card-back">
+            <img src="/cefNew/img/casino/cardbg.png" class="casino-window-body-page-poker-table-card-back-img">
+        </div>
+    </div>`;
+    return casinoPokerCardDiv;
+}
+
+function casinoPokerGetNext(id) {
+    if (Number(id) == 4) {
+        if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="1"] .casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass' && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="1"] .casino-window-body-page-poker-player-nickname span').textContent) {
+            return 1;
+        }
+        else {
+            return casinoPokerGetNext(1+1);
+        }
+    }
+    else {
+        if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+(Number(id)+1)+'"] .casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass' && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+(Number(id)+1)+'"] .casino-window-body-page-poker-player-nickname span').textContent) {
+            return Number(id)+1;
+        }
+        else {
+            return casinoPokerGetNext(Number(id)+1);
+        }
+    }
+}
+
+function casinoPokerGetPrev(id) {
+    if (Number(id) == 1) {
+        if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="4"] .casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass' && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="4"] .casino-window-body-page-poker-player-nickname span').textContent) {
+            return 4;
+        }
+        else {
+            return casinoPokerGetNext(4-1);
+        }
+    }
+    else {
+        if (document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+(Number(id)-1)+'"] .casino-window-body-page-poker-player-do').getAttribute('pokertypedo') != 'pass' && document.querySelector('.casino-window-body-page-poker-player[pokerplayer="'+(Number(id)-1)+'"] .casino-window-body-page-poker-player-nickname span').textContent) {
+            return Number(id)-1;
+        }
+        else {
+            return casinoPokerGetNext(Number(id)-1);
+        }
+    }
+}
+
+function casinoDiceStopGame() {
+    casinoDiceVsNickname = document.querySelector('.casino-window-body-dice-poly.vs .casino-window-body-dice-poly-nickname').textContent;
+    showCasino('dice', casinoNickname);
+    casinoResponse('dice', 'join/'+casinoDiceVsNickname);
+}
+
+function casinoDiceCheckWinner() {
+    casinoDiceOwnScore = Number(document.querySelector('.casino-window-body-dice-poly.own .casino-window-body-dice-poly-score span').textContent);
+    casinoDiceVsScore = Number(document.querySelector('.casino-window-body-dice-poly.vs .casino-window-body-dice-poly-score span').textContent);
+    casinoDiceVsNickname = document.querySelector('.casino-window-body-dice-poly.vs .casino-window-body-dice-poly-nickname').textContent;
+
+    if (casinoDiceOwnScore > casinoDiceVsScore) {
+        casinoShowDialog('info', 'Вы выиграли, набрав большее количество очков: '+casinoDiceOwnScore+'.', 'Хорошо');
+        uCefJS.triggerEvent('casino:giveMoney', casinoNickname, (casinoLastBet*2)*0.9);
+        uCefJS.triggerEvent('casino:Response', 'dice', 'showDialog/info/'+casinoNickname+' выигрывает, набрав большее количество очков: '+casinoDiceOwnScore+'./Хорошо');
+    }
+    else if (casinoDiceOwnScore < casinoDiceVsScore) {
+        casinoShowDialog('info', casinoDiceVsNickname+' выигрывает, набрав большее количество очков: '+casinoDiceVsScore+'.', 'Хорошо');
+        uCefJS.triggerEvent('casino:giveMoney', casinoDiceVsNickname, (casinoLastBet*2)*0.9);
+        uCefJS.triggerEvent('casino:Response', 'dice', 'showDialog/info/Вы выиграли, набрав большее количество очков: '+casinoDiceVsScore+'./Хорошо');
+    }
+    else if (casinoDiceOwnScore == casinoDiceVsScore) {
+        casinoShowDialog('info', 'Ничья! Вы набрали одинаковое количество очков.', 'Хорошо');
+        uCefJS.triggerEvent('casino:giveMoney', casinoNickname, casinoLastBet*0.9);
+        uCefJS.triggerEvent('casino:giveMoney', casinoDiceVsNickname, casinoLastBet*0.9);
+        uCefJS.triggerEvent('casino:Response', 'dice', 'showDialog/info/Ничья! Вы набрали одинаковое количество очков./Хорошо');
+    }
+
+    casinoLastBet = 0;
+    casinoIsGame = false;
+
+    setTimeout(() => {
+        casinoDiceStopGame();
+        uCefJS.triggerEvent('casino:Response', 'dice', 'stopGame');
+    }, 2000);
+}
+
+function casinoDiceNonStarterStart() {
+    setTimeout(() => {
+        iDice = 0;
+        casinoDiceSound.play();
+        dice1Interval2 = setInterval(() => {
+            iDice++;
+            if (iDice < 12) {
+                casinoDice1Random = casinoRandom(1, 6);
+                casinoDiceUpdate('own', 'dice1', casinoDice1Random);
+                uCefJS.triggerEvent('casino:Response', 'dice', 'update/vs/dice1/'+casinoDice1Random);
+            }
+            if (iDice < 15) {
+                casinoDice2Random = casinoRandom(1, 6);
+                casinoDiceUpdate('own', 'dice2', casinoDice2Random);
+                uCefJS.triggerEvent('casino:Response', 'dice', 'update/vs/dice2/'+casinoDice2Random);
+            }
+            if (iDice == 15) {
+                clearInterval(dice1Interval2);
+                uCefJS.triggerEvent('casino:Response', 'dice', 'nonStarterStop');
+            }
+        }, 150);
+    }, 3000);
+}
+
+function casinoDiceStart(isStarter) {
+    casinoIsGame = true;
+    document.querySelectorAll('.casino-window-body-dice-poly-dice').forEach(element => {
+        element.style.display = '';
+    });
+    document.querySelectorAll('.casino-window-body-dice-poly-score').forEach(element => {
+        element.style.display = '';
+        element.querySelector('span').textContent = '12';
+    });
+    document.querySelectorAll('.casino-window-body-dice-poly-dice-pips#pip6').forEach(element => {
+        element.style.display = '';
+    });
+
+    if (isStarter) {
+        setTimeout(() => {
+            iDice = 0;
+            casinoDiceSound.play();
+            dice1Interval = setInterval(() => {
+                iDice++;
+                if (iDice < 12) {
+                    casinoDice1Random = casinoRandom(1, 6);
+                    casinoDiceUpdate('own', 'dice1', casinoDice1Random);
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'update/vs/dice1/'+casinoDice1Random);
+                }
+                if (iDice < 15) {
+                    casinoDice2Random = casinoRandom(1, 6);
+                    casinoDiceUpdate('own', 'dice2', casinoDice2Random);
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'update/vs/dice2/'+casinoDice2Random);
+                } 
+                if (iDice == 15) {
+                    clearInterval(dice1Interval);
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'starterStop');
+                }
+            }, 150);
+        }, 3000);
+    }
+}
+
+function casinoDiceUpdate(type, dice, pip) {
+    document.querySelectorAll('.casino-window-body-dice-poly.'+type+' #'+dice+' .casino-window-body-dice-poly-dice-pips').forEach(element => {
+        element.style.display = 'none';
+    });
+    document.querySelector('.casino-window-body-dice-poly.'+type+' #'+dice+' #pip'+pip).style.display = '';
+
+    document.querySelector('.casino-window-body-dice-poly.'+type+' .casino-window-body-dice-poly-score span').textContent = Number(document.querySelector('.casino-window-body-dice-poly.'+type+' #dice1 .casino-window-body-dice-poly-dice-pips[style=""]').getAttribute('id').replace('pip', ''))+Number(document.querySelector('.casino-window-body-dice-poly.'+type+' #dice2 .casino-window-body-dice-poly-dice-pips[style=""]').getAttribute('id').replace('pip', ''));
+}
+
+function casinoRandom(min, max) {
+    return (Math.random() * (max - min) + min).toFixed(0);
+}
+
+function casinoDiceATP(type) {
+    if (type == 'cancel') {
+        uCefJS.triggerEvent('casino:Response', 'dice', 'cancelBet');
+        clearInterval(casinoATPInterval);
+        casinoHideDialog();
+    }
+    else if (type == 'agree') {
+        uCefJS.triggerEvent('casino:Response', 'dice', 'agreeBet');
+        uCefJS.triggerEvent('casino:removeMoney', casinoLastBet);
+        clearInterval(casinoATPInterval);
+        casinoHideDialog();
+        casinoDiceStart(false);
+    }
+}
+
+function casinoDiceButton() {
+    if (casinoIsGame) {return;}
+    if (!document.querySelector('.casino-window-body-dice-bottom-input').value) {
+        casinoShowDialog('info', 'Введите размер ставки.', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-dice-bottom-input').value) > Number(document.querySelector('.casino-window-body-money-text span').textContent.replaceAll('.', ''))) {
+        casinoShowDialog('info', 'У вас недостаточно средств.', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-dice-bottom-input').value) < 1000) {
+        casinoShowDialog('info', 'Минимальный размер ставки - 1.000₽', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-dice-bottom-input').value) > 1000000) {
+        casinoShowDialog('info', 'Максимальный размер ставки - 1.000.000₽', 'Хорошо');
+    }
+    else {
+        uCefJS.triggerEvent('casino:Response', 'dice', 'bet/'+casinoNickname+'/'+document.querySelector('.casino-window-body-dice-bottom-input').value);
+        casinoShowDialog('infoWait', 'Ожидание ответа от второго игрока (<span>15</span>с).');
+        casinoLastBet = Number(document.querySelector('.casino-window-body-dice-bottom-input').value);
+        document.querySelector('.casino-window-body-dice-bottom-input').value = '';
+        clearInterval(casinoATPInterval);
+    }
+}
+
+function casinoRoleButton() {
+    if (casinoIsGame || casinoLastBet) {return;}
+    if (casinoRoleLastPolys.length == 0) {
+        casinoShowDialog('info', 'Выберите поле для ставки.', 'Хорошо');
+    }
+    else if (!document.querySelector('.casino-window-body-role-bottom-input').value) {
+        casinoShowDialog('info', 'Введите размер ставки.', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-role-bottom-input').value) > Number(document.querySelector('.casino-window-body-money-text span').textContent.replaceAll('.', ''))) {
+        casinoShowDialog('info', 'У вас недостаточно средств', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-role-bottom-input').value) < 1000) {
+        casinoShowDialog('info', 'Минимальный размер ставки - 1.000₽', 'Хорошо');
+    }
+    else if (Number(document.querySelector('.casino-window-body-role-bottom-input').value) > 1000000) {
+        casinoShowDialog('info', 'Максимальный размер ставки - 1.000.000₽', 'Хорошо');
+    }
+    else {
+        // casinoResponse('role', 'bet/'+casinoNickname+'/'+casinoRoleLastBet+'/'+document.querySelector('.casino-window-body-role-bottom-input').value+'/'+casinoRandom(200, 400)+'/'+casinoRandom(200, 400));
+        uCefJS.triggerEvent('casino:Response', 'role', 'bet/'+casinoNickname+'/'+casinoRoleLastBet+'/'+document.querySelector('.casino-window-body-role-bottom-input').value, casinoRandom(200, 400), casinoRandom(200, 400));
+        casinoLastBet = Number(document.querySelector('.casino-window-body-role-bottom-input').value);
+        casinoRoleIsBet = true;
+        document.querySelector('.casino-window-body-role-bottom-input').value = '';
+        document.querySelectorAll('.casino-window-body-page-role-table-svg [casinorole]').forEach(element => {
+            element.setAttribute('stroke', 'white');
+        });
+        // casinoResponse('role', 'startTime'); //TEST
+    }
+}
+
+function casinoBlindButton() {
+    if (!document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value) {
+        casinoShowDialog('info', 'Введите размер малого блайнда.', 'Хорошо');
+    }
+    else if (document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value < casinoPokerTypeTable[casinoPokerTypeTableLast][0] || document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value > casinoPokerTypeTable[casinoPokerTypeTableLast][1]) {
+        casinoShowDialog('info', 'Малый блайнд за этим столом<br>от '+moneyFormat(casinoPokerTypeTable[casinoPokerTypeTableLast][0])+' до '+moneyFormat(casinoPokerTypeTable[casinoPokerTypeTableLast][1])+' ₽', 'Хорошо');
+    }
+    else {
+        clearInterval(pokerBlindTimer);
+        document.querySelector('.casino-window-body-page-poker-bottom-game-buttons-block').style.display = '';
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind').style.display = 'none';
+        casinoPokerSmallBlind = Number(document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value);
+        // casinoResponse('poker', 'bet/'+casinoNickname+'/smallBlind/'+casinoPokerSmallBlind);
+        uCefJS.triggerEvent('casino:Response', 'poker', 'bet/'+casinoNickname+'/smallBlind/'+casinoPokerSmallBlind, casinoPokerTypeTableLast);
+        casinoPokerSetMoney(-casinoPokerSmallBlind);
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value = '';
+    }
+}
+
+function casinoCheckDiceInput() {
+    if (casinoIsGame || casinoLastBet) {
+        document.querySelector('.casino-window-body-dice-bottom-input').value = '';
+        return;
+    }
+    count = document.querySelector('.casino-window-body-dice-bottom-input').value;
+
+    if (count.split('')[0] == 0) {
+        document.querySelector('.casino-window-body-dice-bottom-input').value = '';
+    }
+    if (!casinoNumbers.includes(Number(count.split('').at(-1)))) {
+        document.querySelector('.casino-window-body-dice-bottom-input').value = count.slice(0, -1);
+    }
+}
+
+function casinoCheckRoleInput() {
+    if (casinoIsGame || casinoLastBet) {
+        document.querySelector('.casino-window-body-role-bottom-input').value = '';
+        return;
+    }
+    count = document.querySelector('.casino-window-body-role-bottom-input').value;
+
+    if (count.split('')[0] == 0) {
+        document.querySelector('.casino-window-body-role-bottom-input').value = '';
+    }
+    if (!casinoNumbers.includes(Number(count.split('').at(-1)))) {
+        document.querySelector('.casino-window-body-role-bottom-input').value = count.slice(0, -1);
+    }
+}
+
+function casinoCheckBlindInput() {
+    count = document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value;
+
+    if (count.split('')[0] == 0) {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value = '';
+    }
+    if (!casinoNumbers.includes(Number(count.split('').at(-1)))) {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value = count.slice(0, -1);
+    }
+}
+
+function casinoChangeDiceInput(sum) {
+    if (casinoIsGame || casinoLastBet) {return;}
+    count = document.querySelector('.casino-window-body-dice-bottom-input').value;
+
+    if (Number(count)+sum <= 0) {
+        document.querySelector('.casino-window-body-dice-bottom-input').value = '';
+    }
+    else {
+        document.querySelector('.casino-window-body-dice-bottom-input').value = Number(count)+sum;
+    }
+}
+
+function casinoChangeRoleInput(sum) {
+    if (casinoIsGame || casinoLastBet) {return;}
+    count = document.querySelector('.casino-window-body-role-bottom-input').value;
+
+    if (Number(count)+sum <= 0) {
+        document.querySelector('.casino-window-body-role-bottom-input').value = '';
+    }
+    else {
+        document.querySelector('.casino-window-body-role-bottom-input').value = Number(count)+sum;
+    }
+}
+
+function casinoChangeBlindInput(sum) {
+    count = document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value;
+
+    if (Number(count)+sum <= 0) {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value = '';
+    }
+    else {
+        document.querySelector('.casino-window-body-page-poker-bottom-game-smallblind-input-block-input').value = Number(count)+sum;
+    }
+}
+
+function casinoShowDialog(type, title, button1, button2) {
+    if (document.querySelector('.casino-window-dialog').style.display == '') {
+        casinoHideDialog();
+        setTimeout(() => {
+            casinoShowDialog(type, title, button1, button2);
+        }, 300);
+    }
+    switch (type) {
+        case 'askToPlay':
+            document.querySelector('.casino-window-dialog#askToPlay .casino-window-dialog-block-title').innerHTML = 'Игра - кости (<span>15</span>с)';
+            document.querySelector('.casino-window-dialog#askToPlay #casinoDiceATPNickname').textContent = title;
+            document.querySelector('.casino-window-dialog#askToPlay #casinoDiceATPSum').textContent = moneyFormat(button1)+' ₽';
+
+            casinoATPInterval = setInterval(() => {
+                if (document.querySelector('.casino-window-dialog#askToPlay .casino-window-dialog-block-title span').textContent == '1') {
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'noResponseBet');
+                    uCefJS.triggerEvent('casino:Response', 'dice', 'exit');
+                    clearInterval(casinoATPInterval);
+                    casinoHideDialog();
+                    hideCasino();
+                    showNotice(4, 'Казино', 'Вы не ответили на ставку и были исключены из игры.');
+                }
+                document.querySelector('.casino-window-dialog#askToPlay .casino-window-dialog-block-title span').textContent = Number(document.querySelector('.casino-window-dialog#askToPlay .casino-window-dialog-block-title span').textContent)-1;
+            }, 1000);
+            break;
+        case 'info':
+            document.querySelector('.casino-window-dialog-block-info-title').innerHTML = title;
+            document.querySelector('.casino-window-dialog#info .casino-window-dialog-block-button.active').textContent = button1;
+            document.querySelector('.casino-window-dialog#info .casino-window-dialog-block-button.active').style.display = '';
+            break;
+        case 'infoWait':
+            document.querySelector('.casino-window-dialog-block-info-title').innerHTML = title;
+            document.querySelector('.casino-window-dialog#info .casino-window-dialog-block-button.active').style.display = 'none';
+            type = 'info';
+            casinoBetInterval = setInterval(() => {
+                if (document.querySelector('.casino-window-dialog-block-info-title span').textContent == '1') {
+                    clearInterval(casinoBetInterval);
+                    casinoHideDialog();
+
+                    //TEST
+                    // casinoResponse('dice', 'noResponseBet');
+                    // casinoResponse('dice', 'exit');
+                }
+                document.querySelector('.casino-window-dialog-block-info-title span').textContent = Number(document.querySelector('.casino-window-dialog-block-info-title span').textContent)-1;
+            }, 1000);
+            break;
+        case 'switch':
+            document.querySelector('.casino-window-dialog-block-info-title').innerHTML = title;
+            document.querySelector('.casino-window-dialog#switch .casino-window-dialog-block-button').textContent = button1;
+            document.querySelector('.casino-window-dialog#switch .casino-window-dialog-block-button').setAttribute('onclick', 'casinoHideDialog()');
+            document.querySelector('.casino-window-dialog#switch .casino-window-dialog-block-button.active').textContent = button2;
+            document.querySelector('.casino-window-dialog#switch .casino-window-dialog-block-button.active').setAttribute('onclick', 'uCefJS.triggerEvent("Casino:Close", 1); casinoHideDialog();');
+            break;
+        case 'rules':
+            document.querySelector('.casino-window-dialog-block-rules-title span').innerHTML = title;
+            document.querySelectorAll('.casino-window-dialog-block-rules-textarea').forEach(element => {
+                element.style.display = 'none';
+            });
+            document.querySelector('.casino-window-dialog-block-rules-textarea#'+button1).style.display = '';
+            break;
+        case 'poker-cards':
+            document.querySelector('.casino-window-dialog-block-rules-textarea#poker-cards').style.display = '';
+            break
+        case 'role-result':
+            document.querySelector('.casino-window-dialog-block-role-result').classList.remove('red');
+            document.querySelector('.casino-window-dialog-block-role-result').classList.remove('black');
+            if (casinoRolePoly['red'].includes(title)) {
+                document.querySelector('.casino-window-dialog-block-role-result').classList.add('red');
+            }
+            else if (casinoRolePoly['black'].includes(title)) {
+                document.querySelector('.casino-window-dialog-block-role-result').classList.add('black');
+            }
+            document.querySelector('.casino-window-dialog-block-role-result').textContent = title;
+
+            resultPrice = 0;
+
+            console.log(casinoRoleLastBet, title)
+
+            if (casinoRoleLastBet == '1-18' && title >= 1 && title <= 18) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == '19-36' && title >= 19 && title <= 36) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == 'red' && casinoRolePoly['red'].includes(title)) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == 'black' && casinoRolePoly['black'].includes(title)) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == 'chet' && title % 2 == 0) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == 'nechet' && title % 2 != 0) {
+                resultPrice = casinoLastBet*2;
+            }
+            else if (casinoRoleLastBet == '1st12' && title >= 1 && title <= 12) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (casinoRoleLastBet == '2nd12' && title >= 13 && title <= 24) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (casinoRoleLastBet == '3rd12' && title >= 25 & title <= 36) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (casinoRoleLastBet == '1col' && casinoRolePoly['1col'].includes(title)) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (casinoRoleLastBet == '2col' && casinoRolePoly['2col'].includes(title)) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (casinoRoleLastBet == '3col' && casinoRolePoly['3col'].includes(title)) {
+                resultPrice = casinoLastBet*3;
+            }
+            else if (Number(casinoRoleLastBet) >= 1 && Number(casinoRoleLastBet) <= 36 && title == Number(casinoRoleLastBet)) {
+                resultPrice = casinoLastBet*7;
+            }
+            else if ((title == '0' && casinoRoleLastBet == '0') || (title == '00' && casinoRoleLastBet == '00')) {
+                resultPrice = casinoLastBet*7;
+            }
+            else {
+                resultPrice = 0;
+            }
+
+            if (resultPrice != 0) {
+                showNotice(1, 'Вы выиграли!', 'Ваша ставка: '+casinoRoleLastBet+', выигрыш: '+resultPrice+'.');
+                console.log('casino:giveMoney',resultPrice)
+                uCefJS.triggerEvent('casino:giveMoney', casinoNickname, resultPrice*0.9);
+            }
+            else {
+                showNotice(3, 'Вы проиграли', 'Ваша ставка: '+casinoRoleLastBet+', выпало: '+title+'.');
+            }
+
+            casinoRoleResultTime = 5;
+            casinoRoleResultTimer = setInterval(() => {
+                casinoRoleResultTime--;
+                if (casinoRoleResultTime < 0) {
+                    casinoHideDialog('role-result');
+                    clearInterval(casinoRoleResultTimer);
+                }
+            }, 1000);
+            break;
+    }
+
+    document.querySelector('.casino-window-dialog#'+type).style.display = '';
+    setTimeout(() => {
+        document.querySelector('.casino-window-dialog#'+type).style.opacity = '1';
+    }, 100);
+
+}
+
+function casinoHideDialog(type) {
+    if (type == 'role-result') {
+        uCefJS.triggerEvent('casino:Response', 'role', 'stopBet/'+casinoNickname);
+        uCefJS.triggerEvent('casino:startRole', 0);
+        casinoResponse('role', 'stopBet/'+casinoNickname);
+
+        casinoRoleLastBet = '';
+        casinoRoleLastPolys = [];
+        casinoLastBet = 0;
+        casinoRoleResult = 0;
+        casinoRoleIsBet = false;
+        casinoIsGame = false;
+    }
+
+    document.querySelectorAll('.casino-window-dialog').forEach(element => {
+        if (element.style.display != 'none') {
+            element.style.opacity = '0';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 300);
+        }
+    });
+}

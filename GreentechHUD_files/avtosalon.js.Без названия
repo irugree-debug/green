@@ -1,0 +1,142 @@
+var avtosalonMaxVar = {
+    "speed": 222,
+    "fuel": 100,
+    "engine": 10000,
+    "power": 500
+};
+var avtosalonNoticeInterval = '';
+
+document.addEventListener('keydown', function(event) {
+    if (event.key == 'Alt' && document.querySelector('.avtosalon-button').style.display == '') {
+        uCefJS.triggerEvent('avtosalon:Alt', 1);
+    }
+});
+
+function showAvtosalon(isLeader) {
+    document.querySelector('.avtosalon').style.display = '';
+    document.querySelector('.avtosalon-right-button').textContent = 'Купить';
+    showInterface(lastHudId, false);
+    document.querySelector('.main-menu-body-hud-block#' + lastHudId).classList.add('select');
+
+    if (isLeader == 0) {
+        document.querySelector('.avtosalon-right-button.org').style.display = 'none';
+    } else {
+        document.querySelector('.avtosalon-right-button.org').style.display = '';
+    }
+}
+
+function hideAvtosalon() {
+    document.querySelector('.avtosalon').style.display = 'none';
+    showInterface('newHud-' + lastHudId, true);
+}
+
+// ASsetCar('ВАЗ 2107', 2003, 125, 60, 1529, '92/84', 92, 8.5154235346, 'Задний', 'МКПП', 'Седан', 125000)
+
+function ASsetCar(namecar, year, speed, fuel, engine, power, typefuel, rashod, rear, kpp, kuzov, price, limitAll = 0, limit = 0) {
+    document.querySelector('.avtosalon-left-choose-block-name').textContent = namecar;
+    document.querySelector('.avtosalon-left-year span').textContent = year;
+    document.querySelector('.avtosalon-left-character-block#ASspeed .avtosalon-left-character-block-line-block-text').textContent = speed + ' км/ч';
+    document.querySelector('.avtosalon-left-character-block#ASspeed .avtosalon-left-character-block-line').style.width = ASgetVar('speed', speed) + '%';
+    document.querySelector('.avtosalon-left-character-block#ASfuel .avtosalon-left-character-block-line-block-text').textContent = fuel + ' л';
+    if (typefuel == 'Электро') document.querySelector('.avtosalon-left-character-block#ASfuel .avtosalon-left-character-block-line-block-text').textContent = fuel + ' %';
+    document.querySelector('.avtosalon-left-character-block#ASfuel .avtosalon-left-character-block-line').style.width = ASgetVar('fuel', fuel) + '%';
+    document.querySelector('.avtosalon-left-character-block#ASengine .avtosalon-left-character-block-line-block-text').textContent = engine + ' см³';
+    document.querySelector('.avtosalon-left-character-block#ASengine .avtosalon-left-character-block-line').style.width = ASgetVar('engine', engine) + '%';
+    document.querySelector('.avtosalon-left-character-block#ASpower .avtosalon-left-character-block-line-block-text').textContent = power + ' кВт/л.с.';
+    document.querySelector('.avtosalon-left-character-block#ASpower .avtosalon-left-character-block-line').style.width = ASgetVar('power', power) + '%';
+    document.querySelector('.avtosalon-left-caption-block-text#AStypefuel').textContent = typefuel;
+    document.querySelector('.avtosalon-left-caption-block-text#ASrashod').textContent = rashod.toFixed(1);
+    if (typefuel == 'Электро') document.querySelector('.avtosalon-left-caption-block-text#ASrashod').textContent = rashod.toFixed(1) + ' %';
+    document.querySelector('.avtosalon-left-caption-block-text#ASrear').textContent = rear;
+    if (kpp == 'АКПП') kpp = 'Автомат';
+    if (kpp == 'МКПП') kpp = 'Механика';
+    document.querySelector('.avtosalon-left-caption-block-text#ASkpp').textContent = kpp;
+    document.querySelector('.avtosalon-left-caption-block-text#ASkuzov').textContent = kuzov;
+    document.querySelector('.avtosalon-right-price span').textContent = moneyFormat(price);
+    if (limitAll == 0) {
+        document.querySelector('.avtosalon-left-caption-block#avtosalon-block-limit').style.display = 'none';
+    } else {
+        document.querySelector('.avtosalon-left-caption-block#avtosalon-block-limit').style.display = '';
+        document.querySelector('.avtosalon-left-caption-block-text#ASlimit').textContent = limit + '/' + limitAll;
+    }
+}
+
+function ASclickBuy(element) {
+    if (element.textContent == 'Купить' || element.textContent == 'Купить в организацию') {
+        element.innerHTML = 'Вы уверены? (<span>10</span>)';
+
+        ASBuyInterval = setInterval(() => {
+            element.querySelector('span').textContent = Number(element.querySelector('span').textContent) - 1;
+
+            if (Number(element.querySelector('span').textContent) == 0) {
+                element.textContent = 'Купить';
+                clearInterval(ASBuyInterval);
+            }
+        }, 1000);
+    } else if (element.textContent.split(' (')[0] == 'Вы уверены?') {
+        if (element.classList[1] == 'private') {
+            uCefJS.triggerEvent('Avtosalon:Buy', 1);
+            element.textContent = 'Купить';
+        } else if (element.classList[1] == 'org') {
+            uCefJS.triggerEvent('Avtosalon:Buy', 2);
+            element.textContent = 'Купить в организацию';
+        }
+        clearInterval(ASBuyInterval);
+    }
+}
+
+function ASgetVar(type, value) {
+    if (type == 'power') {
+        value = value.split('/')[0];
+    }
+
+    if (value > avtosalonMaxVar[type]) {
+        return 100;
+    }
+
+    return value / avtosalonMaxVar[type] * 100;
+}
+
+function showAvtosalonButton(text) {
+    document.querySelector('.avtosalon-button-text').textContent = text;
+    document.querySelector('.avtosalon-button').style.display = '';
+}
+
+function hideAvtosalonButton() {
+    document.querySelector('.avtosalon-button').style.display = 'none';
+}
+
+function showAvtosalonNotice(text, color = 'red') {
+    clearInterval(avtosalonNoticeInterval);
+    document.querySelector('.avtosalon-notice').textContent = text;
+    document.querySelector('.avtosalon-notice').style.color = color;
+    document.querySelector('.avtosalon-notice').style.display = '';
+    document.querySelector('.avtosalon-notice').setAttribute('time', '5');
+    avtosalonNoticeInterval = setInterval(() => {
+        document.querySelector('.avtosalon-notice').setAttribute('time', Number(document.querySelector('.avtosalon-notice').getAttribute('time')) - 1);
+        if (document.querySelector('.avtosalon-notice').getAttribute('time') == 0) {
+            document.querySelector('.avtosalon-notice').style.display = 'none';
+            clearInterval(avtosalonNoticeInterval);
+        }
+    }, 1000);
+
+}
+
+$(".avtosalon-right-colorselector-picker").spectrum({
+        flat: true,
+        allowEmpty: !1,
+        showAlpha: false,
+        showPallete: false
+    }),
+    (window.onload = function() {
+        var e = $(".scroll");
+        e.mousedown(function() {
+                var i = this.scrollLeft + event.pageX;
+                e.mousemove(function() {
+                    return (this.scrollLeft = i - event.pageX), !1;
+                });
+            }),
+            $(window).mouseup(function() {
+                e.off("mousemove");
+            });
+    });

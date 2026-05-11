@@ -1,0 +1,566 @@
+var alcotesterpick = new Audio('/cefNew/sounds/alcotesterpick.wav');
+var alcotestervidoh = new Audio('/cefNew/sounds/alcotestervidoh.wav');
+var alcotestervidoh2 = new Audio('/cefNew/sounds/alcotestervidoh2.wav');
+var alcotestershelc = new Audio('/cefNew/sounds/alcotestershelc.wav');
+var alcotesterOn = false;
+var alcotesterIsInspector = false;
+var alcotesterType = '';
+var alcotesterVidohNow = false;
+var alcotesterAlt = false;
+var alcotesterAlcohol = 0;
+var alcotesterPage = '';
+var alcotestFulldataPage = 0;
+var alcotestFulldataData = [];
+var keyboardRus = {
+    1: ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З'],
+    2: ['Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д'],
+    3: ['Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь'],
+    4: ['-', '.', 'Х', 'Ъ', 'Ж', 'Э', 'Б', 'Ю', '', ''],
+    5: ['АБВ', 'ПРОБЕЛ', 'УДАЛ']
+}
+var keyboardEng = {
+    1: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    2: ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+    3: ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+    4: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+    5: ['ABC', 'SPACE', 'DEL']
+}
+var fullDataPages = ['Имя Обследуемого', 'Место Обследования', 'Гос. Номер Машины', 'Нагрудный Знак', 'Инспектор', 'Отдел ДПС'];
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList[0] == 'alcotester-screen' || event.target.parentNode.classList[0] == 'alcotester-screen' || event.target.parentNode.parentNode.classList[0] == 'alcotester-screen' || event.target.parentNode.parentNode.parentNode.classList[0] == 'alcotester-screen' || event.target.parentNode.parentNode.parentNode.parentNode.classList[0] == 'alcotester-screen' || event.target.classList[0] == 'alcotester-screen-main-fulldata-keyboard-button' && alcotesterOn) {
+        cefSoundPlay('alcotesterpick.wav');
+    }
+
+    if (event.target.classList[0] == 'alcotester-screen-main-fulldata-keyboard-button') {
+        if (event.target.textContent == 'ПРОБЕЛ' || event.target.textContent == 'SPACE') {
+            document.querySelector('.alcotester-screen-main-fulldata-input').value = document.querySelector('.alcotester-screen-main-fulldata-input').value + ' ';
+        } else if (event.target.textContent == 'УДАЛ' || event.target.textContent == 'DEL') {
+            document.querySelector('.alcotester-screen-main-fulldata-input').value = document.querySelector('.alcotester-screen-main-fulldata-input').value.slice(0, -1);
+        } else if (event.target.textContent == 'АБВ') {
+            i = 0;
+            document.querySelectorAll('.alcotester-screen-main-fulldata-keyboard-line').forEach(element => {
+                i += 1;
+                buttonI = 0;
+                element.querySelectorAll('.alcotester-screen-main-fulldata-keyboard-button').forEach(button => {
+                    button.textContent = keyboardEng[i][buttonI];
+                    buttonI += 1;
+                });
+            });
+        } else if (event.target.textContent == 'ABC') {
+            i = 0;
+            document.querySelectorAll('.alcotester-screen-main-fulldata-keyboard-line').forEach(element => {
+                i += 1;
+                buttonI = 0;
+                element.querySelectorAll('.alcotester-screen-main-fulldata-keyboard-button').forEach(button => {
+                    button.textContent = keyboardRus[i][buttonI];
+                    buttonI += 1;
+                });
+            });
+        } else {
+            document.querySelector('.alcotester-screen-main-fulldata-input').value = document.querySelector('.alcotester-screen-main-fulldata-input').value + event.target.textContent;
+        }
+
+        document.querySelector('.alcotester-screen-main-fulldata-input').focus();
+        document.querySelector('.alcotester-screen-main-fulldata-input').setSelectionRange(1000, 1000);
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key == 'Alt' && alcotesterOn && alcotesterType && !alcotesterVidohNow && !alcotesterAlt && !alcotesterIsInspector) {
+        alcotesterAlt = true;
+        uCefJS.triggerEvent('alcotester:ResponsePlayer', 'startVidoh');
+        uCefJS.triggerEvent('Send:AME', 'набрал в легкие воздух, начал дуть в алкотестер.');
+        alcotesterStartVidoh();
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    alcotesterAlt = false;
+    if (event.key == 'Alt' && alcotesterOn && !alcotesterIsInspector) {
+        uCefJS.triggerEvent('alcotester:ResponsePlayer', 'stopVidoh');
+        uCefJS.triggerEvent('Send:AME', 'прекратил дуть в алкотестер.');
+        alcotesterStopVidoh();
+    }
+});
+
+function alcotesterStartVidoh() {
+    if (alcotesterType == 'scrining') {
+        alcotestervidoh.play();
+        alcotesterVidohNow = true;
+        alcotestProgress = 100;
+        document.querySelector('.alcotester-vidoh-button-span').style.transition = '2000'.replace('000', '') + 's linear';
+        document.querySelector('.alcotester-screen-main-progress-text').textContent = '100%';
+        document.querySelector('.alcotester-screen-main-progress-span').style.width = '100%';
+        document.querySelector('.alcotester-vidoh-button-span').style.height = '100%';
+        alcotestPressedProgress = setInterval(() => {
+            if (alcotestProgress == 100) { alcotestProgress = 75; } else if (alcotestProgress == 75) { alcotestProgress = 50; } else if (alcotestProgress == 50) { alcotestProgress = 25; } else if (alcotestProgress == 25) { alcotestProgress = 0; }
+            document.querySelector('.alcotester-screen-main-progress-text').textContent = alcotestProgress + '%';
+            document.querySelector('.alcotester-screen-main-progress-span').style.width = alcotestProgress + '%';
+        }, 2000 / 4);
+
+        alcotestPressedTimeout = setTimeout(() => {
+            if (alcotesterVidohNow) {
+                alcotesterVidohNow = false;
+                clearInterval(alcotestPressedProgress);
+                setTimeout(() => {
+                    cefSoundPlay('alcotestershelc.wav');
+                }, 300);
+                if (alcotesterIsInspector) {
+                    setTimeout(() => {
+                        alcotesterSetResponse(true, 'setDrunk;-10000') //test
+                        uCefJS.triggerEvent('alcotester:getDrunk', 1);
+                    }, 700);
+                }
+            }
+        }, 2000);
+    } else if (alcotesterType == 'fullscrining') {
+        alcotestervidoh2.play();
+        alcotesterVidohNow = true;
+        alcotestProgress = 100;
+        document.querySelector('.alcotester-vidoh-button-span').style.transition = '5000'.replace('000', '') + 's linear';
+        document.querySelector('.alcotester-screen-main-progress-text').textContent = '100%';
+        document.querySelector('.alcotester-screen-main-progress-span').style.width = '100%';
+        document.querySelector('.alcotester-vidoh-button-span').style.height = '100%';
+        alcotestPressedProgress = setInterval(() => {
+            if (alcotestProgress == 100) { alcotestProgress = 75; } else if (alcotestProgress == 75) { alcotestProgress = 50; } else if (alcotestProgress == 50) { alcotestProgress = 25; } else if (alcotestProgress == 25) { alcotestProgress = 0; }
+            document.querySelector('.alcotester-screen-main-progress-text').textContent = alcotestProgress + '%';
+            document.querySelector('.alcotester-screen-main-progress-span').style.width = alcotestProgress + '%';
+        }, 5000 / 4);
+
+        alcotestPressedTimeout = setTimeout(() => {
+            if (alcotesterVidohNow) {
+                alcotesterVidohNow = false;
+                alcotesterStopVidoh();
+                clearInterval(alcotestPressedProgress);
+                setTimeout(() => {
+                    cefSoundPlay('alcotestershelc.wav');
+                }, 300);
+                if (alcotesterIsInspector) {
+                    setTimeout(() => {
+                        alcotesterSetPage('analiz');
+                        setTimeout(() => {
+                            alcotesterSetResponse(true, 'setDrunk;20000') //test
+                            uCefJS.triggerEvent('alcotester:getDrunk', 1);
+                        }, 3500);
+                    }, 700);
+                }
+            }
+        }, 5000);
+    }
+}
+
+function alcotesterStopVidoh() {
+    clearInterval(alcotestPressedProgress);
+    document.querySelector('.alcotester-vidoh-button-span').style.transition = '0s';
+    document.querySelector('.alcotester-vidoh-button-span').style.height = '0%';
+
+    if (alcotesterType == 'scrining') {
+        alcotestervidoh.pause();
+        alcotestervidoh.currentTime = 0;
+        alcotesterVidohNow = false;
+    } else if (alcotesterType == 'fullscrining') {
+        alcotestervidoh2.pause();
+        alcotestervidoh2.currentTime = 0;
+        if (alcotesterVidohNow) {
+            alcotesterVidohNow = false;
+            clearTimeout(checkOtkaz);
+            setTimeout(() => {
+                cefSoundPlay('alcotestershelc.wav');
+                setTimeout(() => {
+                    alcotesterSetPage('prervan');
+                }, 200);
+            }, 300);
+        }
+    }
+}
+
+function showAlcotester(isInspector) {
+    alcotesterIsInspector = isInspector;
+    alcotesterAlcohol = 0;
+    document.querySelector('.alcotester').style.display = '';
+    if (isInspector) {
+        document.querySelector('.alcotester-block').style.display = 'none';
+    } else {
+        document.querySelector('.alcotester-block').style.display = 'block';
+    }
+}
+
+function hideAlcotester() {
+    document.querySelector('.alcotester').style.display = 'none';
+    alcotesterOn = false;
+    document.querySelector('.alcotester-img').setAttribute('src', '/cefNew/img/alcotester/alcotester1.png');
+    alcotesterSetPage('');
+}
+
+function alcotesterSwitch() {
+    if (!alcotesterOn) {
+        alcotesterAME('нажал на кнопку питания алкотестера, подождал его включения.');
+        document.querySelector('.alcotester-screen-main-bottom-text2').textContent = 'Тестов в памяти: 00' + randomIntFromInterval(200, 800).split('.')[0];
+        alcotesterSetPage('loading');
+        setTimeout(() => {
+            cefSoundPlay('alcotesterpick.wav');
+            setTimeout(() => {
+                alcotesterSetPage('main');
+                alcotesterOn = true;
+            }, 800);
+        }, 500);
+    } else {
+        alcotesterAME('задержал кнопку питания алкотестера, подождал его выключения.');
+        alcotesterOn = false;
+        document.querySelector('.alcotester-img').setAttribute('src', '/cefNew/img/alcotester/alcotester1.png');
+        alcotesterSetPage('offing');
+        setTimeout(() => {
+            alcotesterSetPage('');
+        }, 800);
+    }
+}
+
+function alcotesterSetPage(type) {
+    document.querySelector('.alcotester-vidoh').style.display = 'none';
+    document.querySelector('.alcotester-vidoh-button-span').style.transition = '0s';
+    document.querySelector('.alcotester-vidoh-button-span').style.height = '0%';
+    if (type != 'analiz') {
+        alcotesterType = '';
+    }
+
+    if (type == 'main') {
+        alcotesterAME('перешел на главный экран алкотестера.');
+        document.querySelector('.alcotester-img').setAttribute('src', '/cefNew/img/alcotester/alcotester1.png');
+    } else if (type == 'full') {
+        alcotesterAME('перешел на страницу начала забора воздуха.');
+        document.querySelector('.alcotester-img').setAttribute('src', '/cefNew/img/alcotester/alcotester2.png');
+    } else if (type == 'fulldata') {
+        alcotesterAME('перешел на страницу ввода данных.');
+        alcotestFulldataPage = 0;
+        alcotestFulldataData = [];
+        document.querySelector('.alcotester-screen-block#fulldata .alcotester-screen-top .alcotester-screen-top-text').textContent = fullDataPages[alcotestFulldataPage];
+    } else if (type == 'scrining') {
+        alcotesterAME('перешел на страницу скрининга.');
+        document.querySelector('.alcotester-img').setAttribute('src', '/cefNew/img/alcotester/alcotester3.png');
+        alcotesterType = 'scrining';
+        document.querySelector('.alcotester-screen-main-progress-text').textContent = '100%';
+        document.querySelector('.alcotester-screen-main-progress-span').style.width = '100%';
+        if (!alcotesterIsInspector) {
+            document.querySelector('.alcotester-vidoh').style.display = 'flex';
+        }
+    } else if (type == 'fullscrining') {
+        alcotesterAME('перешел на страницу полного продувания.');
+        alcotesterType = 'fullscrining';
+        type = 'scrining';
+        document.querySelector('.alcotester-screen-main-progress-text').textContent = '100%';
+        document.querySelector('.alcotester-screen-main-progress-span').style.width = '100%';
+        if (!alcotesterIsInspector) {
+            document.querySelector('.alcotester-vidoh').style.display = 'flex';
+        } else if (alcotesterIsInspector) {
+            checkOtkaz = setTimeout(() => {
+                if (document.querySelector('.alcotester-screen-block#scrining') && alcotesterType == 'fullscrining') {
+                    alcotesterSetPage('otkaz');
+                }
+            }, 30000);
+        }
+    } else if (type == 'scriningresult') {
+        alcotesterAME('ознакомился с результатами скрининга.');
+        if (alcotesterAlcohol != '0.000') {
+            document.querySelector('.alcotester-screen-main-textresult').textContent = 'Обнаружен алкоголь';
+            document.querySelector('.alcotester-screen-main-textresult').setAttribute('id', 'true');
+        } else {
+            document.querySelector('.alcotester-screen-main-textresult').textContent = 'Алкоголь не обнаружен';
+            document.querySelector('.alcotester-screen-main-textresult').setAttribute('id', 'false');
+        }
+        alcotesterStopVidoh();
+        uCefJS.triggerEvent('alcotester:ResponsePlayer', 'stopVidoh');
+    } else if (type == 'fullresult') {
+        alcotesterAME('ознакомился с результатами полного продувания.');
+        if (alcotesterAlcohol == '-1') {
+            document.querySelector('.alcotester-screen-main-fullresult-text2').textContent = 'Выдох Прерван';
+            document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'prervan');
+        } else if (alcotesterAlcohol == '-2') {
+            document.querySelector('.alcotester-screen-main-fullresult-text2').textContent = 'Отказ';
+            document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'otkaz');
+        } else if (alcotesterAlcohol == '0.000' || Number(alcotesterAlcohol) <= 0.160) {
+            document.querySelector('.alcotester-screen-main-fullresult-text2').innerHTML = alcotesterAlcohol + ' <span>мг/л</span>';
+            document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'false');
+        } else {
+            document.querySelector('.alcotester-screen-main-fullresult-text2').innerHTML = alcotesterAlcohol + ' <span>мг/л</span>';
+            document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'true');
+        }
+        alcotesterStopVidoh();
+        uCefJS.triggerEvent('alcotester:ResponsePlayer', 'stopVidoh');
+    } else if (type == 'fullresult-prervan') {
+        alcotesterAME('ознакомился с результатами полного продувания.');
+        alcotesterAlcohol = -1;
+        document.querySelector('.alcotester-screen-main-fullresult-text2').textContent = 'Выдох Прерван';
+        document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'prervan');
+        type = 'fullresult';
+    } else if (type == 'fullresult-otkaz') {
+        alcotesterAME('ознакомился с результатами полного продувания.');
+        alcotesterAlcohol = -2;
+        document.querySelector('.alcotester-screen-main-fullresult-text2').textContent = 'Отказ';
+        document.querySelector('.alcotester-screen-main-fullresult-text2').setAttribute('id', 'otkaz');
+        type = 'fullresult';
+    }
+    document.querySelectorAll('.alcotester-screen-block').forEach(element => {
+        element.style.display = 'none';
+    });
+    document.querySelector('.alcotester-screen-block#' + type).style.display = 'block';
+    alcotesterPage = type;
+
+    if (alcotesterIsInspector) {
+        if (alcotesterPage == 'scriningresult' || alcotesterPage == 'fullresult') {
+            uCefJS.triggerEvent('alcotester:Response', 'show;' + alcotesterPage + ';' + alcotesterAlcohol);
+        } else if (alcotesterPage == 'scrining' && alcotesterType == 'fullscrining') {
+            uCefJS.triggerEvent('alcotester:Response', 'show;fullscrining');
+        } else {
+            uCefJS.triggerEvent('alcotester:Response', 'show;' + alcotesterPage);
+        }
+    }
+}
+
+function alcotesterSetResponse(isInspector, type) {
+    if (type.split(';')[0] == 'show') {
+        showAlcotester(isInspector);
+        alcotesterOn = true;
+        if (type.split(';')[1] == 'scriningresult' || type.split(';')[1] == 'fullresult') {
+            alcotesterAlcohol = type.split(';')[2];
+        }
+        alcotesterSetPage(type.split(';')[1]);
+    } else if (type.split(';')[0] == 'startVidoh') {
+        alcotesterStartVidoh();
+    } else if (type.split(';')[0] == 'stopVidoh') {
+        alcotesterStopVidoh();
+    } else if (type.split(';')[0] == 'setDrunk') {
+        alcotesterAlcohol = alcotesterCheckAlcohol(type.split(';')[1]);
+        setTimeout(() => {
+            if (alcotesterType == 'scrining') {
+                alcotesterSetPage('scriningresult');
+            } else if (alcotesterType == 'fullscrining') {
+                alcotesterSetPage('fullresult');
+            }
+        }, 2000);
+    } else if (type.split(';')[0] == 'getPage') {
+        if (alcotesterIsInspector) {
+            if (alcotesterPage == 'scriningresult') {
+                uCefJS.triggerEvent('alcotester:Response', 'show;' + alcotesterPage + ';' + alcotesterAlcohol);
+            } else {
+                uCefJS.triggerEvent('alcotester:Response', 'show;' + alcotesterPage);
+            }
+        }
+    }
+}
+
+function alcotesterCheckAir() {
+    alcotesterSetPage('checkair');
+    setTimeout(() => {
+        cefSoundPlay('alcotestershelc.wav');
+        setTimeout(() => {
+            cefSoundPlay('alcotestershelc.wav');
+            setTimeout(() => {
+                alcotesterSetPage('fullscrining');
+            }, 200);
+        }, 2000);
+    }, 200);
+}
+
+function alcotesterCheckAlcohol(type) {
+    drunk = 0;
+    if (type <= -50000 || type > -50000 && type <= -30000) { drunk = '0.000' } else if (type > -30000 && type <= -20000) { drunk = alcotesterGetRandom(0.0, 0.140) } else if (type > -20000 && type <= 0) { drunk = alcotesterGetRandom(0.175, 0.220) } else if (type > 0 && type <= 15000) { drunk = alcotesterGetRandom(0.220, 0.850) } else if (type > 15000 && type <= 50000) { drunk = alcotesterGetRandom(0.900, 1.300) } else if (type > 50000 && type <= 150000) { drunk = alcotesterGetRandom(1.400, 2.200) } else if (type > 15000) { drunk = '>2.500' }
+    return drunk;
+}
+
+function alcotesterGetRandom(min, max) {
+    return (Math.random() * (max - min) + min).toFixed(3);
+}
+
+function getAlcoholLevel(intoxication) {
+    const points = [
+        { level: 0, value: 0.000 },
+        { level: 10, value: 0.160 },
+        { level: 30, value: 0.250 },
+        { level: 50, value: 1.200 },
+        { level: 100, value: 2.700 }
+    ];
+
+    for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i];
+        const p2 = points[i + 1];
+
+        if (intoxication >= p1.level && intoxication <= p2.level) {
+            const ratio = (intoxication - p1.level) / (p2.level - p1.level);
+            return (p1.value + ratio * (p2.value - p1.value)).toFixed(3);
+        }
+    }
+
+    return intoxication >= 100 ? ">2.500" : "0.000";
+}
+
+
+function alcotesterSetPageFull(type) {
+    if (type == 'next' && alcotestFulldataPage < 5) {
+        alcotestFulldataData[alcotestFulldataPage] = document.querySelector('.alcotester-screen-main-fulldata-input').value;
+        document.querySelector('.alcotester-screen-main-fulldata-input').value = '';
+        alcotestFulldataPage += 1;
+        document.querySelector('.alcotester-screen-block#fulldata .alcotester-screen-top .alcotester-screen-top-text').textContent = fullDataPages[alcotestFulldataPage];
+    } else if (type == 'next' && alcotestFulldataPage == 5) {
+        alcotestFulldataData[alcotestFulldataPage] = document.querySelector('.alcotester-screen-main-fulldata-input').value;
+        document.querySelector('.alcotester-screen-main-fulldata-input').value = '';
+        alcotesterSetPage('full');
+    } else if (type == 'prev' && alcotestFulldataPage != 0) {
+        alcotestFulldataPage -= 1;
+        document.querySelector('.alcotester-screen-main-fulldata-input').value = alcotestFulldataData[alcotestFulldataPage];
+        document.querySelector('.alcotester-screen-block#fulldata .alcotester-screen-top .alcotester-screen-top-text').textContent = fullDataPages[alcotestFulldataPage];
+    }
+}
+
+function alcotesterPechat() {
+    for (let i = 0; i < 6; i++) {
+        if (alcotestFulldataData[i] == '' || alcotestFulldataData.length <= i) {
+            alcotestFulldataData[i] = '&nbsp;';
+        }
+    }
+    document.querySelector('.alcotester-full span.nomer').textContent = '602' + randomIntFromInterval(200, 800).split('.')[0];
+    document.querySelector('.alcotester-full span.testnomer').textContent = '00' + randomIntFromInterval(200, 800).split('.')[0];
+    document.querySelector('.alcotester-full span.date').textContent = document.querySelector('.alcotester-screen-main-date').textContent;
+    document.querySelector('.alcotester-full span.time').textContent = document.querySelector('.alcotester-screen-main-time').textContent.split(' ')[1];
+    document.querySelector('.alcotester-full span.result').textContent = document.querySelector('.alcotester-screen-main-fullresult-text2').textContent;
+    document.querySelector('.alcotester-full span.name').innerHTML = alcotestFulldataData[0];
+    document.querySelector('.alcotester-full span.address').innerHTML = alcotestFulldataData[1];
+    document.querySelector('.alcotester-full span.carnumber').innerHTML = alcotestFulldataData[2];
+    document.querySelector('.alcotester-full span.znak').innerHTML = alcotestFulldataData[3];
+    document.querySelector('.alcotester-full span.inspector').innerHTML = alcotestFulldataData[4];
+    document.querySelector('.alcotester-full span.otdel').innerHTML = alcotestFulldataData[5];
+    alcotesterShowCheck(0);
+}
+
+function alcotesterShowCheck(type, img = '', dataAlcotesterCheck) {
+    if (type == 0) {
+        uCefJS.triggerEvent('Send:AME', 'оторвал чек освидетельстования от алкотестера, взял ручку.');
+        if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        document.querySelector('.alcotester-check').style.display = 'block';
+        document.querySelector('#canvas').style.display = 'block';
+        document.querySelector('.protokol-menu').style.display = 'block';
+        document.querySelector('.protokol-menu-10').style.display = 'block';
+        if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        document.querySelector('#canvas').style.display = 'block';
+        canvas.setAttribute('width', document.querySelector('.alcotester-check').offsetWidth);
+        canvas.setAttribute('height', document.querySelector('.alcotester-check').offsetHeight);
+        canvas.style.left = document.querySelector('.alcotester-check').getBoundingClientRect().left + 'px';
+        canvas.style.top = document.querySelector('.alcotester-check').getBoundingClientRect().top + 'px';
+        drawInit();
+    } else if (type == 1) {
+        uCefJS.triggerEvent('Send:AME', 'взял чек освидетельстования с ручкой у инспектора, ознакомился.');
+        if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        document.querySelector('.alcotester-check-text .alcotester-full span.nomer').innerHTML = dataAlcotesterCheck.split(';')[0];
+        document.querySelector('.alcotester-check-text .alcotester-full span.testnomer').innerHTML = dataAlcotesterCheck.split(';')[1];
+        document.querySelector('.alcotester-check-text .alcotester-full span.date').innerHTML = dataAlcotesterCheck.split(';')[2];
+        document.querySelector('.alcotester-check-text .alcotester-full span.time').innerHTML = dataAlcotesterCheck.split(';')[3];
+        document.querySelector('.alcotester-check-text .alcotester-full span.result').innerHTML = dataAlcotesterCheck.split(';')[4];
+        document.querySelector('.alcotester-check-text .alcotester-full span.name').innerHTML = dataAlcotesterCheck.split(';')[5];
+        document.querySelector('.alcotester-check-text .alcotester-full span.address').innerHTML = dataAlcotesterCheck.split(';')[6];
+        document.querySelector('.alcotester-check-text .alcotester-full span.carnumber').innerHTML = dataAlcotesterCheck.split(';')[7];
+        document.querySelector('.alcotester-check-text .alcotester-full span.znak').innerHTML = dataAlcotesterCheck.split(';')[8];
+        document.querySelector('.alcotester-check-text .alcotester-full span.inspector').innerHTML = dataAlcotesterCheck.split(';')[9];
+        document.querySelector('.alcotester-check-text .alcotester-full span.otdel').innerHTML = dataAlcotesterCheck.split(';')[10];
+        document.querySelector('#alcotester-check-img1').setAttribute('src', img);
+        document.querySelector('#alcotester-check-img1').style.display = 'block';
+
+        document.querySelector('#canvas').style.display = 'block';
+        document.querySelector('.protokol-menu').style.display = 'block';
+        document.querySelector('.protokol-menu-11').style.display = 'block';
+        document.querySelector('.alcotester-check').style.display = 'block';
+        canvas.setAttribute('width', document.querySelector('.alcotester-check').offsetWidth);
+        canvas.setAttribute('height', document.querySelector('.alcotester-check').offsetHeight);
+        canvas.style.left = document.querySelector('.alcotester-check').getBoundingClientRect().left + 'px';
+        canvas.style.top = document.querySelector('.alcotester-check').getBoundingClientRect().top + 'px';
+        drawInit();
+    } else if (type == 2) {
+        uCefJS.triggerEvent('Send:AME', 'забрал чек освидетельствования с ручкой.');
+        document.querySelector('#canvas').style.display = 'block';
+        document.querySelector('.protokol-menu').style.display = 'block';
+        document.querySelector('.protokol-menu-12').style.display = 'block';
+        document.querySelector('.alcotester-check').style.display = 'block';
+        canvas.setAttribute('width', document.querySelector('.alcotester-check').offsetWidth);
+        canvas.setAttribute('height', document.querySelector('.alcotester-check').offsetHeight);
+        canvas.style.left = document.querySelector('.alcotester-check').getBoundingClientRect().left + 'px';
+        canvas.style.top = document.querySelector('.alcotester-check').getBoundingClientRect().top + 'px';
+        document.querySelector('#alcotester-check-img1').setAttribute('src', img);
+        document.querySelector('#alcotester-check-img2').setAttribute('src', podpisIMG1);
+        document.querySelector('#alcotester-check-img1').style.display = 'block';
+        document.querySelector('#alcotester-check-img2').style.display = 'block';
+    }
+}
+
+function alcotesterHideCheck(type) {
+    document.querySelector('.protokol-menu').style.display = 'none';
+    document.querySelector('.protokol-menu-' + type).style.display = 'none';
+    document.querySelector('.alcotester-check').style.display = 'none';
+    document.querySelector('#alcotester-check-img1').style.display = 'none';
+    document.querySelector('#alcotester-check-img2').style.display = 'none';
+    document.querySelector('#canvas').style.display = 'none';
+    podpisDraw = false;
+    uCefJS.triggerEvent('Send:AME', 'отложил чек освидетельствования.');
+}
+
+function alcotesterCheckGet(type) {
+    if (type == 0 || type == 1) {
+        if (isCanvasBlank(document.getElementById('canvas'))) {
+            uCefJS.triggerEvent('FIS:Getprotokol', 6);
+            return
+        }
+        try {
+            var img = document.getElementById('canvas').toDataURL('image/png', 1).split(',')[1];
+        } catch (e) {
+            var img = document.getElementById('canvas').toDataURL().split(',')[1];
+        }
+        $.ajax({
+            url: 'https://api.imgur.com/3/image',
+            type: 'post',
+            headers: {
+                Authorization: 'Client-ID f9715a00108c0b3'
+            },
+            data: {
+                image: img
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (type == 0) {
+                    if (response.success) {
+                        podpisIMG1 = response.data.link;
+                        elementCheck = '';
+                        document.querySelectorAll('.alcotester-check-text .alcotester-full span').forEach(element => {
+                            elementCheck += element.textContent + ';';
+                        });
+                        uCefJS.triggerEvent('alcotester:GetCheck', 1, response.data.link, elementCheck);
+                        alcotesterHideCheck(10);
+                        uCefJS.triggerEvent('Send:AME', 'подписал чек освидетельствования, передал его вместе с ручкой.');
+                        // setTimeout(() => {
+                        //     alcotesterShowCheck(1, response.data.link, elementCheck)
+                        // }, 2000);
+                    }
+                } else if (type == 1) {
+                    if (response.success) {
+                        podpisIMG2 = response.data.link;
+                        uCefJS.triggerEvent('alcotester:GetCheck', 2, response.data.link);
+                        alcotesterHideCheck(11);
+                        uCefJS.triggerEvent('Send:AME', 'подписал чек освидетельствования, вернул его обратно сотруднику вместе с ручкой.');
+                        // setTimeout(() => {
+                        //     alcotesterShowCheck(2, response.data.link)
+                        // }, 2000);
+                    }
+                }
+            }
+        });
+    }
+}
+
+function alcotesterAME(text) {
+    if (alcotesterIsInspector) {
+        uCefJS.triggerEvent('Send:AME', text);
+    }
+}

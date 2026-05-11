@@ -1,0 +1,156 @@
+var adminPanelInterval = null;
+
+document.addEventListener('keydown', function(event) {
+    if (event.key == 'Alt') {
+        if (document.querySelector('.admin-panel-main').style.display == '') {
+            setCursor(true);
+        }
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    if (event.key == 'Alt') {
+        if (document.querySelector('.admin-panel-main').style.display == '') {
+            setCursor(false);
+        }
+    }
+});
+
+function showAdminpanel(nickname, id, name, surname, patronymic, level, cash, bank, frac, rang, food, drink, address, warns, blockVU, mute, jail) {
+    document.querySelector('.admin-panel-main').style.display = '';
+    document.querySelector('.admin-panel-buttons').style.display = '';
+    document.querySelector('#APNickname').textContent = nickname + ' (' + id + ')';
+    document.querySelector('#APName').textContent = name;
+    document.querySelector('#APSurname').textContent = surname;
+    document.querySelector('#APPatronymic').textContent = patronymic;
+    document.querySelector('#APLevel').textContent = level;
+    document.querySelector('#APCash').textContent = moneyFormat(cash);
+    document.querySelector('#APBank').textContent = moneyFormat(bank);
+    document.querySelector('.admin-panel-main-info-line.frac').style.display = 'none';
+    document.querySelector('.admin-panel-main-info-line.rang').style.display = 'none';
+    if (frac != ' ') {
+        document.querySelector('.admin-panel-main-info-line.frac').style.display = '';
+        document.querySelector('.admin-panel-main-info-line.rang').style.display = '';
+        document.querySelector('#APFrac').textContent = frac;
+        document.querySelector('#APRang').textContent = rang;
+    }
+    document.querySelector('#APNeeds').textContent = food + '/' + drink;
+    document.querySelector('#APAddress').textContent = address;
+    document.querySelector('.admin-panel-main-info-line.warns').style.display = 'none';
+    if (warns != 0) {
+        document.querySelector('.admin-panel-main-info-line.warns').style.display = '';
+        document.querySelector('#APWarns').textContent = warns + '/3';
+    }
+    document.querySelector('.admin-panel-main-info-line.blockvu').style.display = 'none';
+    if (blockVU != 0) {
+        document.querySelector('.admin-panel-main-info-line.blockvu').style.display = '';
+        document.querySelector('#APBlockVU').textContent = Math.round(blockVU / 60 / 60) + ' часов';
+    }
+    document.querySelector('.admin-panel-main-info-line.mute').style.display = 'none';
+    if (mute != 0) {
+        document.querySelector('.admin-panel-main-info-line.mute').style.display = '';
+        document.querySelector('#APMute').textContent = Math.round(mute / 60) + ' минут';
+    }
+    document.querySelector('.admin-panel-main-info-line.jail').style.display = 'none';
+    if (jail != 0) {
+        document.querySelector('.admin-panel-main-info-line.jail').style.display = '';
+        document.querySelector('#APJail').textContent = Math.round(jail / 60) + ' минут';
+    }
+
+    if (!adminPanelInterval) {
+        adminPanelInterval = setInterval(() => {
+            if (document.querySelector('.admin-panel-main').style.display == '') {
+                var adminPanelTVHTTP = new XMLHttpRequest();
+                adminPanelTVHTTP.open("GET", 'https://greentech-rp.com/php/adminpanel.php?nickname=' + phoneNickname + '&key=' + phoneKey + '&type=updateTimeTV', false);
+                try {
+                    adminPanelTVHTTP.send(null);
+        
+                } catch (e) {
+                    console.log('ADMINPANELHISTORY ERROR ' + e);
+                    return;
+                }
+            }
+        }, 60000);
+    }
+}
+
+function hideAdminpanel() {
+    document.querySelector('.admin-panel-main').style.display = 'none';
+    document.querySelector('.admin-panel-buttons').style.display = 'none';
+}
+
+function showAdminpanelCar(car, id, owner, hp) {
+    document.querySelector('.admin-panel-car').style.display = '';
+    document.querySelector('#APCar').textContent = car + ' (' + id + ')';
+    document.querySelector('#APCarOwner').textContent = owner;
+    document.querySelector('#APCarHP').textContent = Math.round(hp);
+}
+
+function hideAdminpanelCar() {
+    document.querySelector('.admin-panel-car').style.display = 'none';
+}
+
+function adminPanelHistory() {
+    if (document.querySelector('#APButtonHistory').textContent == 'История наказаний') {
+        document.querySelectorAll('.admin-panel-history-table-block tbody tr').forEach(element => {
+            element.remove();
+        });
+        let nicknamePlayer = document.querySelector('#APNickname').textContent.split(' ')[0];
+
+        var adminPanelHistoryHTTP = new XMLHttpRequest();
+        adminPanelHistoryHTTP.open("GET", 'https://greentech-rp.com/php/adminpanel.php?nickname=' + phoneNickname + '&key=' + phoneKey + '&type=history' + '&nicknamePlayer=' + nicknamePlayer, false);
+        try {
+            adminPanelHistoryHTTP.send(null);
+            adminPanelHistoryJSON = adminPanelHistoryHTTP.responseText;
+            adminPanelHistoryJSON = JSON.parse(adminPanelHistoryJSON);
+            console.log(adminPanelHistoryJSON)
+
+            adminPanelHistoryJSON.forEach(element => {
+                adminPanelHistoryHTML = `<tr>
+                                <td>` + element[0] + `</td>
+                                <td>` + element[1] + `</td>
+                                <td>` + element[2] + `</td>
+                                <td>` + element[3] + `</td>
+                            </tr>`;
+                document.querySelector('.admin-panel-history-table-block tbody').insertAdjacentHTML('beforeend', adminPanelHistoryHTML);
+            });
+
+            document.querySelector('#APHistoryNickname span').textContent = nicknamePlayer;
+            document.querySelector('#APButtonHistory').textContent = 'Закрыть';
+            document.querySelector('.admin-panel-history-table').style.display = '';
+
+        } catch (e) {
+            console.log('ADMINPANELHISTORY ERROR ' + e);
+            return;
+        }
+    } else if (document.querySelector('#APButtonHistory').textContent == 'Закрыть') {
+        document.querySelector('.admin-panel-history-table').style.display = 'none';
+        document.querySelector('#APButtonHistory').textContent = 'История наказаний';
+    }
+}
+
+function adminPanelAccounts() {
+    if (document.querySelector('#APButtonAccounts').textContent == 'Другие аккаунты') {
+        let nicknamePlayer = document.querySelector('#APNickname').textContent.split(' ')[0];
+
+        var adminPanelAccountsHTTP = new XMLHttpRequest();
+        adminPanelAccountsHTTP.open("GET", 'https://greentech-rp.com/php/adminpanel.php?nickname=' + phoneNickname + '&key=' + phoneKey + '&type=accounts' + '&nicknamePlayer=' + nicknamePlayer, false);
+        try {
+            adminPanelAccountsHTTP.send(null);
+            adminPanelAccountsJSON = adminPanelAccountsHTTP.responseText;
+            console.log(adminPanelAccountsJSON)
+
+            document.querySelector('.admin-panel-acoounts-text').innerHTML = adminPanelAccountsJSON.replaceAll('\n', '<br>');
+            document.querySelector('#APAccountsNickname span').textContent = nicknamePlayer;
+            document.querySelector('#APButtonAccounts').textContent = 'Закрыть';
+            document.querySelector('.admin-panel-accounts-container').style.display = '';
+
+        } catch (e) {
+            console.log('ADMINPANELACCOUNTS ERROR ' + e);
+            return;
+        }
+    } else if (document.querySelector('#APButtonAccounts').textContent == 'Закрыть') {
+        document.querySelector('.admin-panel-accounts-container').style.display = 'none';
+        document.querySelector('#APButtonAccounts').textContent = 'Другие аккаунты';
+    }
+}

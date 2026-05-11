@@ -1,0 +1,102 @@
+@font-face {
+    font-family: bold;
+    src: url(../fonts/Myriad/MYRIADPRO-BOLD.OTF);
+}
+
+@font-face {
+    font-family: regular;
+    src: url(../fonts/Myriad/MYRIADPRO-REGULAR.OTF);
+}
+
+#cordd .bg {
+    transform: translate(50%, 80%);
+    width: 50%;
+    z-index: -1;
+}
+
+#cordd .avatar {
+    position: absolute;
+    width: 8.9%;
+    height: 20.9%;
+    left: 26%;
+    top: 30.4%;
+    transform: translate(0%, 0%);
+}
+
+#cordd .left-div {
+    margin-left: 30vw;
+    z-index: 1;
+}
+
+#cordd .right-div {
+    z-index: 1;
+    margin-left: 23vw;
+}
+
+#cordd .number-udost {
+    position: absolute;
+    margin-left: 12.5vw;
+    top: 23.35vw;
+    font-family: regular;
+    font-size: 1.15vw;
+    color: #d54642;
+    font-weight: 800;
+}
+
+#cordd .position {
+    margin-top: 10vw;
+}
+
+#cordd .number {
+    font-size: 0.99vw;
+    font-family: regular;
+    position: absolute;
+    top: 26.37vw;
+    margin-left: 12.65vw;
+}
+
+#cordd .date {
+    position: absolute;
+    font-size: 0.83vw;
+    font-family: regular;
+    margin-left: 10.2vw;
+    top: 27.85vw;
+}
+
+#cordd .second-number {
+    position: absolute;
+    top: 14.7vw;
+    margin-left: 12vw;
+    font-family: bold;
+    font-size: 0.94vw;
+    color: #d54642;
+    font-weight: 800;
+}
+
+#cordd .name-div {
+    font-size: 0.9vw;
+    font-family: bold;
+    position: absolute;
+    top: 17vw;
+    margin-left: 7.3vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55vw;
+    justify-content: center;
+}
+
+#cordd .rang {
+    position: absolute;
+    font-size: 0.85vw;
+    font-family: regular;
+    top: 22.2vw;
+    margin-left: 7.2vw;
+}
+
+#cordd .two-rang {
+    position: absolute;
+    font-size: 0.83vw;
+    font-family: regular;
+    top: 23.3vw;
+    margin-left: 3vw;
+}

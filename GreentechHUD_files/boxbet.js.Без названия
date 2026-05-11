@@ -1,0 +1,345 @@
+var BBnumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var BBlastMatch = [];
+var BBnickname = '';
+var BBkey = '';
+var BBmonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+var BBmatches = {};
+var BBlastCommandSet = 0;
+// BBmatches = {
+//     "football": [[1, "1Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"], [2, "1Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"]],
+//     "hockey": [[1, "2Команда 1", "Команда 2", 1.85, 2.51, 3.53, "29.12.2024 18:30"], [2, "2Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"]],
+//     "cybersport": [[1, "3Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"], [2, "3Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"]],
+//     "etc": [[1, "4Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"], [2, "4Команда 1", "Команда 2", "П1", "Ничья", "П2", "29.12.2024 18:30"]]
+// }
+
+function showBoxbet(nickname, money, key) {
+    var BBdate = new Intl.DateTimeFormat('ru-RU', {
+        dateStyle: 'short',
+        timeZone: 'Europe/Moscow'
+    }).format(BBdate);
+    BBnickname = nickname;
+    BBkey = key;
+
+    document.querySelector('.boxbet').style.display = '';
+    document.querySelectorAll('.boxbet-header-account-block-info-block-money span').forEach(element => {
+        element.textContent = moneyFormat(money);
+    });
+    document.querySelectorAll('.boxbet-header-account-block-info-block-nickname').forEach(element => {
+        element.textContent = nickname;
+    });
+    document.querySelector('.boxbet-main-nav-block-block-subtitle').innerHTML = '<span>·</span> ' + Number(BBdate.split('.')[0]) + ' ' + BBmonths[Number(BBdate.split('.')[1]) - 1];
+    BBsetPage('today');
+}
+
+function hideBoxbet() {
+    document.querySelector('.boxbet').style.display = 'none';
+}
+
+function BBsetPage(type) {
+    document.querySelectorAll('.boxbet-main-nav-block-block').forEach(element => {
+        element.classList.remove('active');
+    });
+    document.querySelectorAll('.boxbet-main-page').forEach(element => {
+        element.style.display = 'none';
+    });
+
+    BBupdatePage(type);
+
+    document.querySelector('.boxbet-main-nav-block-block#' + type).classList.add('active');
+    document.querySelector('.boxbet-main-page#' + type).style.display = '';
+}
+
+function BBupdatePage(type, subtype) {
+    switch (type) {
+        case 'today':
+            document.querySelectorAll('.boxbet-main-page#today .boxbet-main-page-today-table tbody tr').forEach(element => {
+                element.remove();
+            });
+
+            var boxbetHTTP = new XMLHttpRequest();
+            boxbetHTTP.open("GET", 'https://greentech-rp.com/php/boxbet.php?type=get&nickname=' + BBnickname + '&key=' + phoneKey, false);
+            boxbetJSON = '';
+            try {
+                boxbetHTTP.send(null);
+                boxbetJSON = boxbetHTTP.responseText;
+                boxbetJSON = JSON.parse(boxbetJSON);
+                BBmatches = boxbetJSON;
+                console.log(BBmatches)
+            } catch (e) {
+                console.log('BOXBET ERROR ' + e);
+            }
+
+            if (BBmatches) {
+                if (!subtype) {
+                    subtype = document.querySelector('.boxbet-main-page-today-list-item.active').getAttribute('id');
+                }
+                BBmatches[subtype].forEach(element => {
+                    BBmatchTimestamp = new Date(element[6] * 1000);
+                    BBmatchDatetime = BBmatchTimestamp.toLocaleString('ru-RU', {
+                        day: 'numeric',
+                        month: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    BBmatchClass = '';
+                    if (Date.now() >= Number(element[6]) * 1000) {
+                        BBmatchClass = 'boxbet-main-page-today-table-tr-red';
+                    }
+                    BBmatchesHTML = `<tr class="` + BBmatchClass + `" id="` + element[0] + `" onclick="BBshowDialog('stavka', ` + element[0] + `)">
+                                    <td>` + element[1] + `</td>
+                                    <td>` + element[2] + `</td>
+                                    <td>` + element[3] + `</td>
+                                    <td>` + element[4] + `</td>
+                                    <td>` + element[5] + `</td>
+                                    <td>` + BBmatchDatetime + `</td>
+                                </tr>`;
+                    document.querySelector('.boxbet-main-page#today .boxbet-main-page-today-table tbody').insertAdjacentHTML('beforeend', BBmatchesHTML);
+                });
+            }
+            break;
+        case 'mybet':
+            document.querySelectorAll('.boxbet-main-page#mybet .boxbet-main-page-today-table tbody tr').forEach(element => {
+                element.remove();
+            });
+
+            var boxbetHTTP = new XMLHttpRequest();
+            boxbetHTTP.open("GET", 'https://greentech-rp.com/php/boxbet.php?type=getMy&nickname=' + BBnickname + '&key=' + phoneKey, false);
+            boxbetJSON = '';
+            try {
+                boxbetHTTP.send(null);
+                boxbetJSON = boxbetHTTP.responseText;
+                boxbetJSON = JSON.parse(boxbetJSON);
+                console.log(boxbetJSON)
+            } catch (e) {
+                console.log('BOXBET ERROR ' + e);
+            }
+
+            if (boxbetJSON) {
+                boxbetJSON.forEach(element => {
+                    BBmatchTimestamp = new Date(element[6] * 1000);
+                    BBmatchDatetime = BBmatchTimestamp.toLocaleString('ru-RU', {
+                        day: 'numeric',
+                        month: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    if (element[7] == 'Command_1') {
+                        dialogText = 'Вы поставили ' + moneyFormat(element[8]) + ' на победу ' + element[1] + '<br>Выигрыш в случае победы: ' + moneyFormat(Math.round(Number(element[8]) * Number(element[3])));
+                    } else if (element[7] == 'Command_2') {
+                        dialogText = 'Вы поставили ' + moneyFormat(element[8]) + ' на победу ' + element[2] + '<br>Выигрыш в случае победы: ' + moneyFormat(Math.round(Number(element[8]) * Number(element[5])));
+                    } else if (element[7] == 'Command_X') {
+                        dialogText = 'Вы поставили ' + moneyFormat(element[8]) + ' на ничью<br>Выигрыш в случае ничьей: ' + moneyFormat(Math.round(Number(element[8]) * Number(element[4])));
+                    }
+                    BBmatchesHTML = `<tr id="` + element[0] + `" onclick="BBshowDialog('info', 'Ставка', '` + dialogText + `', 'Закрыть')">
+                                    <td>` + element[1] + `</td>
+                                    <td>` + element[2] + `</td>
+                                    <td>` + element[3] + `</td>
+                                    <td>` + element[4] + `</td>
+                                    <td>` + element[5] + `</td>
+                                    <td>` + BBmatchDatetime + `</td>
+                                </tr>`;
+                    document.querySelector('.boxbet-main-page#mybet .boxbet-main-page-today-table tbody').insertAdjacentHTML('beforeend', BBmatchesHTML);
+                });
+            }
+            break;
+    }
+}
+
+function BBsetSubPage(type) {
+    document.querySelectorAll('.boxbet-main-page-today-list-item').forEach(element => {
+        element.classList.remove('active');
+    });
+    document.querySelector('.boxbet-main-page-today-list-item#' + type).classList.add('active');
+    BBupdatePage('today', type);
+}
+
+function BBdialogSetCommand(type, id) {
+    BBlastCommandSet = id;
+    if (document.querySelector('.boxbet-dialog-stavka-commands-container-command.active')) {
+        document.querySelector('.boxbet-dialog-stavka-commands-container-command.active').classList.remove('active');
+    }
+    document.querySelector('.boxbet-dialog-stavka-commands-container-command#' + type).classList.add('active');
+
+    if (document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value) {
+        BBcheckStavkaInput();
+    }
+}
+
+function BBshowDialog(type, ...args) {
+    if (type == 'stavka') {
+        if (document.querySelector('.boxbet-dialog-stavka-commands-container-command.active')) {
+            document.querySelector('.boxbet-dialog-stavka-commands-container-command.active').classList.remove('active');
+        }
+        BBmatches[document.querySelector('.boxbet-main-page-today-list-item.active').id].forEach(element => {
+            if (element[0] == args[0]) {
+                BBlastMatch = element;
+                document.querySelector('.boxbet-dialog-stavka-commands-container-command#command1').textContent = element[1];
+                document.querySelector('.boxbet-dialog-stavka-commands-container-command#command2').textContent = element[2];
+            }
+        });
+        document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value = '';
+        document.querySelector('.boxbet-dialog-fails-red').style.display = 'none';
+        document.querySelector('.boxbet-dialog-fails-green').style.display = 'none';
+
+    } else if (type == 'info') {
+        document.querySelector('.boxbet-dialog#info .boxbet-dialog-title').textContent = args[0];
+        document.querySelector('.boxbet-dialog#info .boxbet-dialog-text').innerHTML = args[1];
+        document.querySelector('.boxbet-dialog#info .boxbet-dialog-button1').textContent = args[2];
+    } else if (type == 'add') {
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button1').setAttribute('onclick', 'BBaddMoney()');
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button2').setAttribute('onclick', 'BBhideDialog()');
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button1').textContent = 'Пополнить';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button2').textContent = 'Отмена';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-title').textContent = 'Пополнить счет';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-text').textContent = 'Введите сумму, которую хотите положить на счет BoxBet.';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value = '';
+        type = 'input';
+    } else if (type == 'remove') {
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button1').setAttribute('onclick', 'BBremoveMoney()');
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button2').setAttribute('onclick', 'BBhideDialog()');
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button1').textContent = 'Снять';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-button2').textContent = 'Отмена';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-title').textContent = 'Снять со счета';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-text').textContent = 'Введите сумму, которую хотите снять со счета BoxBet.';
+        document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value = '';
+        type = 'input';
+    }
+    document.querySelector('.boxbet-dialog#' + type).style.display = '';
+    document.querySelector('.boxbet-dialogs').style.display = '';
+    setTimeout(() => {
+        document.querySelector('.boxbet-dialogs').style.opacity = '1';
+    }, 100);
+}
+
+function BBhideDialog() {
+    document.querySelector('.boxbet-dialogs').style.opacity = '0';
+    setTimeout(() => {
+        document.querySelectorAll('.boxbet-dialog').forEach(element => {
+            element.style.display = 'none';
+        });
+        document.querySelector('.boxbet-dialogs').style.display = 'none';
+    }, 300);
+}
+
+function BBcheckStavkaInput() {
+    count = document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value;
+    if (count.split('')[0] == 0) {
+        document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value = '';
+        return
+    }
+    if (!casinoNumbers.includes(Number(count.split('').at(-1)))) {
+        document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value = count.slice(0, -1);
+    }
+    // if (!document.querySelector('.boxbet-dialog-stavka-commands-container-command.active')) {
+    //     document.querySelector('.boxbet-dialog-fails-red').textContent = 'Выберите команду.';
+    //     document.querySelector('.boxbet-dialog-fails-red').style.display = '';
+    //     document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value = '';
+    //     return
+    // }
+
+    if (Number(count) < 10000) {
+        document.querySelector('.boxbet-dialog-fails-red').textContent = 'Минимальный размер ставки - 10.000₽';
+        document.querySelector('.boxbet-dialog-fails-red').style.display = '';
+    } else if (Number(count) >= 10000 && Number(count) <= 1000000) {
+        document.querySelector('.boxbet-dialog-fails-red').style.display = 'none';
+
+        if (document.querySelector('.boxbet-dialog-stavka-commands-container-command.active')) {
+            switch (document.querySelector('.boxbet-dialog-stavka-commands-container-command.active').id) {
+                case 'command1':
+                    koefID = 3;
+                    break;
+                case 'nichya':
+                    koefID = 4;
+                    break;
+                case 'command2':
+                    koefID = 5;
+                    break;
+            }
+            document.querySelector('.boxbet-dialog-fails-green span').textContent = moneyFormat(Math.round(count * BBlastMatch[koefID])) + '₽';
+            document.querySelector('.boxbet-dialog-fails-green').style.display = '';
+        }
+    } else if (Number(count) > 1000000) {
+        document.querySelector('.boxbet-dialog-fails-red').textContent = 'Максимальный размер ставки - 1.000.000₽';
+        document.querySelector('.boxbet-dialog-fails-red').style.display = '';
+        document.querySelector('.boxbet-dialog-fails-green').style.display = 'none';
+    }
+}
+
+function BBstavkaButton() {
+    var boxbetHTTP = new XMLHttpRequest();
+    boxbetHTTP.open("GET", 'https://greentech-rp.com/php/boxbet.php?type=check&nickname=' + BBnickname + '&id=' + Number(BBlastMatch[0]) + '&key=' + phoneKey, false);
+    try {
+        boxbetHTTP.send(null);
+        boxbetJSON = boxbetHTTP.responseText;
+        boxbetJSON = JSON.parse(boxbetJSON);
+        console.log(boxbetJSON)
+        if (boxbetJSON['status'] == 'error') {
+            BBhideDialog();
+            setTimeout(() => {
+                BBshowDialog('info', 'Ставка', 'У вас уже стоит ставка на этот матч.', 'Понятно');
+            }, 300);
+            return;
+        }
+    } catch (e) {
+        console.log('BOXBET ERROR ' + e);
+        return;
+    }
+    count = document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value;
+    if (count >= 10000 && count <= 1000000 && document.querySelector('.boxbet-dialog-stavka-commands-container-command.active').id) {
+        if (Number(document.querySelector('.boxbet-header-account-block-info-block-money span').textContent.replaceAll('.', '')) < count) {
+            BBhideDialog();
+            setTimeout(() => {
+                BBshowDialog('info', 'Ставка', 'У вас недостаточно средств на счету BoxBet.', 'Понятно');
+            }, 300);
+            return;
+        }
+        console.log(BBlastMatch)
+        uCefJS.triggerEvent('boxbet:Stavka', Number(BBlastMatch[0]), BBlastCommandSet, Number(document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value));
+        console.log('boxbet:Stavka', Number(BBlastMatch[0]), BBlastCommandSet, Number(document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value));
+        BBupdateMoney(-Number(document.querySelector('.boxbet-dialog#stavka .boxbet-dialog-input-container-input').value));
+        BBhideDialog();
+    }
+}
+
+function BBupdateMoney(count) {
+    countNew = Number(document.querySelector('.boxbet-header-account-block-info-block-money span').textContent.replaceAll('.', '')) + (count);
+    document.querySelectorAll('.boxbet-header-account-block-info-block-money span').forEach(element => {
+        element.textContent = moneyFormat(countNew);
+    });
+}
+
+function BBaddMoney() {
+    if (Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value) > 0) {
+        if (Number(document.querySelector('#hud-money-bank span').textContent.replaceAll('.', '')) < Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value)) {
+            BBhideDialog();
+            setTimeout(() => {
+                BBshowDialog('info', 'Ошибка', 'У вас недостаточно наличных средств.', 'Хорошо');
+            }, 300);
+            return
+        }
+
+        uCefJS.triggerEvent('boxbet:Add', Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+        console.log('boxbet:Add', Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+        BBhideDialog();
+        BBupdateMoney(Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+    }
+}
+
+function BBremoveMoney() {
+    if (Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value) > 0) {
+        if (Number(document.querySelector('.boxbet-header-account-block-info-block-money span').textContent.replaceAll('.', '')) < Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value)) {
+            BBhideDialog();
+            setTimeout(() => {
+                BBshowDialog('info', 'Ошибка', 'У вас недостаточно средств на счету BoxBet.', 'Хорошо');
+            }, 300);
+            return
+        }
+
+        uCefJS.triggerEvent('boxbet:Remove', Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+        console.log('boxbet:Remove', Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+        BBhideDialog();
+        BBupdateMoney(-Number(document.querySelector('.boxbet-dialog#input .boxbet-dialog-input-container-input').value));
+    }
+}
